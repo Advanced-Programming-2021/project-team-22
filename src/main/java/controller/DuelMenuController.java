@@ -1,8 +1,7 @@
 package controller;
 
 import model.Board;
-import model.Card;
-import model.Monster;
+import model.MonsterCard;
 import model.Player;
 
 import java.util.regex.Matcher;
@@ -61,7 +60,8 @@ public class DuelMenuController {
         if (matcher.find()) {
             int numberOfChosenCard = Integer.parseInt(matcher.group(1));
             if (checkSelectSpellCard(numberOfChosenCard, playerBoard) == null) {
-                playerBoard.setSelectedOwnCard(playerBoard.getSpellsAndTrapsZone()[numberOfChosenCard]);
+                playerBoard.setSelectedCard(playerBoard.getSpellsAndTrapsZone()[numberOfChosenCard]);
+                playerBoard.setMyCardSelected(true);
                 return DuelMenuMessages.SELECT_CARD_DONE;
             }
             return checkSelectMonsterOpponentCard(numberOfChosenCard, playerBoard);
@@ -74,7 +74,8 @@ public class DuelMenuController {
         if (matcher.find()) {
             int numberOfChosenCard = Integer.parseInt(matcher.group(1));
             if (checkSelectSpellCard(numberOfChosenCard, opponentBoard) == null) {
-                playerBoard.setSelectedOpponentCard(opponentBoard.getSpellsAndTrapsZone()[numberOfChosenCard]);
+                playerBoard.setSelectedCard(opponentBoard.getSpellsAndTrapsZone()[numberOfChosenCard]);
+                playerBoard.setMyCardSelected(false);
                 return DuelMenuMessages.SELECT_CARD_DONE;
             }
             return checkSelectMonsterOpponentCard(numberOfChosenCard, playerBoard);
@@ -96,7 +97,8 @@ public class DuelMenuController {
         if (matcher.find()) {
             int numberOfChosenCard = Integer.parseInt(matcher.group(1));
             if (checkSelectMonsterOpponentCard(numberOfChosenCard, playerBoard) == null) {
-                playerBoard.setSelectedOwnCard(playerBoard.getMonstersZone()[numberOfChosenCard]);
+                playerBoard.setSelectedCard(playerBoard.getMonstersZone()[numberOfChosenCard]);
+                playerBoard.setMyCardSelected(true);
                 return DuelMenuMessages.SELECT_CARD_DONE;
             }
             return checkSelectMonsterOpponentCard(numberOfChosenCard, playerBoard);
@@ -121,7 +123,8 @@ public class DuelMenuController {
         if (matcher.find()) {
             int numberOfChosenCard = Integer.parseInt(matcher.group(1));
             if (checkSelectMonsterOpponentCard(numberOfChosenCard, opponentBoard) == null) {
-                playerBoard.setSelectedOpponentCard(opponentBoard.getMonstersZone()[numberOfChosenCard]);
+                playerBoard.setSelectedCard(opponentBoard.getMonstersZone()[numberOfChosenCard]);
+                playerBoard.setMyCardSelected(false);
                 return DuelMenuMessages.SELECT_CARD_DONE;
             }
             return checkSelectMonsterOpponentCard(numberOfChosenCard, opponentBoard);
@@ -129,6 +132,17 @@ public class DuelMenuController {
         } else return DuelMenuMessages.INVALID_CARD_SELECT;
     }
 
+    private Enum disSelectCard(Board board) {
+        if (checkDisSelectCard(board) == null) {
+            board.setSelectedCard(null);
+            return DuelMenuMessages.DIS_SELECTED;
+        } else return checkDisSelectCard(board);
+    }
+
+    private Enum checkDisSelectCard(Board board) {
+        if (board.getSelectedCard() == null)
+            return DuelMenuMessages.NOT_SELECTED_CARD;
+    }
 
     private Enum deselectCard(String command) {
 // TODO
@@ -183,7 +197,7 @@ public class DuelMenuController {
         if (matcher.find()) {
             int numberOfChosenCard = Integer.parseInt(matcher.group(1));
             if (checkAttackMonsterCard(attackingPlayerBoard, opponentPlayerBoard, numberOfChosenCard) == null) {
-                Monster attackingMonster = (Monster) attackingPlayerBoard.getSelectedOwnCard();
+                MonsterCard attackingMonster = (MonsterCard) attackingPlayerBoard.getSelectedCard();
                 return attackingMonster.attack(attackingPlayer, opponentPlayer, attackingPlayerBoard, opponentPlayerBoard, numberOfChosenCard);
             }
             return checkAttackMonsterCard(attackingPlayerBoard, opponentPlayerBoard, numberOfChosenCard);
@@ -192,13 +206,13 @@ public class DuelMenuController {
     }
 
 
-    private Enum checkAttackMonsterCard(, Board attackingPlayerBoard, Board opponentPlayerBoard, int numberOfChosenCard) {
-        if (attackingPlayerBoard.getSelectedOwnCard() == null)
+    private Enum checkAttackMonsterCard(Board attackingPlayerBoard, Board opponentPlayerBoard, int numberOfChosenCard) {
+        if (attackingPlayerBoard.getSelectedCard() == null || !attackingPlayerBoard.getIsMyCardSelected())
             return DuelMenuMessages.NOT_SELECTED_CARD;
-        if (attackingPlayerBoard.getSelectedOwnCard() instanceof Monster)
+        if (attackingPlayerBoard.getSelectedCard() instanceof MonsterCard)
             return DuelMenuMessages.CANT_ATTACK_WITH_CARD;
         //TODO check battle phase
-        Monster card = (Monster) attackingPlayerBoard.getSelectedOwnCard();
+        MonsterCard card = (MonsterCard) attackingPlayerBoard.getSelectedCard();
         if (card.getAttacked())
             return DuelMenuMessages.ATTACKED_BEFORE;
         if (opponentPlayerBoard.getMonstersZone()[numberOfChosenCard] == null)
@@ -207,31 +221,28 @@ public class DuelMenuController {
     }
 
 
-    private Enum checkAttack(String command) {
-//        TODO: maybe merge with checkDirectAttack function
-    }
-
     private Enum directAttack(String command, Board board, Enum phase, Player player) {
         Enum messages = null;
         messages = checkDirectAttack(command, board, phase);
         if (!messages.equals(null))
             return messages;
         else {
-            Monster card = (Monster) board.getSelectedOwnCard();
+            MonsterCard card = (MonsterCard) board.getSelectedCard();
             player.addAmountToLifePoint(card.getAttackLevel());
             return DuelMenuMessages.DIRECT_ATTACK_DONE;
         }
     }
 
     private Enum checkDirectAttack(String command, Board board, Enum phase) {
-        if (board.getSelectedOwnCard().equals(null))
+        if (board.getSelectedCard().equals(null) || !board.getIsMyCardSelected())
             return DuelMenuMessages.NOT_SELECTED_CARD;
         if (phase.equals(phase.))
             return DuelMenuMessages.NOT_SUITABLE_PHASE;
-        if (board.getSelectedOwnCard() extends Monster)//????????????????????????????
-        Monster card = (Monster) board.getSelectedOwnCard();
-        if (card.getAttacked())
-            return DuelMenuMessages.ATTACKED_BEFORE;
+        if (board.getSelectedCard() instanceof MonsterCard) {
+            MonsterCard card = (MonsterCard) board.getSelectedCard();
+            if (card.getAttacked())
+                return DuelMenuMessages.ATTACKED_BEFORE;
+        } else return DuelMenuMessages.CANT_ATTACK_WITH_CARD;
         return null;
     }
 

@@ -2,19 +2,21 @@ package model;
 
 import controller.DuelMenuMessages;
 
-public class Monster extends Card implements SpecialMonstersFunction {
+public class MonsterCard extends Card implements SpecialMonstersFunction {
     protected int attackLevel;
     protected int defenseLevel;
     protected Enum kindOfWarrior;
     protected boolean isAttacked = false;
     protected String cardStatus;
 
-    public Monster(String cardType, String name, String description, String upDown, int attackLevel, int defenseLevel, Enum kindOfWarrior) {
+    public MonsterCard(String cardType, String name, String description, String upDown, int attackLevel, int defenseLevel, Enum kindOfWarrior) {
         super(cardType, name, description, upDown);
         setAttackLevel(attackLevel);
         setDefenseLevel(defenseLevel);
         setKindOfWarrior(kindOfWarrior);
     }
+
+
 
     public int getAttackLevel() {
         return attackLevel;
@@ -39,6 +41,7 @@ public class Monster extends Card implements SpecialMonstersFunction {
     public void setKindOfWarrior(Enum kindOfWarrior) {
         this.kindOfWarrior = kindOfWarrior;
     }
+
     public String print() {
 
         if (this.getUpDown().equals("down") && this.cardStatus.equals("defense"))

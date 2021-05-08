@@ -37,12 +37,11 @@ public class ProfileMenuController {
         }
         else {
             return ProfileMenuMessages.INVALID_COMMAND;
-
         }
     }
 
     public Enum changeNickname(String command) {
-        Matcher matcher = Utils.getMatcher("^profile change --nickname ([A-Za-z0-9]+)$", command);
+        Matcher matcher = Utils.getMatcher("^profile change --nickname ([^ ]+)$", command);
 
         Enum holdEnum = checkChangeNickName(matcher, loggedInPlayer);
 
@@ -64,7 +63,7 @@ public class ProfileMenuController {
     }
 
     public Enum changePassword(String command) {
-        Matcher matcher = Utils.getMatcher("^profile change --password --current ([A-Za-z0-9]+) --new ([A-Za-z0-9]+)$", command);
+        Matcher matcher = Utils.getMatcher("^profile change --password --current ([^ ]+) --new ([^ ]+)$", command);
         Enum holdEnum = checkChangePassword(matcher, loggedInPlayer);
 
         if (holdEnum == null){

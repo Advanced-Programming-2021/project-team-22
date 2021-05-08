@@ -5,35 +5,47 @@ import java.util.ArrayList;
 public class Board {
 
 
-    private Monster[] monstersZone;
+    private MonsterCard[] monstersZone;
     private TraoAndSpell[] spellsAndTrapsZone;
     private ArrayList<Card> graveyard;
     private Deck deck;
     //  private MagicCard fieldZone;//TODO: maybe it should be from these classes --> Spell / fieldSpell
-    private Card selectedOwnCard;
-    private Card selectedOpponentCard;
+    private Card selectedCard;
+    protected boolean isMyCardSelected;
+
+    //  private Card selectedOpponentCard;
+
+
     {
-        monstersZone = new Monster[6];
+        monstersZone = new MonsterCard[6];
         spellsAndTrapsZone = new TraoAndSpell[6];
         graveyard = new ArrayList<>();
-        selectedOpponentCard = null;
-        selectedOwnCard = null;
+        //  selectedOpponentCard = null;
+        selectedCard = null;
     }
 
-    public void setSelectedOpponentCard(Card selectedOpponentCard) {
+  /*  public void setSelectedOpponentCard(Card selectedOpponentCard) {
         this.selectedOpponentCard = selectedOpponentCard;
+    }*/
+
+    public void setMyCardSelected(boolean myCardSelected) {
+        isMyCardSelected = myCardSelected;
     }
 
-    public void setSelectedOwnCard(Card selectedOwnCard) {
-        this.selectedOwnCard = selectedOwnCard;
+    public boolean getIsMyCardSelected() {
+        return isMyCardSelected;
     }
 
-    public Card getSelectedOpponentCard() {
+    public void setSelectedCard(Card selectedOwnCard) {
+        this.selectedCard = selectedOwnCard;
+    }
+
+    /*public Card getSelectedOpponentCard() {
         return selectedOpponentCard;
-    }
+    }*/
 
-    public Card getSelectedOwnCard() {
-        return selectedOwnCard;
+    public Card getSelectedCard() {
+        return selectedCard;
     }
 
     public ArrayList<Card> getGraveyard() {
@@ -44,7 +56,7 @@ public class Board {
         return spellsAndTrapsZone;
     }
 
-    public Monster[] getMonstersZone() {
+    public MonsterCard[] getMonstersZone() {
         return monstersZone;
     }
 

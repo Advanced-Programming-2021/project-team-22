@@ -47,7 +47,7 @@ public class DuelMenuView {
     }
 
     private void showMonsterZone(Board board){
-        Monster[] monsters = board.getMonstersZone();
+        MonsterCard[] monsters = board.getMonstersZone();
         monsters[5].print();
         System.out.print(monsters[5].print() + "    ");
         System.out.print(monsters[3].print() + "    ");
@@ -67,7 +67,7 @@ public class DuelMenuView {
    }
 
     private void showOpponentMonsterZone(Board board) {
-        Monster[] monsters = board.getMonstersZone();
+        MonsterCard[] monsters = board.getMonstersZone();
         System.out.print(monsters[4].print() + "    ");
         System.out.print(monsters[2].print() + "    ");
         System.out.print(monsters[1].print() + "    ");

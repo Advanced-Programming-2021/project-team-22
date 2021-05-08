@@ -2,12 +2,10 @@ package model;
 
 import controller.DuelMenuMessages;
 
-import java.util.ArrayList;
-
 public interface SpecialMonstersFunction {
     default Enum attack(Player attackingPlayer, Player opponentPlayer, Board attackingPlayerBoard, Board opponentPlayerBoard, int numberToAttack) {
-        Monster attackingCard = (Monster) attackingPlayerBoard.getSelectedOwnCard();
-        Monster opponentCard = opponentPlayerBoard.getMonstersZone()[numberToAttack];
+        MonsterCard attackingCard = (MonsterCard) attackingPlayerBoard.getSelectedOwnCard();
+        MonsterCard opponentCard = opponentPlayerBoard.getMonstersZone()[numberToAttack];
         if (opponentCard.defense(attackingPlayer, opponentPlayer, attackingPlayerBoard, opponentPlayerBoard, attackingCard, opponentCard, numberToAttack) != null) {
             if (opponentCard.print().equals("OO")) {
                 if (attackingCard.getAttackLevel() > opponentCard.getAttackLevel()) {
@@ -58,7 +56,7 @@ public interface SpecialMonstersFunction {
             return opponentCard.defense(attackingPlayer, opponentPlayer, attackingPlayerBoard, opponentPlayerBoard, attackingCard, opponentCard, numberToAttack);
     }
 
-    default Enum defense(Player attackingPlayer, Player opponentPlayer, Board attackingPlayerBoard, Board opponentPlayerBoard, Monster attackingCard, Monster opponentCard, int numberToAttack) {
+    default Enum defense(Player attackingPlayer, Player opponentPlayer, Board attackingPlayerBoard, Board opponentPlayerBoard, MonsterCard attackingCard, MonsterCard opponentCard, int numberToAttack) {
         if (opponentCard.getName().equals("Command knight")) {
             commandKnightFunction(opponentPlayerBoard);
         } else if (opponentCard.getName().equals("Yomi Ship")) {
@@ -75,7 +73,7 @@ public interface SpecialMonstersFunction {
         return null;
     }
 
-    default Enum texchangerFunction(Monster opponentCard) {
+    default Enum texchangerFunction(MonsterCard opponentCard) {
         if (!opponentCard.getIsPowerUsed()) {
             opponentCard.setPowerUsed(true);
             // choosing a card ehzar???????
@@ -94,7 +92,7 @@ public interface SpecialMonstersFunction {
         return null;
     }
 
-    default Enum yomiShipFunction(Board attackingPlayerBoard, Monster attackingCard, Monster opponentCard) {
+    default Enum yomiShipFunction(Board attackingPlayerBoard, MonsterCard attackingCard, MonsterCard opponentCard) {
         if (opponentCard.print().equals("OO") && attackingCard.attackLevel > opponentCard.getAttackLevel()) {
             attackingPlayerBoard.getGraveyard().add(attackingCard);
             deleteMonsterFromZone(attackingCard, attackingPlayerBoard.getMonstersZone());
@@ -106,7 +104,7 @@ public interface SpecialMonstersFunction {
         return null;
     }
 
-    default Enum suijinFunction(Monster attackingCard) {
+    default Enum suijinFunction(MonsterCard attackingCard) {
         attackingCard.setAttackLevel(0);
         return null;
     }
@@ -116,7 +114,7 @@ public interface SpecialMonstersFunction {
         return null;
     }
 
-    default Enum exploderDragon(Player attackingPlayer, Player opponentPlayer, Board attackingPlayerBoard, Board opponentPlayerBoard, Monster attackingCard, Monster opponentCard, int number) {
+    default Enum exploderDragon(Player attackingPlayer, Player opponentPlayer, Board attackingPlayerBoard, Board opponentPlayerBoard, MonsterCard attackingCard, MonsterCard opponentCard, int number) {
         if (opponentCard.print().equals("OO") && attackingCard.attackLevel > opponentCard.getAttackLevel()) {
             attackingPlayerBoard.getGraveyard().add(attackingCard);
             opponentPlayerBoard.getGraveyard().add(opponentCard);
@@ -134,7 +132,7 @@ public interface SpecialMonstersFunction {
         return null;
     }
 
-    default void deleteMonsterFromZone(Monster monster, Monster[] monstersZone) {
+    default void deleteMonsterFromZone(MonsterCard monster, MonsterCard[] monstersZone) {
         for (int i = 1; i < monstersZone.length; i++) {
             if (monstersZone[i].equals(monster)) {
                 monstersZone[i] = null;
