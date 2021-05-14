@@ -12,6 +12,7 @@ public enum DuelMenuMessages {
     ATTACK_CANCELED("attack to this card was canceled"),
     DIRECT_ATTACK_DONE("you opponent receives <damage> battle damage"),
     DIS_SELECTED("card deselected"),
+    INVALID_COMMAND_CHEAT_CODE("invalid command"),
     OPPONENT_GOT_DAMAGE_IN_ATTACK("your opponent’s monster is destroyed and your opponent receives" +
             "<damage> battle damage"),
     ATTACKING_PLAYER_CARD_DESTROYED("Your monster card is destroyed and you received <damage> battle" +

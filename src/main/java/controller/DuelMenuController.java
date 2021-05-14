@@ -36,6 +36,37 @@ public class DuelMenuController {
     }
 
 
+    private Enum cheatCodeDecreaseOpponentLifePont(String command) {
+        Matcher matcher = Utils.getMatcher("^decrease --opponentLP ([0-9]+)$", command);
+        if (matcher.find()) {
+            notTurnPlayer.addAmountToLifePoint(-1 * Integer.parseInt(matcher.group(1)));
+            return null;
+        } else return DuelMenuMessages.INVALID_COMMAND_CHEAT_CODE;
+
+    }
+
+    private Enum cheatCodeIncreaseLifePoint(String command) {
+        Matcher matcher = Utils.getMatcher("^increase --LP ([0-9]+)$", command);
+        if (matcher.find()) {
+            turnPlayer.addAmountToLifePoint(Integer.parseInt(matcher.group(1)));
+            return null;
+        } else return DuelMenuMessages.INVALID_COMMAND_CHEAT_CODE;
+    }
+
+    private Enum cheatCodeToWeenTheGame(Player turnPlayer) {
+        notTurnPlayer.setLifePoint(0);
+        return null;
+    }
+
+    private Enum cheatCodeIncreaseMoney(String command) {
+        Matcher matcher = Utils.getMatcher("^increase --money ([0-9]+)$", command);
+        if (matcher.find()) {
+            turnPlayer.increaseMoney(Integer.parseInt(matcher.group(1)));
+            return null;
+        } else return DuelMenuMessages.INVALID_COMMAND_CHEAT_CODE;
+
+    }
+
     private Enum selectCard(String command, Board playerBoard, Board opponentBoard) {
         String[] split = command.split("\\s+");
         if (split[1].equals("--monster") && split[2].equals("--opponent")) {
