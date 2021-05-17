@@ -176,7 +176,15 @@ public class Player {
         this.lifePoint -= amount;
     }
 
+    public void increaseLifePoint(int amount) {
+        this.lifePoint += amount;
+    }
+
     public void createBoard() {
         board = new Board();
+    }
+
+    public Board getBoard() {
+        return board;
     }
 }

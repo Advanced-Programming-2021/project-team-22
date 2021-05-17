@@ -2,6 +2,7 @@ package model.cards;
 
 import model.cards.monstercard.MonsterCard;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeMap;
 
@@ -18,9 +19,11 @@ public class Card {
     protected final transient int price;
 //    if this boolean equals "false" so we can conclude that card is "face down"
     protected transient Boolean isCardFaceUp;
+    protected boolean isPowerUsed;
 
     {
         isCardFaceUp = false;
+        isPowerUsed = false;
     }
 
     public Card(String name, String description, CardTypes cardType, int price) {
@@ -52,6 +55,14 @@ public class Card {
         }
     }
 
+    public static int findNumberOfMonsterCards(ArrayList<Card> cards) {
+        int numberOfMonsterCards = 0;
+        for (Card card : cards) {
+            if (Card.isMonsterCard(card)) ++numberOfMonsterCards;
+        }
+        return numberOfMonsterCards;
+    }
+
     public String getName() {
         return name;
     }
@@ -62,5 +73,25 @@ public class Card {
 
     public int getPrice() {
         return price;
+    }
+
+    public void setPowerUsed(boolean powerUsed) {
+        isPowerUsed = powerUsed;
+    }
+
+    public boolean isPowerUsed() {
+        return isPowerUsed;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Boolean getCardFaceUp() {
+        return isCardFaceUp;
+    }
+
+    public void setCardFaceUp(Boolean cardFaceUp) {
+        isCardFaceUp = cardFaceUp;
     }
 }

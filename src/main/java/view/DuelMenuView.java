@@ -4,6 +4,7 @@ import controller.Utils;
 import controller.duelmenu.DuelMenuController;
 import controller.duelmenu.DuelMenuMessages;
 import controller.duelmenu.Phases;
+import model.Board;
 import model.Player;
 import model.cards.Card;
 
@@ -24,6 +25,23 @@ public class DuelMenuView {
     public static String findChooseOfPlayerInMiniGame(Player player) {
         System.out.println(player.getUsername() + ", please choose between stone, paper and scissor:");
         return Utils.getScanner().nextLine().trim();
+    }
+
+    public static void showGraveyard(Board board) {
+        if (board.getGraveyard().size() != 0) {
+            for (int i = 1; i <= board.getGraveyard().size(); i++) {
+                printCard(i , board.getGraveyard().get(i));
+            }
+        } else System.out.println("graveyard empty");
+        while (true) {
+            String input = Utils.getScanner().nextLine();
+            if (input.equals("back"))
+                break;
+        }
+    }
+
+    public static void printCard(int number, Card card) {
+        System.out.println(number + ". " + card.getName() + ": " + card.getDescription());
     }
 
     public void setFirstPlayer(Player firstPlayer) {
@@ -49,12 +67,8 @@ public class DuelMenuView {
 
             System.out.print(result.getMessage());
 
-            if (result.equals(DuelMenuMessages.SHOW_GRAVEYARD)) showGraveyard();
+//            if (result.equals(DuelMenuMessages.SHOW_GRAVEYARD)) showGraveyard();
         }
-    }
-
-    private void showGraveyard() {
-
     }
 
     public void showCard(Card card) {

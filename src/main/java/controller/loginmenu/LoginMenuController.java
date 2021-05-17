@@ -30,7 +30,7 @@ public class LoginMenuController {
             return LoginMenuMessages.INVALID_NAVIGATION;
         }
 
-        return LoginMenuMessages.ENTER_ANOTHER_MENU;
+        return LoginMenuMessages.FIRST_LOGIN;
     }
 
     private static LoginMenuMessages checkCreateUser(String command) {

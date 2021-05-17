@@ -1,7 +1,7 @@
 package controller.loginmenu;
 
 public enum LoginMenuMessages {
-    ENTER_ANOTHER_MENU("please login first"),
+    FIRST_LOGIN("please login first"),
     INVALID_NAVIGATION("menu navigation is not possible"),
     SHOW_MENU("Login Menu"),
     USER_CREATED("user created successfully!"),
