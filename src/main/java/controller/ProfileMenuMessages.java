@@ -20,4 +20,7 @@ public enum ProfileMenuMessages {
         ProfileMenuMessages.NOT_UNIQUE_NICKNAME.message = "user with nickname " + nickname + " already exists";
     }
 
+    public String getMessage() {
+        return message;
     }
+}

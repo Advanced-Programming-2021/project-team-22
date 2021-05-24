@@ -8,7 +8,6 @@ public class MonsterCard extends Card implements SpecialMonstersFunction {
     protected Enum kindOfWarrior;
     protected boolean isAttacked = false;
     protected String cardStatus;
-
     public MonsterCard(String cardType, String name, String description, String upDown, int attackLevel, int defenseLevel, Enum kindOfWarrior) {
         super(cardType, name, description, upDown);
         setAttackLevel(attackLevel);
@@ -44,11 +43,11 @@ public class MonsterCard extends Card implements SpecialMonstersFunction {
 
     public String print() {
 
-        if (this.getUpDown().equals("down") && this.cardStatus.equals("defense"))
+        if (!this.isCardFaceUp() && this.cardStatus.equals("defense"))
             return "DH";
-        else if (this.getUpDown().equals("up") && this.cardStatus.equals("defense"))
+        else if (this.isCardFaceUp() && this.cardStatus.equals("defense"))
             return "DO";
-        else if (this.getUpDown().equals("up") && this.cardStatus.equals("attack"))
+        else if (this.isCardFaceUp && this.cardStatus.equals("attack"))
             return "OO";
         return "E ";
     }

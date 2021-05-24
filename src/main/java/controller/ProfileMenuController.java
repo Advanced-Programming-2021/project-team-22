@@ -15,7 +15,7 @@ public class ProfileMenuController {
         this.loggedInPlayer = loggedInPlayer;
     }
 
-    public Enum findCommand(String command) {
+    public ProfileMenuMessages findCommand(String command) {
         String[] split = command.split("\\s+");
         if (split.length<2){
             return ProfileMenuMessages.INVALID_COMMAND;
@@ -40,10 +40,10 @@ public class ProfileMenuController {
         }
     }
 
-    public Enum changeNickname(String command) {
+    public ProfileMenuMessages changeNickname(String command) {
         Matcher matcher = Utils.getMatcher("^profile change --nickname ([^ ]+)$", command);
 
-        Enum holdEnum = checkChangeNickName(matcher, loggedInPlayer);
+        ProfileMenuMessages holdEnum = checkChangeNickName(matcher, loggedInPlayer);
 
         if (holdEnum == null) {
             loggedInPlayer.setNickname(matcher.group(1));
@@ -52,7 +52,7 @@ public class ProfileMenuController {
         return holdEnum;
     }
 
-    public Enum checkChangeNickName(Matcher matcher, Player player) {
+    public ProfileMenuMessages checkChangeNickName(Matcher matcher, Player player) {
         if (matcher.find()) {
             if (Player.isNicknameExist(matcher.group(1))) {
                 return ProfileMenuMessages.NOT_UNIQUE_NICKNAME;
@@ -62,9 +62,9 @@ public class ProfileMenuController {
 
     }
 
-    public Enum changePassword(String command) {
+    public ProfileMenuMessages changePassword(String command) {
         Matcher matcher = Utils.getMatcher("^profile change --password --current ([^ ]+) --new ([^ ]+)$", command);
-        Enum holdEnum = checkChangePassword(matcher, loggedInPlayer);
+        ProfileMenuMessages holdEnum = checkChangePassword(matcher, loggedInPlayer);
 
         if (holdEnum == null){
             loggedInPlayer.setPassword(matcher.group(2));
@@ -74,7 +74,7 @@ public class ProfileMenuController {
         return holdEnum;
     }
 
-    public Enum checkChangePassword(Matcher matcher, Player player) {
+    public ProfileMenuMessages checkChangePassword(Matcher matcher, Player player) {
         if (matcher.find()){
             if (!player.getPassword().equals(matcher.group(1)))
                 return ProfileMenuMessages.WRONG_CURRENT_PASSWORD;

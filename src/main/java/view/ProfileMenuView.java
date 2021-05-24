@@ -23,11 +23,11 @@ public class ProfileMenuView {
         while (true) {
             String command = Utils.getScanner().nextLine().trim();
             ProfileMenuController profileMenuController = new ProfileMenuController(loggedInPlayer);
-            Enum result = profileMenuController.findCommand(command);
+            ProfileMenuMessages result = profileMenuController.findCommand(command);
             if (result.equals(ProfileMenuMessages.EXIT_MENU))
                 break;
             else
-            System.out.print(result);
+                System.out.print(result.getMessage());
         }
     }
 }

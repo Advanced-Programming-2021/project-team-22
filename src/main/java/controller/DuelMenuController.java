@@ -31,12 +31,12 @@ public class DuelMenuController {
         this.phase = phase;
     }
 
-    public Enum findCommand(String command) {
+    public DuelMenuMessages findCommand(String command) {
 
     }
 
 
-    private Enum cheatCodeDecreaseOpponentLifePont(String command) {
+    private DuelMenuMessages cheatCodeDecreaseOpponentLifePont(String command) {
         Matcher matcher = Utils.getMatcher("^decrease --opponentLP ([0-9]+)$", command);
         if (matcher.find()) {
             notTurnPlayer.addAmountToLifePoint(-1 * Integer.parseInt(matcher.group(1)));
@@ -45,7 +45,7 @@ public class DuelMenuController {
 
     }
 
-    private Enum cheatCodeIncreaseLifePoint(String command) {
+    private DuelMenuMessages cheatCodeIncreaseLifePoint(String command) {
         Matcher matcher = Utils.getMatcher("^increase --LP ([0-9]+)$", command);
         if (matcher.find()) {
             turnPlayer.addAmountToLifePoint(Integer.parseInt(matcher.group(1)));
@@ -53,12 +53,12 @@ public class DuelMenuController {
         } else return DuelMenuMessages.INVALID_COMMAND_CHEAT_CODE;
     }
 
-    private Enum cheatCodeToWeenTheGame(Player turnPlayer) {
+    private DuelMenuMessages cheatCodeToWeenTheGame(Player turnPlayer) {
         notTurnPlayer.setLifePoint(0);
         return null;
     }
 
-    private Enum cheatCodeIncreaseMoney(String command) {
+    private DuelMenuMessages cheatCodeIncreaseMoney(String command) {
         Matcher matcher = Utils.getMatcher("^increase --money ([0-9]+)$", command);
         if (matcher.find()) {
             turnPlayer.increaseMoney(Integer.parseInt(matcher.group(1)));
@@ -67,7 +67,7 @@ public class DuelMenuController {
 
     }
 
-    private Enum selectCard(String command, Board playerBoard, Board opponentBoard) {
+    private DuelMenuMessages selectCard(String command, Board playerBoard, Board opponentBoard) {
         String[] split = command.split("\\s+");
         if (split[1].equals("--monster") && split[2].equals("--opponent")) {
             return selectMonsterOpponentCard(command, playerBoard, opponentBoard);
@@ -86,7 +86,7 @@ public class DuelMenuController {
     }
 
 
-    private Enum selectOwnMagicCard(String command, Board playerBoard) {
+    private DuelMenuMessages selectOwnMagicCard(String command, Board playerBoard) {
         Matcher matcher = Utils.getMatcher("^select --spell ([0-9]+)$", command);
         if (matcher.find()) {
             int numberOfChosenCard = Integer.parseInt(matcher.group(1));
@@ -100,7 +100,7 @@ public class DuelMenuController {
     }
 
 
-    private Enum selectOpponentSpellCard(String command, Board playerBoard, Board opponentBoard) {
+    private DuelMenuMessages selectOpponentSpellCard(String command, Board playerBoard, Board opponentBoard) {
         Matcher matcher = Utils.getMatcher("^select --spell --opponent ([0-9]+)$", command);
         if (matcher.find()) {
             int numberOfChosenCard = Integer.parseInt(matcher.group(1));
@@ -113,7 +113,7 @@ public class DuelMenuController {
         } else return DuelMenuMessages.INVALID_CARD_SELECT;
     }
 
-    private Enum checkSelectSpellCard(int numberOfChosenCard, Board board) {
+    private DuelMenuMessages checkSelectSpellCard(int numberOfChosenCard, Board board) {
         if (numberOfChosenCard > 5 || numberOfChosenCard < 1) {
             return DuelMenuMessages.INVALID_CARD_SELECT;
         }
@@ -123,7 +123,7 @@ public class DuelMenuController {
         return null;
     }
 
-    private Enum selectOwnMonsterCard(String command, Board playerBoard) {
+    private DuelMenuMessages selectOwnMonsterCard(String command, Board playerBoard) {
         Matcher matcher = Utils.getMatcher("^select --monster ([0-9]+)$", command);
         if (matcher.find()) {
             int numberOfChosenCard = Integer.parseInt(matcher.group(1));
@@ -137,7 +137,7 @@ public class DuelMenuController {
     }
 
 
-    Enum checkSelectMonsterOpponentCard(int numberOfChosenCard, Board board) {
+    DuelMenuMessages checkSelectMonsterOpponentCard(int numberOfChosenCard, Board board) {
         if (numberOfChosenCard > 5 || numberOfChosenCard < 1) {
             return DuelMenuMessages.INVALID_CARD_SELECT;
         }
@@ -149,7 +149,7 @@ public class DuelMenuController {
         return null;
     }
 
-    private Enum selectMonsterOpponentCard(String command, Board playerBoard, Board opponentBoard) {
+    private DuelMenuMessages selectMonsterOpponentCard(String command, Board playerBoard, Board opponentBoard) {
         Matcher matcher = Utils.getMatcher("select --monster --opponent ([0-9]+)", command);
         if (matcher.find()) {
             int numberOfChosenCard = Integer.parseInt(matcher.group(1));
@@ -163,67 +163,21 @@ public class DuelMenuController {
         } else return DuelMenuMessages.INVALID_CARD_SELECT;
     }
 
-    private Enum disSelectCard(Board board) {
+    private DuelMenuMessages disSelectCard(Board board) {
         if (checkDisSelectCard(board) == null) {
             board.setSelectedCard(null);
             return DuelMenuMessages.DIS_SELECTED;
         } else return checkDisSelectCard(board);
     }
 
-    private Enum checkDisSelectCard(Board board) {
+    private DuelMenuMessages checkDisSelectCard(Board board) {
         if (board.getSelectedCard() == null)
             return DuelMenuMessages.NOT_SELECTED_CARD;
+        return null;
     }
 
-    private Enum deselectCard(String command) {
-// TODO
-    }
 
-    private Enum checkDeselectCard(String command) {
-
-    }
-
-    private Enum summonMonster(String command) {
-//        TODO: maybe change the name to --> summonCard
-    }
-
-    private Enum checkSummonMonster(String command) {
-//        TODO: maybe change the name to --> checkSummonCard
-    }
-
-    private void victimize() {
-//        TODO: handle it!
-    }
-
-    private Enum setAMonster(String command) {
-
-    }
-
-    private Enum checkSetAMonster(String command) {
-
-    }
-
-    private Enum changePosition(String command) {
-
-    }
-
-    private Enum checkChangePosition(String command) {
-
-    }
-
-    private void updateGraveyard() {
-//        TODO: handle it!
-    }
-
-    private Enum flipSummon(String command) {
-
-    }
-
-    private Enum checkFlipSummon(String command) {
-
-    }
-
-    private Enum attack(String command, Player attackingPlayer, Player opponentPlayer, Board attackingPlayerBoard, Board opponentPlayerBoard) {
+    private DuelMenuMessages attack(String command, Player attackingPlayer, Player opponentPlayer, Board attackingPlayerBoard, Board opponentPlayerBoard) {
         Matcher matcher = Utils.getMatcher("attack ([0-9]+)", command);
         if (matcher.find()) {
             int numberOfChosenCard = Integer.parseInt(matcher.group(1));
@@ -237,7 +191,7 @@ public class DuelMenuController {
     }
 
 
-    private Enum checkAttackMonsterCard(Board attackingPlayerBoard, Board opponentPlayerBoard, int numberOfChosenCard) {
+    private DuelMenuMessages checkAttackMonsterCard(Board attackingPlayerBoard, Board opponentPlayerBoard, int numberOfChosenCard) {
         if (attackingPlayerBoard.getSelectedCard() == null || !attackingPlayerBoard.getIsMyCardSelected())
             return DuelMenuMessages.NOT_SELECTED_CARD;
         if (attackingPlayerBoard.getSelectedCard() instanceof MonsterCard)
@@ -248,12 +202,12 @@ public class DuelMenuController {
             return DuelMenuMessages.ATTACKED_BEFORE;
         if (opponentPlayerBoard.getMonstersZone()[numberOfChosenCard] == null)
             return DuelMenuMessages.NO_CARD_FOUND_IN_THE_POSITION;
-
+        return null;
     }
 
 
-    private Enum directAttack(String command, Board board, Enum phase, Player player) {
-        Enum messages = null;
+    private DuelMenuMessages directAttack(String command, Board board, Enum phase, Player player) {
+        DuelMenuMessages messages = null;
         messages = checkDirectAttack(command, board, phase);
         if (!messages.equals(null))
             return messages;
@@ -264,7 +218,7 @@ public class DuelMenuController {
         }
     }
 
-    private Enum checkDirectAttack(String command, Board board, Enum phase) {
+    private DuelMenuMessages checkDirectAttack(String command, Board board, Enum phase) {
         if (board.getSelectedCard().equals(null) || !board.getIsMyCardSelected())
             return DuelMenuMessages.NOT_SELECTED_CARD;
         if (phase.equals(phase.))
@@ -277,38 +231,5 @@ public class DuelMenuController {
         return null;
     }
 
-    private Enum activeASpellCard(String command) {
-
-    }
-
-    private Enum checkActiveASpellCard(String command) {
-
-    }
-
-    private Enum setASpell(String command) {
-
-    }
-
-    private Enum checkSetASpell(String command) {
-
-    }
-
-//    TODO: handle activeASpellInOpponentTurn
-//    TODO: -----------------------------------------------
-//    TODO: we are not sure about under functions
-
-    private Enum ritualSummon(String command) {
-
-    }
-
-    private Enum specialSummon(String command) {
-
-    }
-
-    private Player/*or Enum*/ checkWinner() {
-
-    }
-
-//    TODO: -----------------------------------------------
 
 }

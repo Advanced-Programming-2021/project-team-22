@@ -8,13 +8,13 @@ public class Card {
     protected String cardType;
     protected String name;
     protected String description;
-    protected String upDown;
+   // protected String upDown;
     protected boolean isPowerUsed = false;
+    protected transient boolean isCardFaceUp = false;
     public Card(String cardType, String name, String description, String upDown) {
         setCardType(cardType);
         setName(name);
         setDescription(description);
-        setUpDown(upDown);
         allCards.add(this);
     }
 
@@ -35,8 +35,6 @@ public class Card {
         return null;
     }
 
-    public static TreeMap<String, String> getListOfCards() {
-    }
 
     public String getDescription() {
         return description;
@@ -69,17 +67,14 @@ public class Card {
         this.name = name;
     }
 
-    public String getUpDown() {
-        return upDown;
+    public void setCardFaceUp(boolean b){
+        isCardFaceUp = b;
     }
 
-    public void setUpDown(String upDown) {
-        this.upDown = upDown;
+    public boolean isCardFaceUp() {
+        return isCardFaceUp;
     }
 
     //public void callCard(){}
 
-    public void turnCard() {
-        setUpDown("up");
-    }
 }

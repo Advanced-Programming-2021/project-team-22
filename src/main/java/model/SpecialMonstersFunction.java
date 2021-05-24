@@ -3,8 +3,8 @@ package model;
 import controller.DuelMenuMessages;
 
 public interface SpecialMonstersFunction {
-    default Enum attack(Player attackingPlayer, Player opponentPlayer, Board attackingPlayerBoard, Board opponentPlayerBoard, int numberToAttack) {
-        MonsterCard attackingCard = (MonsterCard) attackingPlayerBoard.getSelectedOwnCard();
+    default DuelMenuMessages attack(Player attackingPlayer, Player opponentPlayer, Board attackingPlayerBoard, Board opponentPlayerBoard, int numberToAttack) {
+        MonsterCard attackingCard = (MonsterCard) attackingPlayerBoard.getSelectedCard();
         MonsterCard opponentCard = opponentPlayerBoard.getMonstersZone()[numberToAttack];
         if (opponentCard.defense(attackingPlayer, opponentPlayer, attackingPlayerBoard, opponentPlayerBoard, attackingCard, opponentCard, numberToAttack) != null) {
             if (opponentCard.print().equals("OO")) {
@@ -56,7 +56,7 @@ public interface SpecialMonstersFunction {
             return opponentCard.defense(attackingPlayer, opponentPlayer, attackingPlayerBoard, opponentPlayerBoard, attackingCard, opponentCard, numberToAttack);
     }
 
-    default Enum defense(Player attackingPlayer, Player opponentPlayer, Board attackingPlayerBoard, Board opponentPlayerBoard, MonsterCard attackingCard, MonsterCard opponentCard, int numberToAttack) {
+    default DuelMenuMessages defense(Player attackingPlayer, Player opponentPlayer, Board attackingPlayerBoard, Board opponentPlayerBoard, MonsterCard attackingCard, MonsterCard opponentCard, int numberToAttack) {
         if (opponentCard.getName().equals("Command knight")) {
             commandKnightFunction(opponentPlayerBoard);
         } else if (opponentCard.getName().equals("Yomi Ship")) {
@@ -73,7 +73,7 @@ public interface SpecialMonstersFunction {
         return null;
     }
 
-    default Enum texchangerFunction(MonsterCard opponentCard) {
+    default DuelMenuMessages texchangerFunction(MonsterCard opponentCard) {
         if (!opponentCard.getIsPowerUsed()) {
             opponentCard.setPowerUsed(true);
             // choosing a card ehzar???????
@@ -82,7 +82,7 @@ public interface SpecialMonstersFunction {
         return null;
     }
 
-    default Enum commandKnightFunction(Board opponentPlayerBoard) {
+    default DuelMenuMessages commandKnightFunction(Board opponentPlayerBoard) {
         int i = 1;
         for (i = 1; i <= 5; i++) {
             if (opponentPlayerBoard.getMonstersZone()[i] != null && !opponentPlayerBoard.getMonstersZone()[i].getName().equals("Command knight")) {
@@ -92,7 +92,7 @@ public interface SpecialMonstersFunction {
         return null;
     }
 
-    default Enum yomiShipFunction(Board attackingPlayerBoard, MonsterCard attackingCard, MonsterCard opponentCard) {
+    default DuelMenuMessages yomiShipFunction(Board attackingPlayerBoard, MonsterCard attackingCard, MonsterCard opponentCard) {
         if (opponentCard.print().equals("OO") && attackingCard.attackLevel > opponentCard.getAttackLevel()) {
             attackingPlayerBoard.getGraveyard().add(attackingCard);
             deleteMonsterFromZone(attackingCard, attackingPlayerBoard.getMonstersZone());
@@ -104,17 +104,17 @@ public interface SpecialMonstersFunction {
         return null;
     }
 
-    default Enum suijinFunction(MonsterCard attackingCard) {
+    default DuelMenuMessages suijinFunction(MonsterCard attackingCard) {
         attackingCard.setAttackLevel(0);
         return null;
     }
 
-    default Enum marshmallonFunction(Player attackingPlayer) {
+    default DuelMenuMessages marshmallonFunction(Player attackingPlayer) {
         attackingPlayer.addAmountToLifePoint(-1000);
         return null;
     }
 
-    default Enum exploderDragon(Player attackingPlayer, Player opponentPlayer, Board attackingPlayerBoard, Board opponentPlayerBoard, MonsterCard attackingCard, MonsterCard opponentCard, int number) {
+    default DuelMenuMessages exploderDragon(Player attackingPlayer, Player opponentPlayer, Board attackingPlayerBoard, Board opponentPlayerBoard, MonsterCard attackingCard, MonsterCard opponentCard, int number) {
         if (opponentCard.print().equals("OO") && attackingCard.attackLevel > opponentCard.getAttackLevel()) {
             attackingPlayerBoard.getGraveyard().add(attackingCard);
             opponentPlayerBoard.getGraveyard().add(opponentCard);
