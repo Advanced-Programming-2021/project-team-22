@@ -46,7 +46,7 @@ public class DuelMenuView {
         showGrave(playerBoard);
     }
 
-    private void showMonsterZone(Board board){
+    private void showMonsterZone(Board board) {
         MonsterCard[] monsters = board.getMonstersZone();
         monsters[5].print();
         System.out.print(monsters[5].print() + "    ");
@@ -57,14 +57,14 @@ public class DuelMenuView {
         System.out.println();
     }
 
-   private void showTrapAndSpellZone(Board board){
-       TraoAndSpell[] spellsAndTrapsZone = board.getSpellsAndTrapsZone();
-       spellsAndTrapsZone[5].print();
-       spellsAndTrapsZone[3].print();
-       spellsAndTrapsZone[1].print();
-       spellsAndTrapsZone[2].print();
-       spellsAndTrapsZone[4].print();
-   }
+    private void showTrapAndSpellZone(Board board) {
+        TraoAndSpell[] spellsAndTrapsZone = board.getSpellsAndTrapsZone();
+        spellsAndTrapsZone[5].print();
+        spellsAndTrapsZone[3].print();
+        spellsAndTrapsZone[1].print();
+        spellsAndTrapsZone[2].print();
+        spellsAndTrapsZone[4].print();
+    }
 
     private void showOpponentMonsterZone(Board board) {
         MonsterCard[] monsters = board.getMonstersZone();
@@ -103,5 +103,25 @@ public class DuelMenuView {
             if (input.equals("back"))
                 break;
         }
+    }
+
+
+    private void showCardSelected(Board board) {
+        if (showCardCheck(board)) {
+            System.out.println(board.getSelectedCard().getName() + " " + board.getSelectedCard().getDescription());
+
+        }
+    }
+
+    private boolean showCardCheck(Board board) {
+        if (board.getSelectedCard() == null) {
+            System.out.println("you have not selected card");
+            return false;
+        }
+        if (!board.getIsMyCardSelected() && !board.getSelectedCard().isCardFaceUp()) {
+            System.out.println("you cant see this card!");
+            return false;
+        }
+        return true;
     }
 }

@@ -7,7 +7,7 @@ public class MonsterCard extends Card implements SpecialMonstersFunction {
     protected int defenseLevel;
     protected Enum kindOfWarrior;
     protected boolean isAttacked = false;
-    protected String cardStatus;
+    protected boolean isDefensePosition = false;
     public MonsterCard(String cardType, String name, String description, String upDown, int attackLevel, int defenseLevel, Enum kindOfWarrior) {
         super(cardType, name, description, upDown);
         setAttackLevel(attackLevel);
@@ -16,6 +16,13 @@ public class MonsterCard extends Card implements SpecialMonstersFunction {
     }
 
 
+    public void setDefensePosition(boolean defensePosition) {
+        isDefensePosition = defensePosition;
+    }
+
+    public boolean getIsDefensePosition(){
+        return this.isDefensePosition;
+    }
 
     public int getAttackLevel() {
         return attackLevel;
@@ -43,11 +50,11 @@ public class MonsterCard extends Card implements SpecialMonstersFunction {
 
     public String print() {
 
-        if (!this.isCardFaceUp() && this.cardStatus.equals("defense"))
+        if (!this.isCardFaceUp() && this.getIsDefensePosition())
             return "DH";
-        else if (this.isCardFaceUp() && this.cardStatus.equals("defense"))
+        else if (this.isCardFaceUp() && this.getIsDefensePosition())
             return "DO";
-        else if (this.isCardFaceUp && this.cardStatus.equals("attack"))
+        else if (this.isCardFaceUp && !this.getIsDefensePosition())
             return "OO";
         return "E ";
     }
