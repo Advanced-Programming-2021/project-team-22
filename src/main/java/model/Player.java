@@ -1,5 +1,6 @@
 package model;
 
+import com.google.gson.annotations.Expose;
 import controller.Database;
 import model.cards.Card;
 import model.cards.magiccard.MagicCard;
@@ -14,21 +15,31 @@ public class Player {
         allPlayers = new ArrayList<>();
     }
 
+    @Expose
     private ArrayList<Card> boughtCards;
+    @Expose
     private ArrayList<Deck> allMainDecks;
-    private transient Board board;
+    private Board board;
+    @Expose
     private Deck sideDeck;
+    @Expose
     private Deck activatedDeck;
+    @Expose
     private String username;
+    @Expose
     private String password;
+    @Expose
     private String nickname;
+    @Expose
     private long score;
+    @Expose
     private long money;
-    private transient int lifePoint = 8000;
+    private int lifePoint = 8000;
 
     {
         boughtCards = new ArrayList<>();
         allMainDecks = new ArrayList<>();
+        board = null;
         sideDeck = new Deck();
         activatedDeck = null;
         score = 0;

@@ -86,9 +86,14 @@ public class DuelMenuController {
         if (turnPlayer.equals(firstPlayer)) notTurnPlayer = secondPlayer;
         else notTurnPlayer = firstPlayer;
 
-//        shuffle main cards of players
-        Collections.shuffle(firstPlayer.getActivatedDeck().getMainCards());
-        Collections.shuffle(secondPlayer.getActivatedDeck().getMainCards());
+        turnPlayer.createBoard();
+        notTurnPlayer.createBoard();
+
+        turnPlayer.getBoard().setDeck(turnPlayer.getActivatedDeck());
+        notTurnPlayer.getBoard().setDeck(notTurnPlayer.getActivatedDeck());
+
+        Collections.shuffle(turnPlayer.getActivatedDeck().getMainCards());
+        Collections.shuffle(notTurnPlayer.getActivatedDeck().getMainCards());
 
         return DuelMenuMessages.SHOW_TURN_PLAYER;
     }
@@ -319,7 +324,6 @@ public class DuelMenuController {
 
         MagicCard spellCard = (MagicCard) selectedCard;
         if (spellCard.getIcon().equals("Field")) {
-            if (!SpellCardController.handleSpellCardEffect(turnPlayer, notTurnPlayer, spellCard)) return DuelMenuMessages.UNDONE_PREPARATIONS;
             turnPlayer.getBoard().addSpellCardToFieldZone(spellCard);
             spellCard.setPowerUsed(true);
             spellCard.setCardFaceUp(true);
@@ -328,7 +332,7 @@ public class DuelMenuController {
             return DuelMenuMessages.SPELL_ACTIVATED;
         } else if (board.isMagicsZoneFull() && board.isACardInHandSelected()) return DuelMenuMessages.FULL_MAGICS_ZONE;
 
-        if (!SpellCardController.handleSpellCardEffect(turnPlayer, notTurnPlayer, spellCard)) return DuelMenuMessages.UNDONE_PREPARATIONS;
+        if (!SpellCardController.doSpellCardEffect(turnPlayer, notTurnPlayer, spellCard)) return DuelMenuMessages.UNDONE_PREPARATIONS;
         if (board.isACardInHandSelected()) board.addMagicCardToMagicsZone(spellCard);
         selectedCard.setPowerUsed(true);
         selectedCard.setCardFaceUp(true);

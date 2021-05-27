@@ -85,26 +85,19 @@ public class Board {
     }
 
     public boolean isMagicsZoneFull() {
-        return findNumberOfFullPartsOfMagicsZone() == 5;
+        return getNumberOfFullPartsOfMagicsZone() == 5;
     }
 
     public boolean isMagicsZoneEmpty() {
-        return findNumberOfFullPartsOfMagicsZone() == 0;
+        return getNumberOfFullPartsOfMagicsZone() == 0;
     }
 
-    public int findNumberOfFullPartsOfMagicsZone() {
+    public int getNumberOfFullPartsOfMagicsZone() {
         int numberOfFullPartsOfMagicsZone = 0;
         for (int i = 1; i < magicsZone.length; i++) {
             if (magicsZone[i] != null) ++numberOfFullPartsOfMagicsZone;
         }
         return numberOfFullPartsOfMagicsZone;
-    }
-
-    public boolean isCardAvailableInMagicsZone(String cardName) {
-        for (int i = 1; i < magicsZone.length; ++i) {
-            if (magicsZone[i].getName().equals(cardName)) return true;
-        }
-        return false;
     }
 
     public boolean isCardFaceUp(String cardName) {
@@ -125,9 +118,38 @@ public class Board {
         setFieldZone(spellCard);
     }
 
-    public void addMagicCardToMagicsZone(MagicCard magicCard) {
+    public boolean addMagicCardToMagicsZone(MagicCard magicCard) {
         for (int i = 1; i < magicsZone.length; i++) {
-            if (magicsZone[i] == null) magicsZone[i] = magicCard;
+            if (magicsZone[i] == null) {
+                magicsZone[i] = magicCard;
+                return true;
+            }
         }
+        return false;
+    }
+
+    public boolean isCardAvailableInMonstersZone(MonsterCard monsterCard) {
+        for (int i = 1; i < monstersZone.length; i++) {
+            if (monstersZone[i].equals(monsterCard)) return true;
+        }
+        return false;
+    }
+
+    public int getNumberOfFaceUpMonsterCards() {
+        int numberOfFaceUpMonsterCards = 0;
+        for (int i = 1; i < monstersZone.length; i++) {
+            if (monstersZone[i].getCardFaceUp()) ++numberOfFaceUpMonsterCards;
+        }
+
+        return numberOfFaceUpMonsterCards;
+    }
+
+    public int getNumberOfWarriorMonsterCards() {
+        int numberOfWarriorMonsterCards = 0;
+        for (int i = 1; i < monstersZone.length; i++) {
+            if (monstersZone[i].getMonsterType().equals("Warrior")) ++numberOfWarriorMonsterCards;
+        }
+
+        return numberOfWarriorMonsterCards;
     }
 }

@@ -1,5 +1,6 @@
 package model.cards;
 
+import com.google.gson.annotations.Expose;
 import model.cards.monstercard.MonsterCard;
 
 import java.util.ArrayList;
@@ -7,19 +8,20 @@ import java.util.HashMap;
 import java.util.TreeMap;
 
 public class Card {
-    protected transient static HashMap<String, Card> allCards;
+    protected static HashMap<String, Card> allCards;
 
     static {
          allCards = new HashMap<>();
     }
 
+    @Expose
     protected final String name;
-    protected final transient String description;
-    protected final transient CardTypes cardType;
-    protected final transient int price;
+    protected final String description;
+    protected final CardTypes cardType;
+    protected final int price;
 //    if this boolean equals "false" so we can conclude that card is "face down"
-    protected transient Boolean isCardFaceUp;
-    protected boolean isPowerUsed;
+    protected transient boolean isCardFaceUp;
+    protected transient boolean isPowerUsed;
 
     {
         isCardFaceUp = false;
@@ -61,6 +63,10 @@ public class Card {
             if (Card.isMonsterCard(card)) ++numberOfMonsterCards;
         }
         return numberOfMonsterCards;
+    }
+
+    public static void addCardToAllCards(Card card) {
+        allCards.put(card.getName(), card);
     }
 
     public String getName() {

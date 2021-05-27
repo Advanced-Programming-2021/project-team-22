@@ -5,6 +5,7 @@ import model.Board;
 import model.Player;
 import model.cards.Card;
 import model.cards.magiccard.MagicCard;
+import model.cards.monstercard.MonsterCard;
 
 import java.util.ArrayList;
 
@@ -88,5 +89,30 @@ public class SpellCardView extends DuelMenuView {
     public static String findNumberOfCardsToChoose() {
         System.out.println("How many cards do you want to choose to destroy?");
         return Utils.getScanner().nextLine();
+    }
+
+    public static void showFaceUpMonsterCards(Player turnPlayer, Player notTurnPlayer) {
+        System.out.println("your face up monster cards:");
+        int endNumber = showEachPlayerFaceUpMonsterCards(turnPlayer.getBoard(), 1);
+        System.out.println("opponent face up monster cards:");
+        showEachPlayerFaceUpMonsterCards(notTurnPlayer.getBoard(), endNumber);
+    }
+
+    private static int showEachPlayerFaceUpMonsterCards(Board board, int startNumber) {
+        if (board.getNumberOfFaceUpMonsterCards() == 0) {
+            System.out.println("There isn't any face up monster card.");
+            return startNumber;
+        }
+
+        MonsterCard[] monstersZone = board.getMonstersZone();
+        for (int i = 1; i < monstersZone.length; i++) {
+            MonsterCard monsterCard = monstersZone[i];
+            if (monsterCard.getCardFaceUp()) {
+                printCard(startNumber, monsterCard);
+                ++startNumber;
+            }
+        }
+
+        return startNumber;
     }
 }

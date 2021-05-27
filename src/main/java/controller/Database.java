@@ -9,8 +9,8 @@ import model.cards.Card;
 import model.cards.CardTypes;
 import model.cards.magiccard.MagicCard;
 import model.cards.magiccard.MagicCardStatuses;
-import model.cards.monstercard.MonsterCardAttributes;
 import model.cards.monstercard.MonsterCard;
+import model.cards.monstercard.MonsterCardAttributes;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -18,6 +18,7 @@ import java.util.ArrayList;
 public class Database {
     public static void prepareGame() {
         new File("src/database/players").mkdirs();
+        new File("src/database/cards").mkdirs();
         addCardsToGame();
         readPlayersDataFromDatabase();
     }
@@ -73,7 +74,8 @@ public class Database {
     }
 
     public static void readPlayersDataFromDatabase() {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+//        TODO: complete it by Iman's code
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
 
         File file = new File("src/database/players");
         FilenameFilter filenameFilter = (direction, name) -> name.endsWith(".json");
@@ -104,7 +106,7 @@ public class Database {
     }
 
     public static void updatePlayerInformationInDatabase(Player player) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
         try {
             FileWriter fileWriter = new FileWriter("src/database/players/" + player.getUsername() + ".json");
             fileWriter.write(gson.toJson(player));

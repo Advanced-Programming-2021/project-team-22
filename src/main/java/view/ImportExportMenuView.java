@@ -3,14 +3,12 @@ package view;
 import controller.Utils;
 import controller.importexportmenu.ImportExportMenuController;
 import controller.importexportmenu.ImportExportMenuMessages;
-import controller.shopmenu.ShopMenuMessages;
 
 public class ImportExportMenuView {
     public void ImportExportMenuView() {
-        ImportExportMenuController importExportMenuController = new ImportExportMenuController();
         while (true) {
             String command = Utils.getScanner().nextLine().trim();
-            ImportExportMenuMessages result = importExportMenuController.findCommand(command);
+            ImportExportMenuMessages result = ImportExportMenuController.findCommand(command);
 
             System.out.print(result.getMessage());
 

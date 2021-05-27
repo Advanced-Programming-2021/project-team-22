@@ -4,8 +4,8 @@ import model.cards.Card;
 import model.cards.CardTypes;
 
 public class MagicCard extends Card {
-    protected final transient String icon;
-    protected final transient MagicCardStatuses status;
+    protected final String icon;
+    protected final MagicCardStatuses status;
 
     public MagicCard(String name, CardTypes cardType, String icon, String description, MagicCardStatuses status, int price) {
         super(name, description, cardType, price);
