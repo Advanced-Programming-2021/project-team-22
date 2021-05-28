@@ -18,7 +18,6 @@ import java.util.ArrayList;
 public class Database {
     public static void prepareGame() {
         new File("src/database/players").mkdirs();
-        new File("src/database/cards").mkdirs();
         addCardsToGame();
         readPlayersDataFromDatabase();
     }

@@ -5,8 +5,10 @@ public enum ImportExportMenuMessages {
     EXIT_IMPORT_EXPORT_MENU(""),
     SHOW_MENU("Import/Export Menu\n"),
     INVALID_COMMAND("invalid command\n"),
-    INVALID_CARD_NAME("your entered card name is invalid\n"),
-    INVALID_FILE("there isn't any file with chosen name.\n"),
+    UNAVAILABLE_FILE("there isn't any file with your entered card name\n"),
+    INVALID_FILE("your card file is not valid to import\n"),
+    AVAILABLE_CARD("your entered card name is available\n"),
+    UNAVAILABLE_CARD("your entered card name is not available\n"),
     EMPTY("");
 
     private final String message;

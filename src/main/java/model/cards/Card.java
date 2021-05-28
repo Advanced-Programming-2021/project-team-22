@@ -69,6 +69,10 @@ public class Card {
         allCards.put(card.getName(), card);
     }
 
+    public static HashMap<String, Card> getAllCards() {
+        return allCards;
+    }
+
     public String getName() {
         return name;
     }

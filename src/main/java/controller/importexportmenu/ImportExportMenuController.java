@@ -18,8 +18,8 @@ public class ImportExportMenuController {
         if (command.startsWith("menu enter")) return enterAMenu(command);
         else if (command.equals("menu exit")) return ImportExportMenuMessages.EXIT_IMPORT_EXPORT_MENU;
         else if (command.equals("menu show-current")) return ImportExportMenuMessages.SHOW_MENU;
-        else if (command.equals("import card")) return importCard(command);
-        else if (command.equals("export card")) return exportCard(command);
+        else if (command.startsWith("import card")) return importCard(command);
+        else if (command.startsWith("export card")) return exportCard(command);
 
         return ImportExportMenuMessages.INVALID_COMMAND;
     }
@@ -41,6 +41,7 @@ public class ImportExportMenuController {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             MonsterCard monsterCard = gson.fromJson(fileReader, MonsterCard.class);
 
+            if (Card.getCardByName(cardName) != null) return ImportExportMenuMessages.AVAILABLE_CARD;
             if (monsterCard.getAttribute() == null) {
 //                so we understand that the card is a magic card
                 fileReader = new FileReader("src/database/cards/" + cardName + ".json");
@@ -57,7 +58,7 @@ public class ImportExportMenuController {
             }
             fileReader.close();
         } catch (IOException ignore) {
-            return ImportExportMenuMessages.INVALID_CARD_NAME;
+            return ImportExportMenuMessages.UNAVAILABLE_FILE;
         }
 
 
@@ -82,7 +83,7 @@ public class ImportExportMenuController {
 
         String cardName = matcher.group(1);
         Card card = Card.getCardByName(cardName);
-        if (card == null) return ImportExportMenuMessages.INVALID_CARD_NAME;
+        if (card == null) return ImportExportMenuMessages.UNAVAILABLE_CARD;
         try {
             FileWriter fileWriter = new FileWriter("src/database/cards/" + cardName + ".json");
             Gson gson = new GsonBuilder().setPrettyPrinting().create();

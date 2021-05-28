@@ -12,10 +12,6 @@ public class MainMenuController {
     private Player loggedInPlayer;
 
     public MainMenuController(Player loggedInPlayer) {
-        setLoggedInPlayer(loggedInPlayer);
-    }
-
-    public void setLoggedInPlayer(Player loggedInPlayer) {
         this.loggedInPlayer = loggedInPlayer;
     }
 

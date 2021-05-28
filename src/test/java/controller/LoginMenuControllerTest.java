@@ -5,6 +5,8 @@ import controller.loginmenu.LoginMenuMessages;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
+
 class LoginMenuControllerTest extends MenuTest {
     @Test
     void findCommandEnterAMenuMethod() {
@@ -41,7 +43,7 @@ class LoginMenuControllerTest extends MenuTest {
         result = LoginMenuController.findCommand("user create --password 12345 --username John5 --nickname Johny5");
         Assertions.assertEquals(LoginMenuMessages.USER_CREATED, result);
 
-        result = LoginMenuController.findCommand("user create --password 12345 --username John6 --nickname Johny6");
+        result = LoginMenuController.findCommand("user create --password 12345 --nickname Johny6 --username John6");
         Assertions.assertEquals(LoginMenuMessages.USER_CREATED, result);
 
         result = LoginMenuController.findCommand("user create --P 12345 --U John6 --N Johny6");
@@ -72,7 +74,14 @@ class LoginMenuControllerTest extends MenuTest {
 
     @Test
     void loginUser() {
-//        TODO
-//        LoginMenuController.loginUser("user login --password 12345 --username John1");
+        Utils.resetScanner("user logout\n");
+        ByteArrayOutputStream outContent = Utils.setByteArrayOutputStream();
+        LoginMenuController.loginUser("user login --password 12345 --username John1");
+        Assertions.assertEquals("user logged out successfully!\n", outContent.toString());
+
+        Utils.resetScanner("user logout\n");
+        outContent = Utils.setByteArrayOutputStream();
+        LoginMenuController.loginUser("user login --username John1 --password 12345");
+        Assertions.assertEquals("user logged out successfully!\n", outContent.toString());
     }
 }

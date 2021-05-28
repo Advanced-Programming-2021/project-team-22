@@ -11,10 +11,6 @@ public class ShopMenuController {
     private Player loggedInPlayer;
 
     public ShopMenuController(Player loggedInPlayer) {
-        setLoggedInPlayer(loggedInPlayer);
-    }
-
-    public void setLoggedInPlayer(Player loggedInPlayer) {
         this.loggedInPlayer = loggedInPlayer;
     }
 
