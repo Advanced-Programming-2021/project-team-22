@@ -1,6 +1,7 @@
 package model.cards;
 
 import com.google.gson.annotations.Expose;
+import model.Deck;
 import model.cards.monstercard.MonsterCard;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public class Card {
 //    if this boolean equals "false" so we can conclude that card is "face down"
     protected transient boolean isCardFaceUp;
     protected transient boolean isPowerUsed;
+    protected transient Deck currentDeck;
 
     {
         isCardFaceUp = false;
@@ -75,6 +77,12 @@ public class Card {
 
     public String getName() {
         return name;
+    }
+
+    public void setCurrentDeck(Deck currentDeck) { this.currentDeck = currentDeck; }
+
+    public Deck getCurrentDeck() {
+        return currentDeck;
     }
 
     public CardTypes getCardType() {

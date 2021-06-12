@@ -17,14 +17,14 @@ import java.util.ArrayList;
 
 public class Database {
     public static void prepareGame() {
-        new File("src/database/players").mkdirs();
+        new File("src/main/resources/players").mkdirs();
         addCardsToGame();
         readPlayersDataFromDatabase();
     }
 
     private static void addCardsToGame() {
         try {
-            FileReader monsterCardFileReader = new FileReader("src/database/cards/Monster Upgraded.csv");
+            FileReader monsterCardFileReader = new FileReader("src/main/resources/cards/Monster Upgraded.csv");
             CSVReader monsterCardCSVReader = new CSVReaderBuilder(monsterCardFileReader).withSkipLines(1).build();
 
             String[] monsterCardData;
@@ -33,7 +33,7 @@ public class Database {
             }
 
 
-            FileReader magicCardFileReader = new FileReader("src/database/cards/SpellTrap.csv");
+            FileReader magicCardFileReader = new FileReader("src/main/resources/cards/SpellTrap.csv");
             CSVReader magicCardCSVReader = new CSVReaderBuilder(magicCardFileReader).withSkipLines(1).build();
 
             String[] magicCardData;
@@ -76,13 +76,14 @@ public class Database {
 //        TODO: complete it by Iman's code
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
 
-        File file = new File("src/database/players");
+        File file = new File("src/main/resources/players");
         FilenameFilter filenameFilter = (direction, name) -> name.endsWith(".json");
         String[] filesName = file.list(filenameFilter);
 
+        if (filesName == null) return;
         for (String fileName : filesName) {
             try {
-                FileReader fileReader = new FileReader("src/database/players/" + fileName);
+                FileReader fileReader = new FileReader("src/main/resources/players/" + fileName);
                 Player player = gson.fromJson(fileReader, Player.class);
                 fileReader.close();
                 Player.addPlayerToAllPlayers(player);
@@ -106,8 +107,9 @@ public class Database {
 
     public static void updatePlayerInformationInDatabase(Player player) {
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
+
         try {
-            FileWriter fileWriter = new FileWriter("src/database/players/" + player.getUsername() + ".json");
+            FileWriter fileWriter = new FileWriter("src/main/resources/players/" + player.getUsername() + ".json");
             fileWriter.write(gson.toJson(player));
             fileWriter.close();
         } catch (IOException e) {

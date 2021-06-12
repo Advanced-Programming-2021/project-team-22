@@ -4,12 +4,13 @@ import controller.Utils;
 import model.Player;
 import view.DuelMenuView;
 import view.ImportExportMenuView;
+import view.ProfileMenuView;
 import view.ShopMenuView;
 
 import java.util.regex.Matcher;
 
 public class MainMenuController {
-    private Player loggedInPlayer;
+    private final Player loggedInPlayer;
 
     public MainMenuController(Player loggedInPlayer) {
         this.loggedInPlayer = loggedInPlayer;
@@ -44,8 +45,8 @@ public class MainMenuController {
 //            ScoreboardMenuView scoreboardMenuView = new ScoreboardMenuView(loggedInPlayer);
 //            scoreboardMenuView.scoreboardMenuView();
         } else if (menu.equalsIgnoreCase("Profile")) {
-//            ProfileMenuView profileMenuView = new ProfileMenuView(loggedInPlayer);
-//            profileMenuView.profileMenuView();
+            ProfileMenuView profileMenuView = new ProfileMenuView(loggedInPlayer);
+            profileMenuView.profileMenuView();
         } else if (menu.equalsIgnoreCase("Shop")) {
             ShopMenuView shopMenuView = new ShopMenuView(loggedInPlayer);
             shopMenuView.shopMenuView();

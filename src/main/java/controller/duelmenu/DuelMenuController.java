@@ -7,14 +7,13 @@ import model.Player;
 import model.cards.Card;
 import model.cards.CardTypes;
 import model.cards.magiccard.MagicCard;
+import model.cards.monstercard.MonsterCard;
 import view.DuelMenuView;
 
 import java.util.Collections;
 import java.util.regex.Matcher;
 
 public class DuelMenuController {
-//    TODO: how to handle board
-//    TODO: how to handle graveyard --> ArrayList --> put it in Player class/DuelMenuController/board class??
     private Player turnPlayer;
     private Player notTurnPlayer;
     private Phases phase;
@@ -100,17 +99,23 @@ public class DuelMenuController {
 
     public DuelMenuMessages findCommand(String command) {
 //        TODO: handle menu commands --> menu exit and ...
-        if (command.startsWith("select ")) return checkSelectCard(command);
-        else if (command.equals("select -d")) ;//return checkDeselectCard();
+        if (command.startsWith("decrease ")) return cheatCodeDecreaseOpponentLifePont(command);
+        else if (command.startsWith("increase ")) return cheatCodeIncreaseLifePoint(command);
+        else if (command.startsWith("duel set-winner ")) return cheatCodeSetWinner(command);
+        else if (command.startsWith("increase --money ")) return cheatCodeIncreaseMoney(command);
+        else if (command.startsWith("select ")) return checkSelectCard(command);
+        else if (command.equals("select -d")) return deselectCard();
         else if (command.equals("summon")) ;//return checkSummonMonster();
         else if (command.equals("set")) return checkSetACard();
         else if (command.startsWith("set --position"));// return checkChangePosition(command);
         else if (command.equals("flip-summon")) ;//return checkFlipSummon();
-        else if (command.equals("attack direct")) ;//return checkDirectAttack();
-        else if (command.startsWith("attack")) ;//return checkAttack(command);
+        else if (command.equals("attack direct")) return directAttack();
+        else if (command.startsWith("attack")) return attack(command);
         else if (command.equals("activate effect")) return checkActiveASpellCard();
-        else if (command.equals("show graveyard")) return DuelMenuMessages.SHOW_GRAVEYARD;
-        else if (command.equals("back")) ;//checkBack();
+        else if (command.equals("show graveyard")) {
+            DuelMenuView.showGraveyard(turnPlayer.getBoard());
+            return DuelMenuMessages.EMPTY;
+        } else if (command.equals("back")) ;//checkBack();
         else if (command.equals("card show --selected")) {
             DuelMenuView.printCard(1, turnPlayer.getBoard().getSelectedCard());
             return DuelMenuMessages.EMPTY;
@@ -120,6 +125,42 @@ public class DuelMenuController {
 //        TODO: handle cheat/debug commands
 
         return DuelMenuMessages.INVALID_COMMAND;
+    }
+
+    private DuelMenuMessages cheatCodeDecreaseOpponentLifePont(String command) {
+        Matcher matcher = Utils.getMatcher(DuelMenuRegexes.CHEAT_DECREASE_OPPONENT_LIFE_POINT.getRegex(), command);
+        if (matcher.find()) {
+            notTurnPlayer.decreaseLifePoint(Integer.parseInt(matcher.group(1)));
+            return DuelMenuMessages.EMPTY;
+        } else return DuelMenuMessages.INVALID_COMMAND_CHEAT_CODE;
+
+    }
+
+    private DuelMenuMessages cheatCodeIncreaseLifePoint(String command) {
+        Matcher matcher = Utils.getMatcher(DuelMenuRegexes.CHEAT_INCREASE_LIFE_POINT.getRegex(), command);
+        if (matcher.find()) {
+            turnPlayer.increaseLifePoint(Integer.parseInt(matcher.group(1)));
+            return DuelMenuMessages.EMPTY;
+        } else return DuelMenuMessages.INVALID_COMMAND_CHEAT_CODE;
+    }
+
+    private DuelMenuMessages cheatCodeSetWinner(String command) {
+        Matcher matcher = Utils.getMatcher(DuelMenuRegexes.CHEAT_SET_WINNER.getRegex(), command);
+        if (matcher.find()) {
+            String nickname = matcher.group(1);
+            if (turnPlayer.getNickname().equals(nickname)) /*TODO: handle win the player*/;
+            else if (notTurnPlayer.getNickname().equals(nickname)) /*TODO: handle win the player*/;
+            else DuelMenuMessages.WRONG_NICKNAME_CHEAT_CODE;
+        } else return DuelMenuMessages.INVALID_COMMAND_CHEAT_CODE;
+    }
+
+    private DuelMenuMessages cheatCodeIncreaseMoney(String command) {
+        Matcher matcher = Utils.getMatcher(DuelMenuRegexes.CHEAT_INCREASE_MONEY.getRegex(), command);
+        if (matcher.find()) {
+            turnPlayer.increaseMoney(Integer.parseInt(matcher.group(1)));
+            return null;
+        } else return DuelMenuMessages.INVALID_COMMAND_CHEAT_CODE;
+
     }
 
     private DuelMenuMessages checkSelectCard(String command) {
@@ -236,13 +277,21 @@ public class DuelMenuController {
         }
     }
 
-//    private DuelMenuMessages checkDeselectCard() {
-//
-//    }
-//
-//    private DuelMenuMessages deselectCard() {
-//
-//    }
+    private DuelMenuMessages deselectCard() {
+        Board board = turnPlayer.getBoard();
+        DuelMenuMessages result = checkDeselectCard();
+        if (result == null) {
+            board.setSelectedCard(null);
+            return DuelMenuMessages.DESELECTED;
+        } else return result;
+    }
+
+    private DuelMenuMessages checkDeselectCard() {
+        Board board = turnPlayer.getBoard();
+        if (board.getSelectedCard() == null)
+            return DuelMenuMessages.NOT_SELECTED_CARD;
+        return null;
+    }
 //
 //    private DuelMenuMessages checkSummonMonster() {
 ////        TODO: maybe change the name to --> checkSummonCard
@@ -295,22 +344,86 @@ public class DuelMenuController {
 //    private DuelMenuMessages flipSummon() {
 //
 //    }
-//
-//    private DuelMenuMessages checkDirectAttack() {
-////        TODO: maybe merge with checkAttack function
-//    }
-//
-//    private DuelMenuMessages directAttack() {
-//
-//    }
-//
-//    private DuelMenuMessages checkAttack(String command) {
-////        TODO: maybe merge with checkDirectAttack function
-//    }
-//
-//    private DuelMenuMessages attack(String command) {
-//
-//    }
+
+    private DuelMenuMessages attack(String command) {
+        Board attackingPlayerBoard = turnPlayer.getBoard();
+        Board opponentPlayerBoard = notTurnPlayer.getBoard();
+
+        Matcher matcher = Utils.getMatcher(DuelMenuRegexes.ATTACK.getRegex(), command);
+        if (matcher.find()) {
+            int numberOfChosenCard = Integer.parseInt(matcher.group(1));
+
+            DuelMenuMessages result = checkAttack(numberOfChosenCard);
+            if (result == null) {
+                MonsterCard attackingMonster = (MonsterCard) attackingPlayerBoard.getSelectedCard();
+                MonsterCard opponentMonster = opponentPlayerBoard.getMonstersZone()[numberOfChosenCard];
+
+                SpellCardController.handleFieldSpellCardsEffect(turnPlayer, notTurnPlayer, attackingMonster, true);
+                SpellCardController.handleFieldSpellCardsEffect(turnPlayer, notTurnPlayer, opponentMonster, true);
+                SpellCardController.handleEquipSpellCardsEffect(turnPlayer, notTurnPlayer, attackingMonster, true);
+                SpellCardController.handleEquipSpellCardsEffect(turnPlayer, notTurnPlayer, opponentMonster, true);
+                DuelMenuMessages tempResult = attackingMonster.attack(turnPlayer, notTurnPlayer, numberOfChosenCard);
+                SpellCardController.handleFieldSpellCardsEffect(turnPlayer, notTurnPlayer, attackingMonster, false);
+                SpellCardController.handleFieldSpellCardsEffect(turnPlayer, notTurnPlayer, opponentMonster, false);
+                SpellCardController.handleEquipSpellCardsEffect(turnPlayer, notTurnPlayer, attackingMonster, false);
+                SpellCardController.handleEquipSpellCardsEffect(turnPlayer, notTurnPlayer, opponentMonster, false);
+
+                return tempResult;
+            }
+            return result;
+
+        } else return DuelMenuMessages.INVALID_CARD_SELECT;
+    }
+
+    private DuelMenuMessages checkAttack(int numberOfChosenCard) {
+        Board attackingPlayerBoard = turnPlayer.getBoard();
+        Board opponentPlayerBoard = notTurnPlayer.getBoard();
+
+        if (attackingPlayerBoard.getSelectedCard() == null || !attackingPlayerBoard.isMyCardSelected())
+            return DuelMenuMessages.NOT_SELECTED_CARD;
+        if (attackingPlayerBoard.getSelectedCard() instanceof MonsterCard)
+            return DuelMenuMessages.CANT_ATTACK_WITH_CARD;
+        //TODO check battle phase
+        MonsterCard card = (MonsterCard) attackingPlayerBoard.getSelectedCard();
+        if (card.isAttacked())
+            return DuelMenuMessages.ATTACKED_BEFORE;
+        if (opponentPlayerBoard.getMonstersZone()[numberOfChosenCard] == null)
+            return DuelMenuMessages.NO_CARD_FOUND_IN_THE_POSITION;
+        return null;
+    }
+
+    private DuelMenuMessages directAttack() {
+        Board board = turnPlayer.getBoard();
+        DuelMenuMessages messages = checkDirectAttack();
+        if (messages != null)
+            return messages;
+        else {
+            MonsterCard card = (MonsterCard) board.getSelectedCard();
+            SpellCardController.handleFieldSpellCardsEffect(turnPlayer, notTurnPlayer, card, true);
+            SpellCardController.handleEquipSpellCardsEffect(turnPlayer, notTurnPlayer, card, true);
+            notTurnPlayer.decreaseLifePoint(card.getAttackPoints());
+            SpellCardController.handleFieldSpellCardsEffect(turnPlayer, notTurnPlayer, card, false);
+            SpellCardController.handleEquipSpellCardsEffect(turnPlayer, notTurnPlayer, card, false);
+
+            DuelMenuMessages.setDamageAmount(card.getAttackPoints());
+            return DuelMenuMessages.DIRECT_ATTACK_DONE;
+        }
+    }
+
+    private DuelMenuMessages checkDirectAttack() {
+        Board board = turnPlayer.getBoard();
+
+        if (board.getSelectedCard() == null || !board.isMyCardSelected())
+            return DuelMenuMessages.NOT_SELECTED_CARD;
+        if (phase.equals(phase.))
+            return DuelMenuMessages.NOT_SUITABLE_PHASE;
+        if (board.getSelectedCard() instanceof MonsterCard) {
+            MonsterCard card = (MonsterCard) board.getSelectedCard();//TODO: handle cast exception!!
+            if (card.isAttacked()) return DuelMenuMessages.ATTACKED_BEFORE;
+        } else return DuelMenuMessages.CANT_ATTACK_WITH_CARD;
+
+        return null;
+    }
 
     private DuelMenuMessages checkActiveASpellCard() {
 //        TODO: clean it!

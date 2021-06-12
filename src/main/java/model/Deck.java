@@ -13,12 +13,12 @@ public class Deck {
         mainCards = new ArrayList<>();
     }
 
-//    for creating main deck
+    //    for creating main deck
     public Deck(String name) {
         setName(name);
     }
 
-//    for creating side deck
+    //    for creating side deck
     public Deck() {
         setName(null);
     }

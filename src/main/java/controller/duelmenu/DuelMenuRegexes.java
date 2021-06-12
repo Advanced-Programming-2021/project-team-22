@@ -10,8 +10,12 @@ public enum DuelMenuRegexes {
     SELECT_FIELD_ZONE("^select --(?:field|F)$"),
     SELECT_OPPONENT_FIELD_ZONE_FIELD_PATTERN("^select --(?:field|F) --(?:opponent|O)$"),
     SELECT_OPPONENT_FIELD_ZONE_OPPONENT_PATTERN("^select --(?:opponent|O) --(?:field|F)$"),
-    SELECT_CARDS_IN_HAND("^select --(?:hand|H) ((?:-|)\\d+)$");
-
+    SELECT_CARDS_IN_HAND("^select --(?:hand|H) ((?:-|)\\d+)$"),
+    CHEAT_DECREASE_OPPONENT_LIFE_POINT("^decrease --opponentLP ([0-9]+)$"),
+    CHEAT_INCREASE_LIFE_POINT("^increase --LP ([0-9]+)$"),
+    CHEAT_SET_WINNER("^duel set-winner (\\S+)$"),
+    CHEAT_INCREASE_MONEY("^increase --money ([0-9]+)$"),
+    ATTACK("^attack ([0-9]+)$");
 
     private final String regex;
 

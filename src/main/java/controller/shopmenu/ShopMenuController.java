@@ -8,7 +8,7 @@ import model.cards.Card;
 import java.util.regex.Matcher;
 
 public class ShopMenuController {
-    private Player loggedInPlayer;
+    private final Player loggedInPlayer;
 
     public ShopMenuController(Player loggedInPlayer) {
         this.loggedInPlayer = loggedInPlayer;

@@ -6,7 +6,7 @@ import model.cards.magiccard.MagicCard;
 
 import java.util.ArrayList;
 
-public class MonsterCard extends Card {
+public class MonsterCard extends Card implements SpecialMonstersFunction {
     protected final short level;
     protected final MonsterCardAttributes attribute;
     protected final String monsterType;
@@ -15,9 +15,11 @@ public class MonsterCard extends Card {
     protected transient ArrayList<MagicCard> equippedBy;
 //    if this boolean equals "false" so we can conclude that card is in attack position
     protected transient boolean isDefensePosition;
+    protected transient boolean isAttacked = false;
 
     {
         equippedBy = new ArrayList<>();
+        isDefensePosition = false;
     }
 
     public MonsterCard(String name, short level, MonsterCardAttributes attribute, String monsterType, CardTypes cardType,
@@ -68,6 +70,14 @@ public class MonsterCard extends Card {
         this.defensePoints = defensePoints;
     }
 
+    public boolean isAttacked() {
+        return isAttacked;
+    }
+
+    public void setAttacked(boolean attacked) {
+        isAttacked = attacked;
+    }
+
     public boolean isDefensePosition() {
         return isDefensePosition;
     }
@@ -102,5 +112,13 @@ public class MonsterCard extends Card {
 
     public void createEquippedByArrayList() {
         equippedBy = new ArrayList<>();
+    }
+
+    @Override
+    public String toString() {
+        if (!this.getCardFaceUp() && this.isDefensePosition) return "DH";
+        else if (this.getCardFaceUp() && this.isDefensePosition) return "DO";
+        else if (this.getCardFaceUp() && !this.isDefensePosition) return "OO";
+        return "E ";
     }
 }

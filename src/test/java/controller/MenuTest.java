@@ -15,6 +15,6 @@ public class MenuTest {
 
     @AfterAll
     static void deletePlayersDirectory() throws IOException {
-        FileUtils.deleteDirectory(new File("/Users/AMF/Desktop/Yu-Gi-Oh game/Yu-Gi-Oh game/src/database/players"));
+        FileUtils.deleteDirectory(new File("/Users/AMF/Desktop/Yu-Gi-Oh game/Yu-Gi-Oh game/src/main/resources/players"));
     }
 }
