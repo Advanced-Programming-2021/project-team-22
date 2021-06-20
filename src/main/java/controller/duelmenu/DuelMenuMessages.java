@@ -37,6 +37,7 @@ public enum DuelMenuMessages {
     NO_CARD_DESTROYED("no card is destroyed\n"),
     RECEIVE_DAMAGE_BY_ATTACKING_TO_DEFENSE_CARD("no card is destroyed and you received <damage> battle damage\n"),
     BOTH_CARDS_GET_DESTROYED("both you and your opponent monster cards are destroyed and no one receives damage\n"),
+    WRONG_NICKNAME_CHEAT_CODE("your entered nickname is wrong\n"),
     EMPTY(""),
     INVALID_COMMAND("invalid command\n");
 

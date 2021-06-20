@@ -14,7 +14,6 @@ public enum DuelMenuRegexes {
     CHEAT_DECREASE_OPPONENT_LIFE_POINT("^decrease --opponentLP ([0-9]+)$"),
     CHEAT_INCREASE_LIFE_POINT("^increase --LP ([0-9]+)$"),
     CHEAT_SET_WINNER("^duel set-winner (\\S+)$"),
-    CHEAT_INCREASE_MONEY("^increase --money ([0-9]+)$"),
     ATTACK("^attack ([0-9]+)$");
 
     private final String regex;

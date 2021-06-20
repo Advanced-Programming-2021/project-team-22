@@ -5,12 +5,12 @@ import model.Player;
 import model.cards.Card;
 import model.cards.magiccard.MagicCard;
 import model.cards.monstercard.MonsterCard;
-import view.SpellCardView;
+import view.MagicCardView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class SpellCardController {
+public class MagicCardController {
 //    this method doesn't handle field spell cards
     public static boolean doSpellCardEffect(Player turnPlayer, Player notTurnPlayer, MagicCard spellCard) {
 //        handle every kind of spell cards except field and equip
@@ -60,7 +60,7 @@ public class SpellCardController {
 
 //    handle every kind of spell cards except field and equip
     private static boolean doMonsterRebornEffect(Player turnPlayer, Player notTurnPlayer) {
-        SpellCardView.showGraveyardsMonsterCards(turnPlayer, notTurnPlayer);
+        MagicCardView.showGraveyardsMonsterCards(turnPlayer, notTurnPlayer);
 
         int turnPlayerGraveyardMonsterCardsSize = Card.findNumberOfMonsterCards(turnPlayer.getBoard().getGraveyard());
         int notTurnPlayerGraveyardMonsterCardsSize = Card.findNumberOfMonsterCards(notTurnPlayer.getBoard().getGraveyard());
@@ -71,7 +71,7 @@ public class SpellCardController {
             int cardNumber = getCardNumber();
             chosenCard = findMonsterRebornChosenCard(turnPlayer, notTurnPlayer, cardNumber);
             if (chosenCard != null) break;
-            SpellCardView.invalidNumber();
+            MagicCardView.invalidNumber();
         }
 
 //        TODO: how to handle special summon
@@ -81,9 +81,9 @@ public class SpellCardController {
     private static int getCardNumber() {
         while (true) {
             try {
-                return Integer.parseInt(SpellCardView.findCardNumber());
+                return Integer.parseInt(MagicCardView.findCardNumber());
             } catch (Exception exception) {
-                SpellCardView.invalidNumber();
+                MagicCardView.invalidNumber();
             }
         }
     }
@@ -114,7 +114,7 @@ public class SpellCardController {
         ArrayList<Card> cards = player.getBoard().getDeck().getMainCards();
         ArrayList<MagicCard> fieldSpellCards = findFieldSpellCards(cards);
 
-        SpellCardView.showFieldSpellCards(fieldSpellCards);
+        MagicCardView.showFieldSpellCards(fieldSpellCards);
         if (fieldSpellCards.size() == 0) return false;
 
         MagicCard chosenFieldSpellCard;
@@ -126,7 +126,7 @@ public class SpellCardController {
                 cards.remove(chosenFieldSpellCard);
                 break;
             }
-            SpellCardView.invalidNumber();
+            MagicCardView.invalidNumber();
         }
 
         Collections.shuffle(cards);
@@ -209,7 +209,7 @@ public class SpellCardController {
     }
 
     private static boolean doTwinTwistersEffect(Player turnPlayer, Player notTurnPlayer) {
-        SpellCardView.showCardsInHand(turnPlayer);
+        MagicCardView.showCardsInHand(turnPlayer);
         ArrayList<Card> cardsInHand = turnPlayer.getBoard().getCardsInHand();
         if (cardsInHand.size() == 0) return false;
 
@@ -220,10 +220,10 @@ public class SpellCardController {
                 cardsInHand.remove(cardNumber - 1);
                 break;
             }
-            SpellCardView.invalidNumber();
+            MagicCardView.invalidNumber();
         }
 
-        SpellCardView.showMagicsZonesCards(turnPlayer, notTurnPlayer);
+        MagicCardView.showMagicsZonesCards(turnPlayer, notTurnPlayer);
 
         int turnPlayerNumberOfMagicCards = turnPlayer.getBoard().getNumberOfFullPartsOfMagicsZone();
         int notTurnPlayerNumberOfMagicCards = notTurnPlayer.getBoard().getNumberOfFullPartsOfMagicsZone();
@@ -236,7 +236,7 @@ public class SpellCardController {
                     numberOfChosenCards <= turnPlayerNumberOfMagicCards + notTurnPlayerNumberOfMagicCards) {
                 break;
             }
-            SpellCardView.invalidNumber();
+            MagicCardView.invalidNumber();
         }
 
         for (int i = 0; i < numberOfChosenCards; i++) {
@@ -249,9 +249,9 @@ public class SpellCardController {
     private static int getNumberOfCardsToChoose() {
         while (true) {
             try {
-                return Integer.parseInt(SpellCardView.findNumberOfCardsToChoose());
+                return Integer.parseInt(MagicCardView.findNumberOfCardsToChoose());
             } catch (Exception exception) {
-                SpellCardView.invalidNumber();
+                MagicCardView.invalidNumber();
             }
         }
     }
@@ -273,7 +273,7 @@ public class SpellCardController {
     }
 
     private static boolean doMysticalSpaceTyphoonEffect(Player turnPlayer, Player notTurnPlayer) {
-        SpellCardView.showMagicsZonesCards(turnPlayer, notTurnPlayer);
+        MagicCardView.showMagicsZonesCards(turnPlayer, notTurnPlayer);
         int turnPlayerNumberOfMagicCards = turnPlayer.getBoard().getNumberOfFullPartsOfMagicsZone();
         int notTurnPlayerNumberOfMagicCards = notTurnPlayer.getBoard().getNumberOfFullPartsOfMagicsZone();
         if (turnPlayerNumberOfMagicCards + notTurnPlayerNumberOfMagicCards == 0) return false;
@@ -283,7 +283,7 @@ public class SpellCardController {
             if (destroyAMagicCardFromMagicZone(turnPlayer, cardNumber, 1) ||
                     destroyAMagicCardFromMagicZone(notTurnPlayer, cardNumber, turnPlayerNumberOfMagicCards + 1))
                 break;
-            SpellCardView.invalidNumber();
+            MagicCardView.invalidNumber();
         }
 
         return true;
@@ -412,7 +412,7 @@ public class SpellCardController {
 
 //    handle equip spell cards
     private static boolean chooseMonsterToEquip(Player turnPlayer, Player notTurnPlayer, MagicCard spellCard) {
-        SpellCardView.showFaceUpMonsterCards(turnPlayer, notTurnPlayer);
+        MagicCardView.showFaceUpMonsterCards(turnPlayer, notTurnPlayer);
 
         int turnPlayerFaceUpMonsterCardsNumber = turnPlayer.getBoard().getNumberOfFaceUpMonsterCards();
         int notTurnPlayerFaceUpMonsterCardsNumber = notTurnPlayer.getBoard().getNumberOfFaceUpMonsterCards();
@@ -428,7 +428,7 @@ public class SpellCardController {
 //            second and third condition assure me that Magnum Shield just equipped Warrior Monster Cards
             if (chosenCard != null &&
                     (!spellCard.getName().equals("Magnum Shield") || chosenCard.getMonsterType().equals("Warrior"))) break;
-            SpellCardView.invalidNumber();
+            MagicCardView.invalidNumber();
         }
 
         chosenCard.addToEquippedBy(spellCard);

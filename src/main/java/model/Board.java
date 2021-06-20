@@ -116,12 +116,14 @@ public class Board {
         MagicCard previousFieldZone = fieldZone;
         if (previousFieldZone != null) graveyard.add(previousFieldZone);
         setFieldZone(spellCard);
+        cardsInHand.remove(spellCard);
     }
 
     public boolean addMagicCardToMagicsZone(MagicCard magicCard) {
         for (int i = 1; i < magicsZone.length; i++) {
             if (magicsZone[i] == null) {
                 magicsZone[i] = magicCard;
+                cardsInHand.remove(magicCard);
                 return true;
             }
         }

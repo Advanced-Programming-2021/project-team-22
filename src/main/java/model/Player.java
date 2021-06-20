@@ -34,7 +34,7 @@ public class Player {
     private long score;
     @Expose
     private long money;
-    private int lifePoint = 8000;
+    private int lifePoint;
 
     {
         boughtCards = new ArrayList<>();
@@ -44,6 +44,7 @@ public class Player {
         activatedDeck = null;
         score = 0;
         money = 100000;
+        lifePoint = 8000;
     }
 
     public Player(String username, String password, String nickname) {

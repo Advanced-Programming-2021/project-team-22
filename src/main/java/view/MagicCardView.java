@@ -9,8 +9,8 @@ import model.cards.monstercard.MonsterCard;
 
 import java.util.ArrayList;
 
-public class SpellCardView extends DuelMenuView {
-    private SpellCardView(Player firstPlayer, Player secondPlayer) {
+public class MagicCardView extends DuelMenuView {
+    private MagicCardView(Player firstPlayer, Player secondPlayer) {
         super(firstPlayer, secondPlayer);
     }
 
