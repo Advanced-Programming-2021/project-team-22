@@ -1,35 +1,40 @@
 package view;
 
-import controller.ScoreboardMenuController;
-import controller.ScoreboardMenuMessages;
 import controller.Utils;
+import controller.scoreboardmenu.Scoreboard;
+import controller.scoreboardmenu.ScoreboardOutput;
 import model.Player;
 
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class ScoreboardMenuView {
-    private Player loggedInPlayer;
+    public static Scanner scanner = Utils.getScanner();
 
-    public ScoreboardMenuView(Player loggedInPlayer) {
-        setLoggedInPlayer(loggedInPlayer);
-    }
-
-    public void setLoggedInPlayer(Player loggedInPlayer) {
-        this.loggedInPlayer = loggedInPlayer;
-    }
-
-    public void scoreboardMenuView() {
+    public void runScoreboard() {
+        String command;
         while (true) {
-            String command = Utils.getScanner().nextLine().trim();
-            ScoreboardMenuController scoreboardMenuController = new ScoreboardMenuController(loggedInPlayer);
-            Enum result = scoreboardMenuController.findCommand(command);
-
-            System.out.print(result);
-
-            if (result.equals(ScoreboardMenuMessages.EXIT_SCOREBOARD_MENU)) break;
-            else if (result.equals(ScoreboardMenuMessages.SCOREBOARD_SHOW)) rank();
+            command = scanner.nextLine().replaceAll("\\s+", " ");
+            switch (command) {
+                case "scoreboard show":
+                    Scoreboard.getInstance().showScoreboard();
+                    break;
+                case "menu show-current":
+                    ScoreboardOutput.getInstance().showMessage("Scoreboard Menu");
+                    break;
+                case "menu exit":
+//                    MainMenuView mainMenuView = new MainMenuView();
+//                    mainMenuView.mainMenuView();
+                default:
+                    ScoreboardOutput.getInstance().showMessage("invalid command");
+            }
         }
     }
 
-    private void rank() {
-    }
+    private Matcher findMatcher(String input, String regex) {
 
+        Pattern pattern = Pattern.compile(regex);
+        return pattern.matcher(input);
+    }
 }

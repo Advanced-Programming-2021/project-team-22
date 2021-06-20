@@ -1,5 +1,11 @@
 package model;
 
+import com.google.gson.annotations.Expose;
+import controller.Database;
+import model.cards.Card;
+import model.cards.magiccard.MagicCard;
+import model.cards.monstercard.MonsterCard;
+
 import java.util.ArrayList;
 
 public class Player {
@@ -9,44 +15,48 @@ public class Player {
         allPlayers = new ArrayList<>();
     }
 
+    @Expose
     private ArrayList<Card> boughtCards;
+    @Expose
     private ArrayList<Deck> allMainDecks;
+    private Board board;
+    @Expose
     private Deck sideDeck;
+    @Expose
     private Deck activatedDeck;
+    @Expose
     private String username;
+    @Expose
     private String password;
+    @Expose
     private String nickname;
+    @Expose
     private long score;
+    @Expose
     private long money;
     private int lifePoint;
+    private transient Deck allPlayerCard;
+    private transient ArrayList<Deck> allDeck = new ArrayList<>();
+    private transient ArrayList<Deck> gameDecks = new ArrayList<>();
 
     {
         boughtCards = new ArrayList<>();
         allMainDecks = new ArrayList<>();
+        board = null;
         sideDeck = new Deck();
         activatedDeck = null;
         score = 0;
-        money = 0;
+        money = 100000;
+        lifePoint = 8000;
     }
 
     public Player(String username, String password, String nickname) {
         setUsername(username);
         setPassword(password);
         setNickname(nickname);
+        addPlayerToAllPlayers(this);
         allPlayers.add(this);
-        addPlayerToDataBase(this);
-    }
-
-    private static void addPlayerToDataBase(Player player) {
-
-    }
-
-    public void setLifePoint(int lifePoint) {
-        this.lifePoint = lifePoint;
-    }
-
-    public int getLifePoint() {
-        return lifePoint;
+        Database.updatePlayerInformationInDatabase(this);
     }
 
     public static Boolean isNicknameExist(String nickname) {
@@ -70,7 +80,50 @@ public class Player {
         return null;
     }
 
+    public void setBoughtCards(ArrayList<Card> boughtCards) {
+        this.boughtCards = boughtCards;
+    }
 
+    public Deck getActiveDeck() {
+        return activatedDeck;
+    }
+
+    public void setActiveDeck(Deck activatedDeck) {
+        if (this.activatedDeck != null)
+            this.activatedDeck.setActive(false);
+        this.activatedDeck = activatedDeck;
+        activatedDeck.setActive(true);
+    }
+
+    public ArrayList<Deck> getAllDeck() {
+        if (allDeck == null)
+            return (allDeck = new ArrayList<>());
+        return allDeck;
+    }
+
+    public void setAllDeck(ArrayList<Deck> allDeck) {
+        this.allDeck = allDeck;
+    }
+
+    public Deck getAllPlayerCard() {
+        return allPlayerCard;
+    }
+
+    public static ArrayList<Player> getAllPlayers() {
+        return allPlayers;
+    }
+
+    public void addCardToAllPlayerCard(Card card) {
+        this.allPlayerCard.getMainCards().add(card);
+    }
+
+    public void setAllPlayerCard(Deck allPlayerCard) {
+        this.allPlayerCard = allPlayerCard;
+    }
+
+    public static void addPlayerToAllPlayers(Player player) {
+        allPlayers.add(player);
+    }
 
     public String getUsername() {
         return username;
@@ -104,6 +157,14 @@ public class Player {
         return money;
     }
 
+    public Deck getActivatedDeck() {
+        return activatedDeck;
+    }
+
+    public ArrayList<Card> getBoughtCards() {
+        return boughtCards;
+    }
+
     public void increaseScore(long score) {
         this.score += score;
     }
@@ -121,11 +182,11 @@ public class Player {
     }
 
     public void addCardToBoughtCards(Card card) {
-        this.boughtCards.add(card);
-    }
-
-    public void addAmountToLifePoint(int amount){
-        this.lifePoint+=amount;
+        if (Card.isMonsterCard(card)) {
+            this.boughtCards.add(new MonsterCard((MonsterCard) card));
+        } else {
+            this.boughtCards.add(new MagicCard((MagicCard) card));
+        }
     }
 
     public void addMainDeck(String deckName) {
@@ -143,7 +204,7 @@ public class Player {
     public void deleteMainDeck(String deckName) {
         Deck mainDeck = getDeckByName(deckName);
         if (mainDeck != null) {
-            boughtCards.addAll(mainDeck.getCards());
+            boughtCards.addAll(mainDeck.getMainCards());
             allMainDecks.remove(mainDeck);
         }
     }
@@ -155,9 +216,27 @@ public class Player {
         return null;
     }
 
+    public int compareTo(Player player) {
+        if (this.score > player.score)
+            return -1;
+        if (this.score < player.score)
+            return 1;
+        if (this.nickname.compareTo(player.getNickname()) > 0)
+            return -1;
+        if (this.nickname.compareTo(player.getNickname()) < 0)
+            return 1;
+        return 0;
+    }
+
     public void activateADeck(String deckName) {
         Deck deck = getDeckByName(deckName);
         if (deck != null) activatedDeck = deck;
+    }
+    public void activateADeck(Deck activatedDeck) {
+        if (this.activatedDeck != null)
+            this.activatedDeck.setActive(false);
+        this.activatedDeck = activatedDeck;
+        activatedDeck.setActive(true);
     }
 
     public void addCardToMainDeck() {
@@ -166,5 +245,45 @@ public class Player {
 
     public void removeACard() {
 //        TODO: ???? but remember to add this card from boughtCards :)
+    }
+
+    public void decreaseLifePoint(int amount) {
+        this.lifePoint -= amount;
+    }
+
+    public void increaseLifePoint(int amount) {
+        this.lifePoint += amount;
+    }
+
+    public void setLifePoint(int lifePoint) {
+        this.lifePoint = lifePoint;
+    }
+
+    public int getLifePoint() {
+        return lifePoint;
+    }
+
+    public void createBoard() {
+        board = new Board();
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+
+    public boolean hasCard(Card card){
+        for (Card boughtCard : boughtCards) {
+            if (card.getName().equals(boughtCard.getName()))
+                return true;
+        }
+        return false;
+    }
+
+    public void removeCardFromBoughtCards(Card card) {
+        if (Card.isMonsterCard(card)) {
+            this.boughtCards.remove(new MonsterCard((MonsterCard) card));
+        } else {
+            this.boughtCards.remove(new MagicCard((MagicCard) card));
+        }
     }
 }

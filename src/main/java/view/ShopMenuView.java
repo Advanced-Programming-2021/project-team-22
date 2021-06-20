@@ -1,10 +1,10 @@
 package view;
 
-import controller.ShopMenuController;
-import controller.ShopMenuMessages;
 import controller.Utils;
-import model.Card;
+import controller.shopmenu.ShopMenuController;
+import controller.shopmenu.ShopMenuMessages;
 import model.Player;
+import model.cards.Card;
 
 import java.util.TreeMap;
 
@@ -15,27 +15,27 @@ public class ShopMenuView {
         setLoggedInPlayer(loggedInPlayer);
     }
 
+    private static void showListOfCards() {
+        TreeMap<String, Integer> listOfCards = Card.getListOfCards();
+        for (String cardName : listOfCards.keySet()) {
+            System.out.println(cardName + ": " + listOfCards.get(cardName));
+        }
+    }
+
     public void setLoggedInPlayer(Player loggedInPlayer) {
         this.loggedInPlayer = loggedInPlayer;
     }
 
     public void shopMenuView() {
+        ShopMenuController shopMenuController = new ShopMenuController(loggedInPlayer);
         while (true) {
             String command = Utils.getScanner().nextLine().trim();
-            ShopMenuController shopMenuController = new ShopMenuController(loggedInPlayer);
-            Enum result = shopMenuController.findCommand(command);
+            ShopMenuMessages result = shopMenuController.findCommand(command);
 
-            System.out.print(result);
+            System.out.print(result.getMessage());
 
             if (result.equals(ShopMenuMessages.EXIT_SHOP_MENU)) break;
             else if (result.equals(ShopMenuMessages.SHOW_ALL_CARDS)) showListOfCards();
-        }
-    }
-
-    private void showListOfCards() {
-        TreeMap<String, String> listOfCards = Card.getListOfCards;
-        for (String cardName : listOfCards.descendingKeySet()) {
-            System.out.println(cardName + ": " + listOfCards.get(cardName));
         }
     }
 }

@@ -1,6 +1,8 @@
 package view;
 
-import controller.*;
+import controller.Utils;
+import controller.mainmenu.MainMenuController;
+import controller.mainmenu.MainMenuMessages;
 import model.Player;
 
 public class MainMenuView {
@@ -15,12 +17,12 @@ public class MainMenuView {
     }
 
     public void mainMenuView() {
+        MainMenuController mainMenuController = new MainMenuController(loggedInPlayer);
         while (true) {
             String command = Utils.getScanner().nextLine().trim();
-            MainMenuController mainMenuController = new MainMenuController(loggedInPlayer);
-            Enum result = mainMenuController.findCommand(command);
+            MainMenuMessages result = mainMenuController.findCommand(command);
 
-            System.out.print(result);
+            System.out.print(result.getMessage());
 
             if (result.equals(MainMenuMessages.EXIT_MAIN_MENU) ||
             result.equals(MainMenuMessages.USER_LOGGED_OUT)) break;
