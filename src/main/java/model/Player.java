@@ -35,6 +35,9 @@ public class Player {
     @Expose
     private long money;
     private int lifePoint;
+    private boolean hasSummonedInTurn;
+    private int wonRounds;
+    private int maxLifePointDuringPlay;
 
     {
         boughtCards = new ArrayList<>();
@@ -45,6 +48,9 @@ public class Player {
         score = 0;
         money = 100000;
         lifePoint = 8000;
+        hasSummonedInTurn = false;
+        wonRounds = 0;
+        maxLifePointDuringPlay = 0;
     }
 
     public Player(String username, String password, String nickname) {
@@ -78,6 +84,43 @@ public class Player {
 
     public static void addPlayerToAllPlayers(Player player) {
         allPlayers.add(player);
+    }
+
+    public void setBoard(Board board) {
+        this.board = board;
+    }
+
+    public void setHasSummonedInTurn(boolean hasSummonedInTurn) {
+        this.hasSummonedInTurn = hasSummonedInTurn;
+    }
+
+    public boolean getHasSummonedInTurn() {
+        return this.hasSummonedInTurn;
+    }
+
+    public void setLifePoint(int lifePoint) {
+        this.lifePoint = lifePoint;
+    }
+
+    public void setWonRounds(int wonRounds) {
+        this.wonRounds = wonRounds;
+    }
+
+    public int getWonRounds() {
+        return wonRounds;
+    }
+
+    public int getLifePoint() {
+        return lifePoint;
+    }
+
+    public int getMaxLifePointDuringPlay() {
+        return maxLifePointDuringPlay;
+    }
+
+    public void setMaxLifePointDuringPlay(int maxLifePointDuringPlay) {
+        if (this.maxLifePointDuringPlay < maxLifePointDuringPlay)
+            this.maxLifePointDuringPlay = maxLifePointDuringPlay;
     }
 
     public String getUsername() {

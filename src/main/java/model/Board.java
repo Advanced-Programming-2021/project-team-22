@@ -14,7 +14,7 @@ public class Board {
     private Deck deck;
     private MagicCard fieldZone;//TODO: maybe it should be from these classes --> Spell / fieldSpell
     private Card selectedCard;
-//    if this boolean equals "false" so we can conclude that opponent card selected or nothing selected
+    //    if this boolean equals "false" so we can conclude that opponent card selected or nothing selected
     private boolean isMyCardSelected;
     private boolean isACardInHandSelected;
 
@@ -104,7 +104,8 @@ public class Board {
 //        if cardName isn't available, then this method returns false
         boolean isCardFaceUp = false;
         for (int i = 1; i < monstersZone.length; i++) {
-            if (monstersZone[i].getName().equals(cardName) && !isCardFaceUp) isCardFaceUp = monstersZone[i].getCardFaceUp();
+            if (monstersZone[i].getName().equals(cardName) && !isCardFaceUp)
+                isCardFaceUp = monstersZone[i].getCardFaceUp();
         }
         for (int i = 1; i < magicsZone.length; i++) {
             if (magicsZone[i].getName().equals(cardName) && !isCardFaceUp) isCardFaceUp = magicsZone[i].getCardFaceUp();
@@ -153,5 +154,64 @@ public class Board {
         }
 
         return numberOfWarriorMonsterCards;
+    }
+
+    public boolean isMonsterZoneFull() {
+        for (int i = 1; i <= 5; i++) {
+            if (monstersZone[i] == null)
+                return false;
+        }
+        return true;
+    }
+
+    public boolean isThereOneMonsterForTribute() {
+        for (int i = 1; i <= 5; i++) {
+            if (monstersZone[i] != null)
+                return true;
+        }
+        return false;
+    }
+
+    public boolean isThereMonsterCardInAddress(int address) {
+        if (monstersZone[address] == null)
+            return false;
+        else return true;
+    }
+
+    public void setSummonCardOnMonsterZone() {
+        removeSelectedCardFromHand();
+        for (int i = 1; i <= 5; i++) {
+            if (monstersZone[i] == null) {
+                monstersZone[i] = (MonsterCard) selectedCard;
+                monstersZone[i].setCardFaceUp(false);//TODO check attack or deffensive???
+                break;
+            }
+        }
+        selectedCard = null;
+    }
+
+    private void removeSelectedCardFromHand() {
+        for (int i = 0; i < cardsInHand.size(); i++) {
+            if (cardsInHand.get(i) == selectedCard) {
+                cardsInHand.remove(i);
+                break;
+            }
+        }
+    }
+
+    public boolean isThereTwoMonsterForTribute() {
+        int count = 0;
+        for (int i = 1; i <= 5; i++) {
+            if (monstersZone[i] != null)
+                count++;
+        }
+        if (count >= 2)
+            return true;
+        return false;
+    }
+
+    public void removeTribute(int address) {
+        graveyard.add(monstersZone[address]);
+        monstersZone[address] = null;
     }
 }

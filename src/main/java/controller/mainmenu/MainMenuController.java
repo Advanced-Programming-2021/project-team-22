@@ -101,8 +101,7 @@ public class MainMenuController {
                 return MainMenuMessages.INVALID_ROUNDS_NUMBER;
             }
 
-//            TODO: handle 1 or 3 turn game
-            DuelMenuView duelMenuView = new DuelMenuView(loggedInPlayer, opponentPlayer);
+            DuelMenuView duelMenuView = new DuelMenuView(loggedInPlayer, opponentPlayer , Integer.parseInt(rounds));
             duelMenuView.duelMenuView();
         } else {
 //            TODO: handle entering to enter duel menu by AI
