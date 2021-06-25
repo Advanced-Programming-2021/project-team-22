@@ -7,7 +7,7 @@ import model.Player;
 
 public class AIClass {
 
-    public static String getOrder(Board machineBoard, Board playerBoard, Player AIPlayer, Player humanPlayer, Enum phaseOfGame) {
+    public static String getOrder(Board machineBoard, Board playerBoard, Player AIPlayer, Player humanPlayer, Phases phaseOfGame) {
 
         if (phaseOfGame == Phases.MAIN_PHASE_1) {
             if (checkExistMonstereInHand(machineBoard)) {

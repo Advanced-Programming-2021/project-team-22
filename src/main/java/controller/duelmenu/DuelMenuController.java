@@ -1,6 +1,5 @@
 package controller.duelmenu;
 
-import controller.MagicCardController;
 import controller.Utils;
 import model.Board;
 import model.Player;
@@ -18,6 +17,30 @@ public class DuelMenuController {
     private Player notTurnPlayer;
     private Phases phase;
     private boolean isAITurn;
+
+    public void setTurnPlayer(Player turnPlayer) {
+        this.turnPlayer = turnPlayer;
+    }
+
+    public void setNotTurnPlayer(Player notTurnPlayer) {
+        this.notTurnPlayer = notTurnPlayer;
+    }
+
+    public Player getTurnPlayer() {
+        return turnPlayer;
+    }
+
+    public Player getNotTurnPlayer() {
+        return notTurnPlayer;
+    }
+
+    public Phases getPhase() {
+        return phase;
+    }
+
+    public void setPhase(Phases phase) {
+        this.phase = phase;
+    }
 
     public static String specifyTurnPlayer(Player firstPlayer, Player secondPlayer) {
         String firstPlayerChoiceInString = DuelMenuView.findChooseOfPlayerInMiniGame(firstPlayer);
@@ -75,10 +98,6 @@ public class DuelMenuController {
         return null;
     }
 
-    public Player getTurnPlayer() {
-        return turnPlayer;
-    }
-
     public DuelMenuMessages initialGame(Player firstPlayer, Player secondPlayer) {
 //        TODO: handle it for ai
         String result = specifyTurnPlayer(firstPlayer, secondPlayer);
@@ -101,65 +120,53 @@ public class DuelMenuController {
         return DuelMenuMessages.SHOW_TURN_PLAYER;
     }
 
-    public Phases getPhase() {
-        return phase;
-    }
-
-    public Player getNotTurnPlayer() {
-        return notTurnPlayer;
-    }
-
-    public void setNotTurnPlayer(Player notTurnPlayer) {
-        this.notTurnPlayer = notTurnPlayer;
-    }
-
-    public void setTurnPlayer(Player turnPlayer) {
-        this.turnPlayer = turnPlayer;
-    }
-
     public DuelMenuMessages findCommand(String command) {
 //        TODO: handle menu commands --> menu exit and ...
-        if (command.startsWith("decrease ")) return cheatCodeDecreaseOpponentLifePont(command);
-        else if (command.startsWith("increase ")) return cheatCodeIncreaseLifePoint(command);
+        if (command.startsWith("decrease ")) return cheatCodeDecreaseOpponentLifePont(command, notTurnPlayer);
+        else if (command.startsWith("increase ")) return cheatCodeIncreaseLifePoint(command, turnPlayer);
         else if (command.startsWith("duel set-winner ")) return cheatCodeSetWinner(command);
-        else if (command.startsWith("select ")) return checkSelectCard(command);
+        else if (command.startsWith("select hand force ")) return cheatCodeAddCardToHand(command, turnPlayer);
         else if (command.equals("select -d")) return deselectCard();
-        else if (command.equals("summon")) ;//return checkSummonMonster();
-        else if (command.equals("set")) return checkSetACard();//set spell!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        else if (command.startsWith("set --position")) ;// return checkChangePosition(command);
+        else if (command.startsWith("select ")) return checkSelectCard(command);
+        else if (command.equals("summon")) return summonMonster();
+        else if (command.equals("set")) return checkSetACard();
+        else if (command.startsWith("set --position"));// return checkChangePosition(command);
         else if (command.equals("flip-summon")) ;//return checkFlipSummon();
         else if (command.equals("attack direct")) return directAttack();
         else if (command.startsWith("attack")) return attack(command);
-        else if (command.equals("activate effect"))
-            return checkActiveASpellCard();//active spell!!!!!!!!!!!!!!!!!!!!!!!!
+        else if (command.equals("activate effect")) return checkActiveASpellCard();
+        else if (command.equals("activate effect trap")) return checkActiveATrapCard();
         else if (command.equals("show graveyard")) {
             DuelMenuView.showGraveyard(turnPlayer.getBoard());
             return DuelMenuMessages.EMPTY;
+
         } else if (command.equals("back")) ;//checkBack();
-        else if (command.equals("card show --selected")) {
-            DuelMenuView.printCard(1, turnPlayer.getBoard().getSelectedCard());
+        else if (command.equals("card show --selected")) return showSelectedCard();
+        else if (command.startsWith("card show ")) {
+            Utils.showCard(command.substring(10));
             return DuelMenuMessages.EMPTY;
+
         } else if (command.equals("cancel")) ;//cancelCommand();
-        else if (command.equals("surrender")) /*TODO*/ ;
+        else if (command.equals("surrender")) /*TODO*/;
 
 //        TODO: handle cheat/debug commands
 
         return DuelMenuMessages.INVALID_COMMAND;
     }
 
-    private DuelMenuMessages cheatCodeDecreaseOpponentLifePont(String command) {
+    private DuelMenuMessages cheatCodeDecreaseOpponentLifePont(String command, Player player) {
         Matcher matcher = Utils.getMatcher(DuelMenuRegexes.CHEAT_DECREASE_OPPONENT_LIFE_POINT.getRegex(), command);
         if (matcher.find()) {
-            notTurnPlayer.decreaseLifePoint(Integer.parseInt(matcher.group(1)));
+            player.decreaseLifePoint(Integer.parseInt(matcher.group(1)));
             return DuelMenuMessages.EMPTY;
         } else return DuelMenuMessages.INVALID_COMMAND_CHEAT_CODE;
 
     }
 
-    private DuelMenuMessages cheatCodeIncreaseLifePoint(String command) {
+    private DuelMenuMessages cheatCodeIncreaseLifePoint(String command, Player player) {
         Matcher matcher = Utils.getMatcher(DuelMenuRegexes.CHEAT_INCREASE_LIFE_POINT.getRegex(), command);
         if (matcher.find()) {
-            turnPlayer.increaseLifePoint(Integer.parseInt(matcher.group(1)));
+            player.increaseLifePoint(Integer.parseInt(matcher.group(1)));
             return DuelMenuMessages.EMPTY;
         } else return DuelMenuMessages.INVALID_COMMAND_CHEAT_CODE;
     }
@@ -180,36 +187,55 @@ public class DuelMenuController {
         return DuelMenuMessages.EMPTY;
     }
 
+    private DuelMenuMessages cheatCodeAddCardToHand(String command, Player player) {
+        Matcher matcher = Utils.getMatcher(DuelMenuRegexes.CHEAT_ADD_CARD_TO_HAND.getRegex(), command);
+        if (matcher.find()) {
+            String cardName = matcher.group(1);
+            if (Card.getCardByName(cardName) == null) return DuelMenuMessages.UNAVAILABLE_CARD_CHEAT_CODE;
+            else {
+
+                Card card = Card.getCardByName(cardName);
+                if (Card.isMonsterCard(card)) {
+                    player.getBoard().getCardsInHand().add(new MonsterCard((MonsterCard) card));
+                } else {
+                    player.getBoard().getCardsInHand().add(new MagicCard((MagicCard) card));
+                }
+                return DuelMenuMessages.EMPTY;
+
+            }
+        } else return DuelMenuMessages.INVALID_COMMAND_CHEAT_CODE;
+    }
+
     private DuelMenuMessages checkSelectCard(String command) {
 //        TODO: handle --> if there isn't any card in main deck, he/she loses
 //        TODO: maybe clean it more
         Matcher matcher;
-        if ((matcher = Utils.getMatcher(DuelMenuRegexes.SELECT_MONSTER_ZONE.getRegex(), command)).find()) {
+        if ( (matcher = Utils.getMatcher(DuelMenuRegexes.SELECT_MONSTER_ZONE.getRegex(), command)).find() ) {
             if (!isSelectionValid(matcher)) return DuelMenuMessages.INVALID_SELECTION;
             else if (!isCardAvailableInMonstersZone(matcher, turnPlayer)) return DuelMenuMessages.CARD_NOT_FOUND;
             selectCardFromMonstersZone(matcher, true);
 
-        } else if ((matcher = Utils.getMatcher(DuelMenuRegexes.SELECT_MAGIC_ZONE.getRegex(), command)).find()) {
+        } else if ( (matcher = Utils.getMatcher(DuelMenuRegexes.SELECT_MAGIC_ZONE.getRegex(), command)).find() ) {
             if (!isSelectionValid(matcher)) return DuelMenuMessages.INVALID_SELECTION;
             else if (!isCardAvailableInMagicsZone(matcher, turnPlayer)) return DuelMenuMessages.CARD_NOT_FOUND;
             selectCardFromMagicsZone(matcher, true);
 
-        } else if ((matcher = Utils.getMatcher(DuelMenuRegexes.SELECT_OPPONENT_MONSTER_ZONE_MONSTER_PATTERN.getRegex(), command)).find()) {
+        } else if ( (matcher = Utils.getMatcher(DuelMenuRegexes.SELECT_OPPONENT_MONSTER_ZONE_MONSTER_PATTERN.getRegex(), command)).find() ) {
             if (!isSelectionValid(matcher)) return DuelMenuMessages.INVALID_SELECTION;
             else if (!isCardAvailableInMonstersZone(matcher, notTurnPlayer)) return DuelMenuMessages.CARD_NOT_FOUND;
             selectCardFromMonstersZone(matcher, false);
 
-        } else if ((matcher = Utils.getMatcher(DuelMenuRegexes.SELECT_OPPONENT_MONSTER_ZONE_OPPONENT_PATTERN.getRegex(), command)).find()) {
+        } else if ( (matcher = Utils.getMatcher(DuelMenuRegexes.SELECT_OPPONENT_MONSTER_ZONE_OPPONENT_PATTERN.getRegex(), command)).find() ) {
             if (!isSelectionValid(matcher)) return DuelMenuMessages.INVALID_SELECTION;
             else if (!isCardAvailableInMonstersZone(matcher, notTurnPlayer)) return DuelMenuMessages.CARD_NOT_FOUND;
             selectCardFromMonstersZone(matcher, false);
 
-        } else if ((matcher = Utils.getMatcher(DuelMenuRegexes.SELECT_OPPONENT_MAGIC_ZONE_SPELL_PATTERN.getRegex(), command)).find()) {
+        } else if ( (matcher = Utils.getMatcher(DuelMenuRegexes.SELECT_OPPONENT_MAGIC_ZONE_SPELL_PATTERN.getRegex(), command)).find() ) {
             if (!isSelectionValid(matcher)) return DuelMenuMessages.INVALID_SELECTION;
             else if (!isCardAvailableInMagicsZone(matcher, turnPlayer)) return DuelMenuMessages.CARD_NOT_FOUND;
             selectCardFromMagicsZone(matcher, false);
 
-        } else if ((matcher = Utils.getMatcher(DuelMenuRegexes.SELECT_OPPONENT_MAGIC_ZONE_OPPONENT_PATTERN.getRegex(), command)).find()) {
+        } else if ( (matcher = Utils.getMatcher(DuelMenuRegexes.SELECT_OPPONENT_MAGIC_ZONE_OPPONENT_PATTERN.getRegex(), command)).find() ) {
             if (!isSelectionValid(matcher)) return DuelMenuMessages.INVALID_SELECTION;
             else if (!isCardAvailableInMagicsZone(matcher, turnPlayer)) return DuelMenuMessages.CARD_NOT_FOUND;
             selectCardFromMagicsZone(matcher, false);
@@ -232,7 +258,7 @@ public class DuelMenuController {
             }
             selectCardFromFieldZone(false);
 
-        } else if ((matcher = Utils.getMatcher(DuelMenuRegexes.SELECT_CARDS_IN_HAND.getRegex(), command)).find()) {
+        } else if ( (matcher = Utils.getMatcher(DuelMenuRegexes.SELECT_CARDS_IN_HAND.getRegex(), command)).find() ) {
             int number = Integer.parseInt(matcher.group(1));
             if (number > turnPlayer.getBoard().getCardsInHand().size()) {
                 return DuelMenuMessages.INVALID_SELECTION;
@@ -241,7 +267,7 @@ public class DuelMenuController {
             turnPlayer.getBoard().setMyCardSelected(true);
             turnPlayer.getBoard().setACardInHandSelected(true);
 
-        } else {
+        } else  {
             turnPlayer.getBoard().setSelectedCard(null);
             turnPlayer.getBoard().setMyCardSelected(false);
             return DuelMenuMessages.INVALID_SELECTION;
@@ -310,30 +336,102 @@ public class DuelMenuController {
         return null;
     }
 
-    //
-//    private DuelMenuMessages checkSummonMonster() {
-////        TODO: maybe change the name to --> checkSummonCard
-//    }
-//
-//    private DuelMenuMessages summonMonster() {
-////        TODO: maybe change the name to --> summonCard
-//    }
-//
-//    private void victimize() {
-////        TODO: handle it!
-//    }
-//
+    private DuelMenuMessages summonMonster() {
+        Board turnPlayerBoard = turnPlayer.getBoard();
+        DuelMenuMessages result = null;
+        result = checkSummonMonster();
+        if (result != null)
+            return result;
+        turnPlayer.setHasSummonedInTurn(true);
+        MonsterCard selectedMonster = (MonsterCard) turnPlayerBoard.getSelectedCard();
+        if (selectedMonster.getLevel() <= 4) {
+            turnPlayerBoard.getSelectedCard().setCardFaceUp(false);
+            turnPlayerBoard.setSummonCardOnMonsterZone();
+            turnPlayer.getBoard().setSelectedCard(null);
+        } else if (selectedMonster.getLevel() == 5 || selectedMonster.getLevel() == 6) {
+            return summonWithOneTribute();
+        } else if (selectedMonster.getLevel() == 7 || selectedMonster.getLevel() == 8) {
+            return summonWithTwoTribute();
+        }
+        return DuelMenuMessages.SUMMONED_SUCCESSFULLY;
+    }
+
+    private DuelMenuMessages checkSummonMonster() {
+        Board turnPlayerBoard = turnPlayer.getBoard();
+        Card selectedCard = turnPlayerBoard.getSelectedCard();
+        if (!turnPlayerBoard.isMyCardSelected()) {
+            return DuelMenuMessages.UNAVAILABLE_SELECTED_CARD;
+        }
+        if (turnPlayerBoard.isACardInHandSelected() || !model.cards.Card.isMonsterCard(selectedCard) || selectedCard.getCardType() == CardTypes.RITUAL) {
+            return DuelMenuMessages.SUMMON_NOT_POSSIBLE;
+        } else if (phase != Phases.MAIN_PHASE_1 && phase != Phases.MAIN_PHASE_2) {
+            return DuelMenuMessages.NOT_TRUE_PHASE;
+        } else if (turnPlayerBoard.isMonsterZoneFull()) {
+            return DuelMenuMessages.FULL_MONSTERS_ZONE;
+        } else if (turnPlayer.getHasSummonedInTurn() == true) {
+            return DuelMenuMessages.ALREADY_SUMMONED_OR_SET;
+        }
+        return null;
+    }
+
+    private DuelMenuMessages summonWithOneTribute() {
+        Board turnPlayerBoard = turnPlayer.getBoard();
+        if (!turnPlayerBoard.isThereOneMonsterForTribute()) {
+            return DuelMenuMessages.NOT_ENOUGH_CARD_FOR_TRIBUTE;
+        }
+        String addressString = Utils.getScanner().nextLine().trim();
+        int address = Integer.parseInt(addressString);
+        if (!turnPlayerBoard.isThereMonsterCardInAddress(address)) {
+            return DuelMenuMessages.NO_MONSTER_ON_THIS_ADDRESS;
+        }
+        turnPlayerBoard.removeTribute(address);
+        turnPlayerBoard.setSummonCardOnMonsterZone();
+        return DuelMenuMessages.SUMMONED_SUCCESSFULLY;
+    }
+
+    private DuelMenuMessages summonWithTwoTribute() {
+        Board turnPlayerBoard = turnPlayer.getBoard();
+        if (!turnPlayerBoard.isThereTwoMonsterForTribute()) {
+            return DuelMenuMessages.NOT_ENOUGH_CARD_FOR_TRIBUTE;
+        }
+        String addressString = Utils.getScanner().nextLine().trim();
+        int address = Integer.parseInt(addressString);
+        addressString = Utils.getScanner().nextLine().trim();
+        int address2 = Integer.parseInt(addressString);
+        if (!turnPlayerBoard.isThereMonsterCardInAddress(address)) {
+            return DuelMenuMessages.NO_MONSTER_ON_THIS_ADDRESS;
+        }
+        if (!turnPlayerBoard.isThereMonsterCardInAddress(address2)) {
+            return DuelMenuMessages.NO_MONSTER_ON_THIS_ADDRESS;
+        }
+        turnPlayerBoard.removeTribute(address);
+        turnPlayerBoard.removeTribute(address2);
+        turnPlayerBoard.setSummonCardOnMonsterZone();
+        return DuelMenuMessages.SUMMONED_SUCCESSFULLY;
+    }
+
     private DuelMenuMessages checkSetACard() {
         Board board = turnPlayer.getBoard();
         Card selectedCard = board.getSelectedCard();
         if (board.getSelectedCard() == null) return DuelMenuMessages.UNAVAILABLE_SELECTED_CARD;
         else if (!board.isACardInHandSelected()) return DuelMenuMessages.CANT_SET;
-        else if (!phase.equals(Phases.MAIN_PHASE_1) && !phase.equals(Phases.MAIN_PHASE_2))
-            return DuelMenuMessages.NOT_TRUE_PHASE;
+        else if (!phase.equals(Phases.MAIN_PHASE_1) && !phase.equals(Phases.MAIN_PHASE_2)) return DuelMenuMessages.NOT_TRUE_PHASE;
         else if (Card.isMonsterCard(selectedCard)) return checkSetAMonsterCard(selectedCard);
 
         MagicCard magicCard = (MagicCard) selectedCard;
         return setAMagicCard(magicCard);
+    }
+
+    private DuelMenuMessages setAMagicCard(MagicCard magicCard) {
+        Board board = turnPlayer.getBoard();
+        if (magicCard.getIcon().equals("Field")) board.addSpellCardToFieldZone(magicCard);
+        else if (board.isMagicsZoneFull()) return DuelMenuMessages.FULL_MAGICS_ZONE;
+        else board.addMagicCardToMagicsZone(magicCard);
+        magicCard.setPowerUsed(false);
+        magicCard.setCardFaceUp(false);
+        magicCard.setIsSetInThisTurn(true);
+
+        return DuelMenuMessages.SET_SUCCESSFULLY;
     }
 
     private DuelMenuMessages checkSetAMonsterCard(Card card) {
@@ -374,14 +472,28 @@ public class DuelMenuController {
 
             DuelMenuMessages result = checkAttack(numberOfChosenCard);
             if (result == null) {
+                if (isConditionPreparedToActivateMagicCardInOpponentTurn(notTurnPlayer))
+                    checkActiveMagicCardInOpponentTurn(turnPlayer, notTurnPlayer);
+
                 MonsterCard attackingMonster = (MonsterCard) attackingPlayerBoard.getSelectedCard();
                 MonsterCard opponentMonster = opponentPlayerBoard.getMonstersZone()[numberOfChosenCard];
+                TrapResult trapResult = MagicCardController.doTrapEffectsInTurnPlayerAttack(turnPlayer, notTurnPlayer,
+                        attackingMonster, opponentMonster);
+                switch (trapResult) {
+                    case STOP:
+                        return DuelMenuMessages.ACTION_CANCELED_BY_TRAP_CARD;
+                    case NEGATE_ATTACK:
+//                    TODO: ending battle phase
+                        return DuelMenuMessages.ACTION_CANCELED_BY_TRAP_CARD;
+                }
 
                 MagicCardController.handleFieldSpellCardsEffect(turnPlayer, notTurnPlayer, attackingMonster, true);
                 MagicCardController.handleFieldSpellCardsEffect(turnPlayer, notTurnPlayer, opponentMonster, true);
                 MagicCardController.handleEquipSpellCardsEffect(turnPlayer, notTurnPlayer, attackingMonster, true);
                 MagicCardController.handleEquipSpellCardsEffect(turnPlayer, notTurnPlayer, opponentMonster, true);
+
                 DuelMenuMessages tempResult = attackingMonster.attack(turnPlayer, notTurnPlayer, numberOfChosenCard);
+
                 MagicCardController.handleFieldSpellCardsEffect(turnPlayer, notTurnPlayer, attackingMonster, false);
                 MagicCardController.handleFieldSpellCardsEffect(turnPlayer, notTurnPlayer, opponentMonster, false);
                 MagicCardController.handleEquipSpellCardsEffect(turnPlayer, notTurnPlayer, attackingMonster, false);
@@ -402,9 +514,7 @@ public class DuelMenuController {
             return DuelMenuMessages.NOT_SELECTED_CARD;
         if (attackingPlayerBoard.getSelectedCard() instanceof MonsterCard)
             return DuelMenuMessages.CANT_ATTACK_WITH_CARD;
-        if (phase != Phases.BATTLE_PHASE) {
-            return DuelMenuMessages.NOT_TRUE_PHASE;
-        }
+        //TODO check battle phase
         MonsterCard card = (MonsterCard) attackingPlayerBoard.getSelectedCard();
         if (card.isAttacked())
             return DuelMenuMessages.ATTACKED_BEFORE;
@@ -419,10 +529,25 @@ public class DuelMenuController {
         if (messages != null)
             return messages;
         else {
+            if (isConditionPreparedToActivateMagicCardInOpponentTurn(notTurnPlayer))
+                checkActiveMagicCardInOpponentTurn(turnPlayer, notTurnPlayer);
+
             MonsterCard card = (MonsterCard) board.getSelectedCard();
+            TrapResult trapResult = MagicCardController.doTrapEffectsInTurnPlayerAttack(turnPlayer, notTurnPlayer,
+                    card, null);
+            switch (trapResult) {
+                case STOP:
+                    return DuelMenuMessages.ACTION_CANCELED_BY_TRAP_CARD;
+                case NEGATE_ATTACK:
+//                    TODO: ending battle phase
+                    return DuelMenuMessages.ACTION_CANCELED_BY_TRAP_CARD;
+            }
+
             MagicCardController.handleFieldSpellCardsEffect(turnPlayer, notTurnPlayer, card, true);
             MagicCardController.handleEquipSpellCardsEffect(turnPlayer, notTurnPlayer, card, true);
+
             notTurnPlayer.decreaseLifePoint(card.getAttackPoints());
+
             MagicCardController.handleFieldSpellCardsEffect(turnPlayer, notTurnPlayer, card, false);
             MagicCardController.handleEquipSpellCardsEffect(turnPlayer, notTurnPlayer, card, false);
 
@@ -443,21 +568,32 @@ public class DuelMenuController {
             if (card.isAttacked()) return DuelMenuMessages.ATTACKED_BEFORE;
         } else return DuelMenuMessages.CANT_ATTACK_WITH_CARD;
 
-        return DuelMenuMessages.EMPTY;
+        return null;
     }
 
     private DuelMenuMessages checkActiveASpellCard() {
-//        TODO: clean it!
         Board board = turnPlayer.getBoard();
         Card selectedCard = board.getSelectedCard();
         if (selectedCard == null) return DuelMenuMessages.UNAVAILABLE_SELECTED_CARD;
         else if (!selectedCard.getCardType().equals(CardTypes.SPELL)) return DuelMenuMessages.NOT_SPELL_CARD;
-        else if (!phase.equals(Phases.MAIN_PHASE_1) && !phase.equals(Phases.MAIN_PHASE_2))
-            return DuelMenuMessages.CANT_ACTIVATE_SPELL_EFFECT;
+        else if (!phase.equals(Phases.MAIN_PHASE_1) && !phase.equals(Phases.MAIN_PHASE_2)) return DuelMenuMessages.CANT_ACTIVATE_SPELL_EFFECT;
         else if (selectedCard.isPowerUsed()) return DuelMenuMessages.CARD_ACTIVATED_BEFORE;
-        else if (!turnPlayer.getBoard().isMyCardSelected()) return DuelMenuMessages.NOT_OWNER;
+        else if (!board.isMyCardSelected()) return DuelMenuMessages.NOT_OWNER;
 
+        return activeASpellCard(selectedCard, turnPlayer, notTurnPlayer);
+    }
+
+    private DuelMenuMessages activeASpellCard(Card selectedCard, Player turnPlayer, Player notTurnPlayer) {
+        if (isConditionPreparedToActivateMagicCardInOpponentTurn(notTurnPlayer))
+            checkActiveMagicCardInOpponentTurn(turnPlayer, notTurnPlayer);
+
+        Board board = turnPlayer.getBoard();
         MagicCard spellCard = (MagicCard) selectedCard;
+        TrapResult trapResult = MagicCardController.doTrapEffectsInTurnPlayerActivateSpellCard(turnPlayer, notTurnPlayer,
+                spellCard);
+        if (trapResult == TrapResult.STOP) return DuelMenuMessages.ACTION_CANCELED_BY_TRAP_CARD;
+
+
         if (spellCard.getIcon().equals("Field")) {
             turnPlayer.getBoard().addSpellCardToFieldZone(spellCard);
             spellCard.setPowerUsed(true);
@@ -466,98 +602,98 @@ public class DuelMenuController {
             MagicCardController.doSpellAbsorptionEffect(notTurnPlayer);
             return DuelMenuMessages.SPELL_ACTIVATED;
         } else if (board.isMagicsZoneFull() && board.isACardInHandSelected()) return DuelMenuMessages.FULL_MAGICS_ZONE;
+        if (spellCard.getIcon().equals("Quick-play") && spellCard.isSetInThisTurn()) return DuelMenuMessages.SET_IN_THIS_TURN;
 
-        if (!MagicCardController.doSpellCardEffect(turnPlayer, notTurnPlayer, spellCard))
-            return DuelMenuMessages.UNDONE_PREPARATIONS;
+        if (!MagicCardController.doSpellCardEffect(turnPlayer, notTurnPlayer, spellCard)) return DuelMenuMessages.UNDONE_PREPARATIONS;
         if (board.isACardInHandSelected()) board.addMagicCardToMagicsZone(spellCard);
-        selectedCard.setPowerUsed(true);
-        selectedCard.setCardFaceUp(true);
+        spellCard.setPowerUsed(true);
+        spellCard.setCardFaceUp(true);
         MagicCardController.doSpellAbsorptionEffect(turnPlayer);
         MagicCardController.doSpellAbsorptionEffect(notTurnPlayer);
+        if (spellCard.getIcon().equals("Normal") || spellCard.getIcon().equals("Ritual")) board.moveMagicCardToGraveyard(spellCard);
         return DuelMenuMessages.SPELL_ACTIVATED;
     }
 
-    private DuelMenuMessages setAMagicCard(MagicCard magicCard) {
+    private DuelMenuMessages checkActiveATrapCard() {
         Board board = turnPlayer.getBoard();
-        if (magicCard.getIcon().equals("Field")) board.addSpellCardToFieldZone(magicCard);
-        else if (board.isMagicsZoneFull()) return DuelMenuMessages.FULL_MAGICS_ZONE;
-        else board.addMagicCardToMagicsZone(magicCard);
-        magicCard.setPowerUsed(false);
-        magicCard.setCardFaceUp(false);
+        Card selectedCard = board.getSelectedCard();
+        if (selectedCard == null) return DuelMenuMessages.UNAVAILABLE_SELECTED_CARD;
+        else if (!selectedCard.getCardType().equals(CardTypes.TRAP)) return DuelMenuMessages.NOT_TRAP_CARD;
+        else if (selectedCard.isPowerUsed()) return DuelMenuMessages.CARD_ACTIVATED_BEFORE;
+        else if (!turnPlayer.getBoard().isMyCardSelected()) return DuelMenuMessages.NOT_OWNER;
+        else if (board.isMagicsZoneFull() && board.isACardInHandSelected()) return DuelMenuMessages.FULL_MAGICS_ZONE;
 
-        return DuelMenuMessages.SET_SUCCESSFULLY;
+        return activeATrapCard(selectedCard, turnPlayer, notTurnPlayer);
     }
 
-    private DuelMenuMessages summonMonster(Player turnPlayer, Board turnPlayerBoard) {
-        DuelMenuMessages result = null;
-        result = checkSummonMonster(turnPlayer, turnPlayerBoard);
-        if (result != null)
-            return result;
-        turnPlayer.setHasSummonedInTurn(true);
-        MonsterCard selectedMonster = (MonsterCard) turnPlayerBoard.getSelectedCard();
-        if (selectedMonster.getLevel() <= 4) {
-            turnPlayerBoard.getSelectedCard().setCardFaceUp(false);
-            turnPlayerBoard.setSummonCardOnMonsterZone();
-            turnPlayer.getBoard().setSelectedCard(null);
-        } else if (selectedMonster.getLevel() == 5 || selectedMonster.getLevel() == 6) {
-            return summonWithOneTribute(turnPlayerBoard);
-        } else if (selectedMonster.getLevel() == 7 || selectedMonster.getLevel() == 8) {
-            return summonWithTwoTribute(turnPlayerBoard);
-        }
-        return DuelMenuMessages.SUMMONED_SUCCESSFULLY;
+    private DuelMenuMessages activeATrapCard(Card selectedCard, Player turnPlayer, Player notTurnPlayer) {
+        MagicCard spellCard = (MagicCard) selectedCard;
+        if (spellCard.isSetInThisTurn()) return DuelMenuMessages.SET_IN_THIS_TURN;
+        spellCard.setPowerUsed(true);
+        spellCard.setCardFaceUp(true);
+
+        if (spellCard.getName().equals("Mind Crush")) MagicCardController.handleMindCrushEffect(turnPlayer, notTurnPlayer);
+        else if (spellCard.getName().equals("Call of The Haunted")) MagicCardController.handleCallOfTheHauntedEffect(turnPlayer);
+        return DuelMenuMessages.TRAP_ACTIVATED;
     }
 
-    private DuelMenuMessages checkSummonMonster(Player turnPlayer, Board turnPlayerBoard) {
-        Card selectedCard = turnPlayerBoard.getSelectedCard();
-        if (!turnPlayerBoard.isMyCardSelected()) {
-            return DuelMenuMessages.UNAVAILABLE_SELECTED_CARD;
+    private void checkActiveMagicCardInOpponentTurn(Player turnPlayer, Player notTurnPlayer) {
+        while (true) {
+            if (DuelMenuView.activeMagicCardInOpponentTurn(notTurnPlayer)) handleYesAnswerInChangeTurn(notTurnPlayer, turnPlayer);
+            else DuelMenuView.showTurnAndBoard(turnPlayer);
         }
-        if (turnPlayerBoard.isACardInHandSelected() || !model.cards.Card.isMonsterCard(selectedCard) || selectedCard.getCardType() == CardTypes.RITUAL) {
-            return DuelMenuMessages.SUMMON_NOT_POSSIBLE;
-        } else if (phase != Phases.MAIN_PHASE_1 && phase != Phases.MAIN_PHASE_2) {
-            return DuelMenuMessages.NOT_TRUE_PHASE;
-        } else if (turnPlayerBoard.isMonsterZoneFull()) {
-            return DuelMenuMessages.MONSTER_ZONE_IS_FULL;
-        } else if (turnPlayer.getHasSummonedInTurn() == true) {
-            return DuelMenuMessages.ALREADY_SUMMONED_OR_SET;
-        }
-        return null;
     }
 
-    private DuelMenuMessages summonWithOneTribute(Board turnPlayerBoard) {
-        if (!turnPlayerBoard.isThereOneMonsterForTribute()) {
-            return DuelMenuMessages.NOT_ENOUGH_CARD_FOR_TRIBUTE;
-        }
-        String addressString = Utils.getScanner().nextLine().trim();
-        int address = Integer.parseInt(addressString);
-        if (!turnPlayerBoard.isThereMonsterCardInAddress(address)) {
-            return DuelMenuMessages.NO_MONSTER_ON_THIS_ADDRESS;
-        }
-        turnPlayerBoard.removeTribute(address);
-        turnPlayerBoard.setSummonCardOnMonsterZone();
-        return DuelMenuMessages.SUMMONED_SUCCESSFULLY;
+    private void handleYesAnswerInChangeTurn(Player turnPlayer, Player notTurnPlayer) {
+        String command = Utils.getScanner().nextLine();
+        Matcher matcher = Utils.getMatcher(DuelMenuRegexes.ACTIVE_MAGIC_CARD_IN_OPPONENT_TURN.getRegex(), command);
+        if (matcher.find()) {
+
+            MagicCard magicCard = turnPlayer.getBoard().getFaceDownMagicCardFromMagicsZoneByName(matcher.group(1));
+            if (magicCard == null) DuelMenuView.showUnavailableCard();
+            else if (magicCard.getCardType().equals(CardTypes.SPELL) && !magicCard.getIcon().equals("Quick-play"))
+                DuelMenuView.showCantActivateCard();
+            else {
+//                so we can activate magic card
+                if (activeMagicCardInOpponentTurn(turnPlayer, notTurnPlayer, magicCard)) DuelMenuView.showActiveSuccessfullyInOpponentTurn();
+                else DuelMenuView.showActiveUnsuccessfullyInOpponentTurn();
+            }
+
+        } else DuelMenuView.showNotTurnToDoMoves();
     }
 
-    private DuelMenuMessages summonWithTwoTribute(Board turnPlayerBoard) {
-        if (!turnPlayerBoard.isThereTwoMonsterForTribute()) {
-            return DuelMenuMessages.NOT_ENOUGH_CARD_FOR_TRIBUTE;
-        }
-        String addressString = Utils.getScanner().nextLine().trim();
-        int address = Integer.parseInt(addressString);
-        addressString = Utils.getScanner().nextLine().trim();
-        int address2 = Integer.parseInt(addressString);
-        if (!turnPlayerBoard.isThereMonsterCardInAddress(address)) {
-            return DuelMenuMessages.NO_MONSTER_ON_THIS_ADDRESS;
-        }
-        if (!turnPlayerBoard.isThereMonsterCardInAddress(address2)) {
-            return DuelMenuMessages.NO_MONSTER_ON_THIS_ADDRESS;
-        }
-        turnPlayerBoard.removeTribute(address);
-        turnPlayerBoard.removeTribute(address2);
-        turnPlayerBoard.setSummonCardOnMonsterZone();
-        return DuelMenuMessages.SUMMONED_SUCCESSFULLY;
+    private boolean activeMagicCardInOpponentTurn(Player turnPlayer, Player notTurnPlayer, MagicCard magicCard) {
+        if (magicCard.getCardType().equals(CardTypes.SPELL)) {
+            DuelMenuMessages message = activeASpellCard(magicCard, turnPlayer, notTurnPlayer);
+            return !message.equals(DuelMenuMessages.UNDONE_PREPARATIONS) &&
+                    !message.equals(DuelMenuMessages.ACTION_CANCELED_BY_TRAP_CARD);
+
+        } else if (magicCard.getCardType().equals(CardTypes.TRAP)) activeATrapCard(magicCard, turnPlayer, notTurnPlayer);
+
+        return true;
     }
 
+    private boolean isConditionPreparedToActivateMagicCardInOpponentTurn(Player notTurnPlayer) {
+        MagicCard[] magicsZone = notTurnPlayer.getBoard().getMagicsZone();
+        for (int i = 1; i < magicsZone.length; i++) {
+            MagicCard magicCard = magicsZone[i];
+            if (magicCard != null && !magicCard.getCardFaceUp() && (magicCard.getCardType().equals(CardTypes.TRAP) ||
+                    magicCard.getCardType().equals(CardTypes.SPELL) && magicCard.getIcon().equals("Quick-play")))
+                return true;
+        }
+
+        return false;
+    }
+
+    public DuelMenuMessages showSelectedCard() {
+        Board board = turnPlayer.getBoard();
+        Card selectedCard = board.getSelectedCard();
+        if (selectedCard == null) return DuelMenuMessages.NOT_SELECTED_CARD;
+        else if (!board.isMyCardSelected() && !selectedCard.getCardFaceUp()) return DuelMenuMessages.INVISIBLE_CARD;
+
+        Utils.showCard(selectedCard.getName());
+        return DuelMenuMessages.EMPTY;
+    }
 
 //    private DuelMenuMessages checkBack() {
 //

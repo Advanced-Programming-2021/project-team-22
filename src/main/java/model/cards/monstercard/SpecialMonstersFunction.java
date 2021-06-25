@@ -3,6 +3,7 @@ package model.cards.monstercard;
 import controller.duelmenu.DuelMenuMessages;
 import model.Board;
 import model.Player;
+import model.cards.monstercard.MonsterCard;
 
 public interface SpecialMonstersFunction {
     default DuelMenuMessages attack(Player attackingPlayer, Player opponentPlayer, int numberToAttack) {

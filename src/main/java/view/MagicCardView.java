@@ -11,7 +11,8 @@ import java.util.ArrayList;
 
 public class MagicCardView extends DuelMenuView {
     private MagicCardView(Player firstPlayer, Player secondPlayer) {
-        super(firstPlayer, secondPlayer);
+//        number of rounds is not important here!
+        super(firstPlayer, secondPlayer, 1);
     }
 
     public static void showGraveyardsMonsterCards(Player turnPlayer, Player notTurnPlayer) {
@@ -22,8 +23,8 @@ public class MagicCardView extends DuelMenuView {
         showGraveyardMonsterCards(notTurnPlayer.getBoard(), Card.findNumberOfMonsterCards(notTurnPlayer.getBoard().getGraveyard()) + 1);
     }
 
-    private static void showGraveyardMonsterCards(Board board, int startNumber) {
-//        it used for Monster Reborn spell card
+    public static void showGraveyardMonsterCards(Board board, int startNumber) {
+//        it used for Monster Reborn spell card and Call of The Haunted trap card
         int count = startNumber;
         for (int i = 0; i < board.getGraveyard().size(); i++) {
             if (Card.isMonsterCard(board.getGraveyard().get(i))) {
@@ -114,5 +115,20 @@ public class MagicCardView extends DuelMenuView {
         }
 
         return startNumber;
+    }
+
+
+
+    public static String getACardName() {
+        System.out.println("please enter a card name:");
+        return Utils.getScanner().nextLine();
+    }
+
+    public static void invalidCardName() {
+        System.out.println("your entered card name is invalid");
+    }
+
+    public static void cardRemoved(String playerName) {
+        System.out.println(playerName + " cards removed");
     }
 }

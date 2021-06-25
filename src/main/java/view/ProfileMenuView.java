@@ -18,7 +18,7 @@ public class ProfileMenuView {
             String command = Utils.getScanner().nextLine().trim();
             ProfileMenuMessages result = profileMenuController.findCommand(command);
 
-            if (result.equals(ProfileMenuMessages.EXIT_MENU)) break;
+            if (result.equals(ProfileMenuMessages.EXIT_PROFILE_MENU)) break;
             else System.out.print(result.getMessage());
         }
     }

@@ -20,12 +20,6 @@ public class DuelMenuView {
     private AIClass aiClass = new AIClass();
 
     public DuelMenuView(Player firstPlayer, Player secondPlayer, int numberOfRounds) {
-        firstPlayer.setLifePoint(8000);
-        secondPlayer.setLifePoint(8000);
-        firstPlayer.setWonRounds(0);
-        secondPlayer.setWonRounds(0);
-        firstPlayer.createBoard();
-        secondPlayer.createBoard();
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
         this.numberOfRounds = numberOfRounds;
@@ -33,12 +27,6 @@ public class DuelMenuView {
 
     public DuelMenuView(Player firstPlayer, int numberOfRounds) {
         Player secondPlayer = new Player("ai", "ai", "ai");
-        firstPlayer.setLifePoint(8000);
-        secondPlayer.setLifePoint(8000);
-        firstPlayer.setWonRounds(0);
-        secondPlayer.setWonRounds(0);
-        firstPlayer.createBoard();
-        secondPlayer.createBoard();
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
         this.numberOfRounds = numberOfRounds;
@@ -52,7 +40,7 @@ public class DuelMenuView {
     public static void showGraveyard(Board board) {
         if (board.getGraveyard().size() != 0) {
             for (int i = 1; i <= board.getGraveyard().size(); i++) {
-                printCard(i, board.getGraveyard().get(i));
+                printCard(i , board.getGraveyard().get(i));
             }
         } else System.out.println("graveyard empty");
         while (true) {
@@ -82,23 +70,13 @@ public class DuelMenuView {
 
     private static void showMonstersZone(Board board) {
         MonsterCard[] monsters = board.getMonstersZone();
-        if (monsters[5] != null)
-            System.out.print(monsters[5].toString() + "    ");
-        else System.out.print("E     ");
-        if (monsters[3] != null)
-            System.out.print(monsters[3].toString() + "    ");
-        else System.out.print("E     ");
-        if (monsters[1] != null)
-            System.out.print(monsters[1].toString() + "    ");
-        else System.out.print("E     ");
-        if (monsters[2] != null)
-            System.out.print(monsters[2].toString() + "    ");
-        else System.out.print("E     ");
-        if (monsters[4] != null)
-            System.out.print(monsters[4].toString() + "    ");
-        else System.out.print("E     ");
-
-        System.out.println();
+//        monsters[5].print();
+//        System.out.print(monsters[5].print() + "    ");
+//        System.out.print(monsters[3].print() + "    ");
+//        System.out.print(monsters[1].print() + "    ");
+//        System.out.print(monsters[2].print() + "    ");
+//        System.out.print(monsters[4].print() + "    ");
+//        System.out.println();
     }
 
     private static void showMagicsZone(Board board) {
@@ -112,23 +90,11 @@ public class DuelMenuView {
 
     private static void showOpponentMonstersZone(Board board) {
         MonsterCard[] monsters = board.getMonstersZone();
-        if (monsters[4] != null)
-            System.out.print(monsters[4].toString() + "    ");
-        else System.out.print("E     ");
-        if (monsters[2] != null)
-            System.out.print(monsters[2].toString() + "    ");
-        else System.out.print("E     ");
-        if (monsters[1] != null)
-            System.out.print(monsters[1].toString() + "    ");
-        else System.out.print("E     ");
-        if (monsters[3] != null)
-            System.out.print(monsters[3].toString() + "    ");
-        else System.out.print("E     ");
-        if (monsters[5] != null)
-            System.out.print(monsters[5].toString() + "    ");
-        else System.out.print("E     ");
-        System.out.println();
-
+//        System.out.print(monsters[4].print() + "    ");
+//        System.out.print(monsters[2].print() + "    ");
+//        System.out.print(monsters[1].print() + "    ");
+//        System.out.print(monsters[3].print() + "    ");
+//        System.out.print(monsters[5].print() + "    ");
     }
 
     private static void showOpponentMagicsZone(Board board) {
@@ -160,12 +126,64 @@ public class DuelMenuView {
             return false;
         }
         if (!board.isMyCardSelected() && !board.getSelectedCard().getCardFaceUp()) {
-            System.out.println("you cant see this card!");
+            System.out.println("you can't see this card!");
             return false;
         }
         return true;
     }
 
+    public static boolean activeMagicCardInOpponentTurn(Player notTurnPlayer) {
+        showTurnAndBoard(notTurnPlayer);
+        while (true) {
+            System.out.println("do you want to activate your trap and spell?\nplease enter yes or no");
+            String answer = Utils.getScanner().nextLine();
+            if (answer.equals("yes")) return true;
+            if (answer.equals("no")) return false;
+        }
+
+    }
+
+    public static void showTurnAndBoard(Player player) {
+        System.out.println("now it will be " + player.getUsername() + " turn");
+//        TODO: show board
+    }
+
+    public static void showNotTurnToDoMoves() {
+        System.out.println("it’s not your turn to play this kind of moves");
+    }
+
+    public static void showUnavailableCard() {
+        System.out.println("your entered card name is unavailable in your magics zone or that card is activated before");
+    }
+
+    public static void showCantActivateCard() {
+        System.out.println("you can't activate this card");
+    }
+
+    public static void showActiveSuccessfullyInOpponentTurn() {
+        System.out.println("spell/trap activated");
+    }
+
+    public static void showActiveUnsuccessfullyInOpponentTurn() {
+        System.out.println("spell/trap didn't activate");
+    }
+
+    public void duelMenuView() {
+        DuelMenuController duelMenuController = new DuelMenuController();
+
+        DuelMenuMessages resultOfInitialGame = null;
+        while (resultOfInitialGame == null || !resultOfInitialGame.equals(DuelMenuMessages.SHOW_TURN_PLAYER)) {
+            resultOfInitialGame = duelMenuController.initialGame(firstPlayer, secondPlayer);
+            System.out.print(resultOfInitialGame.getMessage());
+        }
+
+        while (true) {
+            String command = Utils.getScanner().nextLine().trim();
+            DuelMenuMessages result = duelMenuController.findCommand(command);
+
+            System.out.print(result.getMessage());
+        }
+    }
 
     public void playWithAi() {
         DuelMenuController duelMenuController = new DuelMenuController();
@@ -185,12 +203,12 @@ public class DuelMenuView {
                     if (phase == Phases.DRAW_PHASE && duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().size() > 0) {
                         duelMenuController.getTurnPlayer().getBoard().getCardsInHand().add(duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().get(0));
                         duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().remove(0);
-                        setPhase(phase, turnFlag);
+                        setPhase(duelMenuController);
                     }
                     String command = AIClass.getOrder(secondPlayer.getBoard(), firstPlayer.getBoard(), secondPlayer, firstPlayer, duelMenuController.getPhase());
                     DuelMenuMessages result = duelMenuController.findCommand(command);
                     System.out.print(result.getMessage());
-                    setPhase(phase, turnFlag);
+                    setPhase(duelMenuController);
                 }
             }
             if (turnFlag == 1) {
@@ -205,62 +223,10 @@ public class DuelMenuView {
                     if (phase == Phases.DRAW_PHASE && duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().size() > 0) {
                         duelMenuController.getTurnPlayer().getBoard().getCardsInHand().add(duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().get(0));
                         duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().remove(0);
-                        setPhase(phase, turnFlag);
+                        setPhase(duelMenuController);
 
                     }
-                    getOrder(duelMenuController, turnFlag);
-                }
-            }
-
-        }
-    }
-
-    public void duelMenuView() {
-        DuelMenuController duelMenuController = new DuelMenuController();
-
-        DuelMenuMessages resultOfInitialGame = null;
-        while (resultOfInitialGame == null || !resultOfInitialGame.equals(DuelMenuMessages.SHOW_TURN_PLAYER)) {
-            resultOfInitialGame = duelMenuController.initialGame(firstPlayer, secondPlayer);
-            System.out.print(resultOfInitialGame.getMessage());
-        }
-        while (true) {
-            if (checkWinner()) {
-                giveScores();
-            }
-            if (turnFlag == 0) {
-                while (true) {
-                    showBoard(duelMenuController.getTurnPlayer().getBoard(), duelMenuController.getNotTurnPlayer().getBoard());
-                    if (turnFlag == 1) {
-                        Player holdPlayer = duelMenuController.getTurnPlayer();
-                        duelMenuController.setTurnPlayer(duelMenuController.getNotTurnPlayer());
-                        duelMenuController.setNotTurnPlayer(holdPlayer);
-                        break;
-                    }
-                    if (phase == Phases.DRAW_PHASE && duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().size() > 0) {
-                        duelMenuController.getTurnPlayer().getBoard().getCardsInHand().add(duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().get(0));
-                        duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().remove(0);
-                        setPhase(phase, turnFlag);
-                    }
-                    getOrder(duelMenuController, turnFlag);
-
-                }
-            }
-            if (turnFlag == 1) {
-                while (true) {
-                    showBoard(duelMenuController.getTurnPlayer().getBoard(), duelMenuController.getNotTurnPlayer().getBoard());
-                    if (turnFlag == 0) {
-                        Player holdPlayer = duelMenuController.getTurnPlayer();
-                        duelMenuController.setTurnPlayer(duelMenuController.getNotTurnPlayer());
-                        duelMenuController.setNotTurnPlayer(holdPlayer);
-                        break;
-                    }
-                    if (phase == Phases.DRAW_PHASE && duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().size() > 0) {
-                        duelMenuController.getTurnPlayer().getBoard().getCardsInHand().add(duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().get(0));
-                        duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().remove(0);
-                        setPhase(phase, turnFlag);
-
-                    }
-                    getOrder(duelMenuController, turnFlag);
+                    getOrder(duelMenuController);
                 }
             }
 
@@ -309,16 +275,14 @@ public class DuelMenuView {
     }
 
     private boolean checkWinner() {
-        if (firstPlayer.getLifePoint() <= 0 || secondPlayer.getLifePoint() <= 0)
-            return true;
-        return false;
+        return firstPlayer.getLifePoint() <= 0 || secondPlayer.getLifePoint() <= 0;
     }
 
-    private void getOrder(DuelMenuController duelMenuController, Integer turnFlag) {
+    private void getOrder(DuelMenuController duelMenuController) {
         System.out.println("this is turn of" + duelMenuController.getTurnPlayer().getUsername());
         String command = Utils.getScanner().nextLine().trim();
         if (command.equals("next Phase")) {
-            setPhase(duelMenuController.getPhase(), turnFlag);
+            setPhase(duelMenuController);
         }
         if (command.equals("show graveyard"))
             showGraveyard(duelMenuController.getTurnPlayer().getBoard());
@@ -328,19 +292,19 @@ public class DuelMenuView {
         System.out.print(result.getMessage());
     }
 
-    public void setPhase(Phases phase, Integer flag) {
-        if (phase == Phases.DRAW_PHASE) {
-            phase = Phases.STANDBY_PHASE;
-        } else if (phase == Phases.STANDBY_PHASE) {
-            phase = Phases.MAIN_PHASE_1;
-        } else if (phase == Phases.MAIN_PHASE_1) {
-            phase = Phases.BATTLE_PHASE;
-        } else if (phase == Phases.BATTLE_PHASE) {
-            phase = Phases.MAIN_PHASE_2;
-        } else if (phase == Phases.MAIN_PHASE_2) {
-            phase = Phases.DRAW_PHASE;
-            flag++;
-            flag %= 2;
+    public void setPhase(DuelMenuController duelMenuController) {
+        if (duelMenuController.getPhase().equals(Phases.DRAW_PHASE)) {
+            duelMenuController.setPhase(Phases.STANDBY_PHASE);
+        } else if (duelMenuController.getPhase().equals(Phases.STANDBY_PHASE)) {
+            duelMenuController.setPhase(Phases.MAIN_PHASE_1);
+        } else if (duelMenuController.getPhase().equals(Phases.MAIN_PHASE_1)) {
+            duelMenuController.setPhase(Phases.BATTLE_PHASE);
+        } else if (duelMenuController.getPhase().equals(Phases.BATTLE_PHASE)) {
+            duelMenuController.setPhase(Phases.MAIN_PHASE_2);
+        } else if (duelMenuController.getPhase().equals(Phases.MAIN_PHASE_2)) {
+            duelMenuController.setPhase(Phases.DRAW_PHASE);
+            turnFlag++;
+            turnFlag %= 2;
         }
 
     }

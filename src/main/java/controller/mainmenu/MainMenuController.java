@@ -1,11 +1,9 @@
 package controller.mainmenu;
 
+import controller.MenuRegexes;
 import controller.Utils;
 import model.Player;
-import view.DuelMenuView;
-import view.ImportExportMenuView;
-import view.ProfileMenuView;
-import view.ShopMenuView;
+import view.*;
 
 import java.util.regex.Matcher;
 
@@ -28,28 +26,34 @@ public class MainMenuController {
     }
 
     private MainMenuMessages enterAMenu(String command) {
-        Matcher matcher = Utils.getMatcher(MainMenuRegexes.ENTER_A_MENU.getRegex(), command);
+        Matcher matcher = Utils.getMatcher(MenuRegexes.ENTER_A_MENU.getRegex(), command);
         if (!matcher.find()) return MainMenuMessages.INVALID_COMMAND;
 
         String menu = matcher.group(1);
         if (menu.equalsIgnoreCase("Login")) {
             return MainMenuMessages.INVALID_NAVIGATION;
+
         } else if (menu.equalsIgnoreCase("Main")) {
             return MainMenuMessages.INVALID_NAVIGATION;
+
         } else if (menu.equalsIgnoreCase("Duel")) {
             return MainMenuMessages.INVALID_NAVIGATION;
+
         } else if (menu.equalsIgnoreCase("Deck")) {
-//            DeckMenuView deckMenuView = new DeckMenuView(loggedInPlayer);
-//            deckMenuView.deckMenuView();
-        } else if (menu.equalsIgnoreCase("Scoreboard")) {
-//            ScoreboardMenuView scoreboardMenuView = new ScoreboardMenuView(loggedInPlayer);
-//            scoreboardMenuView.scoreboardMenuView();
-        } else if (menu.equalsIgnoreCase("Profile")) {
+            DeckMenuView deckMenuView = new DeckMenuView(loggedInPlayer);
+            deckMenuView.deckMenuView();
+
+        } else if (menu.equalsIgnoreCase("Scoreboard"))
+            ScoreboardMenuView.scoreboardMenuView();
+
+        else if (menu.equalsIgnoreCase("Profile")) {
             ProfileMenuView profileMenuView = new ProfileMenuView(loggedInPlayer);
             profileMenuView.profileMenuView();
+
         } else if (menu.equalsIgnoreCase("Shop")) {
             ShopMenuView shopMenuView = new ShopMenuView(loggedInPlayer);
             shopMenuView.shopMenuView();
+
         } else if (menu.equalsIgnoreCase("ImportExport")) {
             ImportExportMenuView importExportMenuView = new ImportExportMenuView();
             importExportMenuView.ImportExportMenuView();
@@ -97,12 +101,16 @@ public class MainMenuController {
 //            TODO: MainMenuMessages.setInvalidDeck(opponentPlayerUsername or loggedInPlayer.getUsername());
 //            TODO: return MainMenuMessages.INVALID_DECK;
 
-            if (!rounds.equals("1") && !rounds.equals("3")) {
+            if (rounds.equals("1")) {
+                DuelMenuView duelMenuView = new DuelMenuView(loggedInPlayer, opponentPlayer, 1);
+                duelMenuView.duelMenuView();
+            } else if (rounds.equals("3")) {
+                DuelMenuView duelMenuView = new DuelMenuView(loggedInPlayer, opponentPlayer, 3);
+                duelMenuView.duelMenuView();
+            } else {
                 return MainMenuMessages.INVALID_ROUNDS_NUMBER;
             }
 
-            DuelMenuView duelMenuView = new DuelMenuView(loggedInPlayer, opponentPlayer , Integer.parseInt(rounds));
-            duelMenuView.duelMenuView();
         } else {
 //            TODO: handle entering to enter duel menu by AI
 

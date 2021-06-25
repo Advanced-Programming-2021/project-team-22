@@ -1,5 +1,9 @@
 package controller;
 
+import model.cards.Card;
+import model.cards.magiccard.MagicCard;
+import model.cards.monstercard.MonsterCard;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -30,5 +34,12 @@ public class Utils {
 
     public static Matcher getMatcher(String regex, String command) {
         return Pattern.compile(regex).matcher(command);
+    }
+
+    public static void showCard(String cardName) {
+        Card card = Card.getCardByName(cardName);
+        if (card == null) System.out.println("unavailable card");
+        else if (card instanceof MonsterCard) System.out.println( ((MonsterCard) card).show() );
+        else System.out.println( ((MagicCard) card).show() );
     }
 }

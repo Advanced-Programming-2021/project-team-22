@@ -2,6 +2,7 @@ package controller.importexportmenu;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import controller.MenuRegexes;
 import controller.Utils;
 import model.cards.Card;
 import model.cards.magiccard.MagicCard;
@@ -25,7 +26,7 @@ public class ImportExportMenuController {
     }
 
     private static ImportExportMenuMessages enterAMenu(String command) {
-        Matcher matcher = Utils.getMatcher(ImportExportMenuRegexes.ENTER_A_MENU.getRegex(), command);
+        Matcher matcher = Utils.getMatcher(MenuRegexes.ENTER_A_MENU.getRegex(), command);
         if (!matcher.find()) return ImportExportMenuMessages.INVALID_COMMAND;
 
         return ImportExportMenuMessages.INVALID_NAVIGATION;
@@ -37,14 +38,14 @@ public class ImportExportMenuController {
 
         String cardName = matcher.group(1);
         try {
-            FileReader fileReader = new FileReader("src/database/cards/" + cardName + ".json");
+            FileReader fileReader = new FileReader("src/main/resources/cards/" + cardName + ".json");
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             MonsterCard monsterCard = gson.fromJson(fileReader, MonsterCard.class);
 
             if (Card.getCardByName(cardName) != null) return ImportExportMenuMessages.AVAILABLE_CARD;
             if (monsterCard.getAttribute() == null) {
 //                so we understand that the card is a magic card
-                fileReader = new FileReader("src/database/cards/" + cardName + ".json");
+                fileReader = new FileReader("src/main/resources/cards/" + cardName + ".json");
                 MagicCard magicCard = gson.fromJson(fileReader, MagicCard.class);
                 Card.addCardToAllCards(magicCard);
                 if (isCardIncomplete(magicCard) || isMagicCardIncomplete(magicCard))
@@ -85,7 +86,7 @@ public class ImportExportMenuController {
         Card card = Card.getCardByName(cardName);
         if (card == null) return ImportExportMenuMessages.UNAVAILABLE_CARD;
         try {
-            FileWriter fileWriter = new FileWriter("src/database/cards/" + cardName + ".json");
+            FileWriter fileWriter = new FileWriter("src/main/resources/cards/" + cardName + ".json");
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             fileWriter.write(gson.toJson(card));
             fileWriter.close();

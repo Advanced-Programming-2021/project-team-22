@@ -6,6 +6,11 @@ import model.cards.CardTypes;
 public class MagicCard extends Card {
     protected final String icon;
     protected final MagicCardStatuses status;
+    private transient boolean isSetInThisTurn;
+
+    {
+        isSetInThisTurn = false;
+    }
 
     public MagicCard(String name, CardTypes cardType, String icon, String description, MagicCardStatuses status, int price) {
         super(name, description, cardType, price);
@@ -26,6 +31,21 @@ public class MagicCard extends Card {
 
     public MagicCardStatuses getStatus() {
         return status;
+    }
+
+    public void setIsSetInThisTurn(boolean setInThisTurn) {
+        isSetInThisTurn = setInThisTurn;
+    }
+
+    public boolean isSetInThisTurn() {
+        return isSetInThisTurn;
+    }
+
+    public String show() {
+        return "Name: " + this.name +
+                "\n" + this.cardType +
+                "\nType: " + this.icon +
+                "\nDescription: " + this.description;
     }
 
     public void print() {
