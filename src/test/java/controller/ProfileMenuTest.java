@@ -21,11 +21,17 @@ public class ProfileMenuTest extends MenuTest {
     public void changeName() {
         Player player = Player.getPlayerByUsername("parsa");
         ProfileMenuController profileMenuController = new ProfileMenuController(player);
-        ProfileMenuMessages result = profileMenuController.findCommand("profile change --nickname newname");
-        Assertions.assertEquals(ProfileMenuMessages.CHANGE_NICKNAME_DONE, result);
+        Assertions.assertEquals(ProfileMenuMessages.CHANGE_NICKNAME_DONE, profileMenuController.findCommand("profile change --nickname newname"));
+
         Assertions.assertEquals("newname", player.getNickname());
-        result = profileMenuController.findCommand("profile change --nickname P");
-        Assertions.assertEquals(ProfileMenuMessages.CHANGE_NICKNAME_DONE, result);
+        Assertions.assertEquals(ProfileMenuMessages.CHANGE_NICKNAME_DONE,  profileMenuController.findCommand("profile change --nickname P"));
+        String userName = "parsa";
+        String password = "123";
+        String nickname = "asd";
+        new Player(userName, password, nickname);
+        ProfileMenuMessages.setNickname(nickname);
+        Assertions.assertEquals(ProfileMenuMessages.NOT_UNIQUE_NICKNAME,  profileMenuController.findCommand("profile change --nickname asd"));
+
     }
 
     @Test
@@ -53,5 +59,23 @@ public class ProfileMenuTest extends MenuTest {
     public void checkExit() {
         ProfileMenuController profileMenuController = new ProfileMenuController(Player.getPlayerByUsername("parsa"));
         Assertions.assertEquals(ProfileMenuMessages.EXIT_MENU , profileMenuController.findCommand("menu exit"));
+    }
+
+    @Test
+    public void findCommand(){
+        ProfileMenuController profileMenuController = new ProfileMenuController(Player.getPlayerByUsername("parsa"));
+        Assertions.assertEquals(ProfileMenuMessages.INVALID_COMMAND , profileMenuController.findCommand("show"));
+        Assertions.assertEquals(ProfileMenuMessages.PROFILE_MENU , profileMenuController.findCommand("menu show"));
+    }
+
+    @Test
+    public void inputPattern(){
+        ProfileMenuController profileMenuController = new ProfileMenuController(Player.getPlayerByUsername("parsa"));
+        Assertions.assertEquals(ProfileMenuMessages.WRONG_CURRENT_PASSWORD , profileMenuController.findCommand("profile change --password --new newPass --current newPass"));
+        Assertions.assertEquals(ProfileMenuMessages.WRONG_CURRENT_PASSWORD , profileMenuController.findCommand("profile change --current newPass --P --N newPass"));
+        Assertions.assertEquals(ProfileMenuMessages.INVALID_COMMAND , profileMenuController.findCommand("^profile change --C newPass --N newPass --password"));
+        Assertions.assertEquals(ProfileMenuMessages.WRONG_CURRENT_PASSWORD , profileMenuController.findCommand("profile change --N newPass --P --C newPass"));
+        Assertions.assertEquals(ProfileMenuMessages.WRONG_CURRENT_PASSWORD , profileMenuController.findCommand("profile change --N newPass --C newPass --P"));
+
     }
 }

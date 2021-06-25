@@ -182,7 +182,15 @@ public class DuelMenuView {
                         duelMenuController.setNotTurnPlayer(holdPlayer);
                         break;
                     }
-                    getOrder(duelMenuController, turnFlag);
+                    if (phase == Phases.DRAW_PHASE && duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().size() > 0) {
+                        duelMenuController.getTurnPlayer().getBoard().getCardsInHand().add(duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().get(0));
+                        duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().remove(0);
+                        setPhase(phase, turnFlag);
+                    }
+                    String command = AIClass.getOrder(secondPlayer.getBoard(), firstPlayer.getBoard(), secondPlayer, firstPlayer, duelMenuController.getPhase());
+                    DuelMenuMessages result = duelMenuController.findCommand(command);
+                    System.out.print(result.getMessage());
+                    setPhase(phase, turnFlag);
                 }
             }
             if (turnFlag == 1) {
@@ -193,6 +201,12 @@ public class DuelMenuView {
                         duelMenuController.setTurnPlayer(duelMenuController.getNotTurnPlayer());
                         duelMenuController.setNotTurnPlayer(holdPlayer);
                         break;
+                    }
+                    if (phase == Phases.DRAW_PHASE && duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().size() > 0) {
+                        duelMenuController.getTurnPlayer().getBoard().getCardsInHand().add(duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().get(0));
+                        duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().remove(0);
+                        setPhase(phase, turnFlag);
+
                     }
                     getOrder(duelMenuController, turnFlag);
                 }
@@ -222,10 +236,13 @@ public class DuelMenuView {
                         duelMenuController.setNotTurnPlayer(holdPlayer);
                         break;
                     }
-                    String command = AIClass.getOrder(secondPlayer.getBoard(), firstPlayer.getBoard(), secondPlayer, firstPlayer, duelMenuController.getPhase());
-                    DuelMenuMessages result = duelMenuController.findCommand(command);
-                    System.out.print(result.getMessage());
-                    setPhase(phase, turnFlag);
+                    if (phase == Phases.DRAW_PHASE && duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().size() > 0) {
+                        duelMenuController.getTurnPlayer().getBoard().getCardsInHand().add(duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().get(0));
+                        duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().remove(0);
+                        setPhase(phase, turnFlag);
+                    }
+                    getOrder(duelMenuController, turnFlag);
+
                 }
             }
             if (turnFlag == 1) {
@@ -236,6 +253,12 @@ public class DuelMenuView {
                         duelMenuController.setTurnPlayer(duelMenuController.getNotTurnPlayer());
                         duelMenuController.setNotTurnPlayer(holdPlayer);
                         break;
+                    }
+                    if (phase == Phases.DRAW_PHASE && duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().size() > 0) {
+                        duelMenuController.getTurnPlayer().getBoard().getCardsInHand().add(duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().get(0));
+                        duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().remove(0);
+                        setPhase(phase, turnFlag);
+
                     }
                     getOrder(duelMenuController, turnFlag);
                 }
