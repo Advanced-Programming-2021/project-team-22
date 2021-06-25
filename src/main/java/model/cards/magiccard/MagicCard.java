@@ -6,6 +6,11 @@ import model.cards.CardTypes;
 public class MagicCard extends Card {
     protected final String icon;
     protected final MagicCardStatuses status;
+    private transient boolean isSetInThisTurn;
+
+    {
+        isSetInThisTurn = false;
+    }
 
     public MagicCard(String name, CardTypes cardType, String icon, String description, MagicCardStatuses status, int price) {
         super(name, description, cardType, price);
@@ -28,12 +33,24 @@ public class MagicCard extends Card {
         return status;
     }
 
-    public void print() {
-//        TODO: handle it --> «this.equals(null)» have error    and    «System.out.print» should be in the view
-//        if (this.equals(null))
-//            System.out.print("E     ");
-//        else if (isCardFaceUp)
-//            System.out.print("O     ");
-//        else System.out.print("H     ");
+    public void setIsSetInThisTurn(boolean setInThisTurn) {
+        isSetInThisTurn = setInThisTurn;
+    }
+
+    public boolean isSetInThisTurn() {
+        return isSetInThisTurn;
+    }
+
+    public String show() {
+        return "Name: " + this.name +
+                "\n" + this.cardType +
+                "\nType: " + this.icon +
+                "\nDescription: " + this.description;
+    }
+
+    @Override
+    public String toString() {
+        if (isCardFaceUp) return "O ";
+        else return "H ";
     }
 }

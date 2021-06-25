@@ -5,5 +5,6 @@ public enum Phases {
     STANDBY_PHASE,
     MAIN_PHASE_1,
     BATTLE_PHASE,
-    MAIN_PHASE_2;
+    MAIN_PHASE_2,
+    END_PHASE;
 }

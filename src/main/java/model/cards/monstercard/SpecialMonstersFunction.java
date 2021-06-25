@@ -3,6 +3,7 @@ package model.cards.monstercard;
 import controller.duelmenu.DuelMenuMessages;
 import model.Board;
 import model.Player;
+import model.cards.monstercard.MonsterCard;
 
 public interface SpecialMonstersFunction {
     default DuelMenuMessages attack(Player attackingPlayer, Player opponentPlayer, int numberToAttack) {
@@ -17,13 +18,16 @@ public interface SpecialMonstersFunction {
                 case "OO":
                     if (attackingCard.attackPoints > opponentCard.attackPoints) {
                         opponentPlayer.decreaseLifePoint(attackingCard.attackPoints - opponentCard.attackPoints);
+                        opponentCard.addEquippedByToGraveyard(opponentPlayerBoard);
                         opponentPlayerBoard.getGraveyard().add(opponentCard);
                         opponentPlayerBoard.getMonstersZone()[numberToAttack] = null;
                         DuelMenuMessages.setOpponentGotDamageInAttack(attackingCard.attackPoints - opponentCard.attackPoints);
                         return DuelMenuMessages.OPPONENT_GOT_DAMAGE_IN_ATTACK;
                     } else if (attackingCard.attackPoints == opponentCard.attackPoints) {
+                        opponentCard.addEquippedByToGraveyard(opponentPlayerBoard);
                         opponentPlayerBoard.getGraveyard().add(opponentCard);
                         opponentPlayerBoard.getMonstersZone()[numberToAttack] = null;
+                        attackingCard.addEquippedByToGraveyard(attackingPlayerBoard);
                         attackingPlayerBoard.getGraveyard().add(attackingCard);
                         deleteMonsterFromZone(attackingCard, attackingPlayerBoard.getMonstersZone());
                         return DuelMenuMessages.BOTH_CARDS_GET_DESTROYED;
@@ -38,6 +42,7 @@ public interface SpecialMonstersFunction {
 
                 case "DO":
                     if (attackingCard.attackPoints > opponentCard.attackPoints) {
+                        opponentCard.addEquippedByToGraveyard(opponentPlayerBoard);
                         opponentPlayerBoard.getGraveyard().add(opponentCard);
                         opponentPlayerBoard.getMonstersZone()[numberToAttack] = null;
                         return DuelMenuMessages.DEFENSE_POSITION_MONSTER_DESTROYED;
@@ -45,6 +50,7 @@ public interface SpecialMonstersFunction {
                         return DuelMenuMessages.NO_CARD_DESTROYED;
                     } else {
 //                    so we can conclude that attackingCard.attackPoints < opponentCard.attackPoints
+                        attackingCard.addEquippedByToGraveyard(attackingPlayerBoard);
                         attackingPlayerBoard.getGraveyard().add(attackingCard);
                         deleteMonsterFromZone(attackingCard, attackingPlayerBoard.getMonstersZone());
                         attackingPlayer.decreaseLifePoint(opponentCard.attackPoints - attackingCard.attackPoints);
@@ -104,10 +110,13 @@ public interface SpecialMonstersFunction {
 
     default DuelMenuMessages yomiShipFunction(Board attackingPlayerBoard, MonsterCard attackingCard, MonsterCard opponentCard) {
         if (opponentCard.toString().equals("OO") && attackingCard.attackPoints > opponentCard.attackPoints) {
+            attackingCard.addEquippedByToGraveyard(attackingPlayerBoard);
             attackingPlayerBoard.getGraveyard().add(attackingCard);
             deleteMonsterFromZone(attackingCard, attackingPlayerBoard.getMonstersZone());
         }
-        if (opponentCard.toString().equals("DO") || opponentCard.toString().equals("DH") && attackingCard.attackPoints > opponentCard.defensePoints) {
+        if (opponentCard.toString().equals("DO") || opponentCard.toString().equals("DH") &&
+                attackingCard.attackPoints > opponentCard.defensePoints) {
+            attackingCard.addEquippedByToGraveyard(attackingPlayerBoard);
             attackingPlayerBoard.getGraveyard().add(attackingCard);
             deleteMonsterFromZone(attackingCard, attackingPlayerBoard.getMonstersZone());
         }
@@ -130,14 +139,19 @@ public interface SpecialMonstersFunction {
         Board opponentPlayerBoard = opponentPlayer.getBoard();
 
         if (opponentCard.toString().equals("OO") && attackingCard.attackPoints > opponentCard.attackPoints) {
+            attackingCard.addEquippedByToGraveyard(attackingPlayerBoard);
             attackingPlayerBoard.getGraveyard().add(attackingCard);
+            opponentCard.addEquippedByToGraveyard(opponentPlayerBoard);
             opponentPlayerBoard.getGraveyard().add(opponentCard);
             attackingPlayerBoard.getMonstersZone()[number] = null;
             deleteMonsterFromZone(attackingCard, attackingPlayerBoard.getMonstersZone());
             return DuelMenuMessages.BOTH_CARDS_GET_DESTROYED;
         }
-        if (opponentCard.toString().equals("DO") || opponentCard.toString().equals("DH") && attackingCard.attackPoints > opponentCard.defensePoints) {
+        if (opponentCard.toString().equals("DO") || opponentCard.toString().equals("DH") &&
+                attackingCard.attackPoints > opponentCard.defensePoints) {
+            attackingCard.addEquippedByToGraveyard(attackingPlayerBoard);
             attackingPlayerBoard.getGraveyard().add(attackingCard);
+            opponentCard.addEquippedByToGraveyard(opponentPlayerBoard);
             opponentPlayerBoard.getGraveyard().add(opponentCard);
             attackingPlayerBoard.getMonstersZone()[number] = null;
             deleteMonsterFromZone(attackingCard, attackingPlayerBoard.getMonstersZone());

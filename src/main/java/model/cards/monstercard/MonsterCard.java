@@ -1,5 +1,6 @@
 package model.cards.monstercard;
 
+import model.Board;
 import model.cards.Card;
 import model.cards.CardTypes;
 import model.cards.magiccard.MagicCard;
@@ -15,11 +16,12 @@ public class MonsterCard extends Card implements SpecialMonstersFunction {
     protected transient ArrayList<MagicCard> equippedBy;
 //    if this boolean equals "false" so we can conclude that card is in attack position
     protected transient boolean isDefensePosition;
-    protected transient boolean isAttacked = false;
+    protected transient boolean isAttacked;
 
     {
         equippedBy = new ArrayList<>();
         isDefensePosition = false;
+        isAttacked = false;
     }
 
     public MonsterCard(String name, short level, MonsterCardAttributes attribute, String monsterType, CardTypes cardType,
@@ -112,6 +114,20 @@ public class MonsterCard extends Card implements SpecialMonstersFunction {
 
     public void createEquippedByArrayList() {
         equippedBy = new ArrayList<>();
+    }
+
+    public void addEquippedByToGraveyard(Board board) {
+        board.getGraveyard().addAll(equippedBy);
+        equippedBy.clear();
+    }
+
+    public String show() {
+        return "Name: " + this.name +
+                "\nLevel: " + this.level +
+                "\nType: " + this.monsterType +
+                "\nATK: " + this.attackPoints +
+                "\nDEF: " + this.defensePoints +
+                "\nDescription: " + this.description;
     }
 
     @Override

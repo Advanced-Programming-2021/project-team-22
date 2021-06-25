@@ -1,7 +1,7 @@
 package controller.profilemenu;
 
 public enum ProfileMenuRegexes {
-    CHANGE_NICKNAME("^profile change --nickname (\\S+)$"),
+    CHANGE_NICKNAME("^profile change --(?:nickname|N) (\\S+)$"),
     CHANGE_PASSWORD_FIRST_PATTERN("^profile change --(?:password|P) --(?:current|C) (\\S+) --(?:new|N) (\\S+)$"),
     CHANGE_PASSWORD_SECOND_PATTERN("^profile change --(?:password|P) --(?:new|N) (\\S+) --(?:current|C) (\\S+)$"),
     CHANGE_PASSWORD_THIRD_PATTERN("^profile change --(?:current|C) (\\S+) --(?:password|P) --(?:new|N) (\\S+)$"),

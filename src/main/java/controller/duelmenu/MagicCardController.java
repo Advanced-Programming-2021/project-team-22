@@ -1,4 +1,4 @@
-package controller;
+package controller.duelmenu;
 
 import model.Board;
 import model.Player;
@@ -45,8 +45,7 @@ public class MagicCardController {
             case "Mystical space typhoon":
                 return doMysticalSpaceTyphoonEffect(turnPlayer, notTurnPlayer);
             case "Ring of defense":
-//                TODO: handle it base trap and monster code
-                break;
+                return true;
 //                it's the only ritual spell card
             case "Advanced Ritual Art":
                 return doAdvancedRitualArtEffect();
@@ -110,7 +109,6 @@ public class MagicCardController {
     }
 
     private static boolean doTerraformingEffect(Player player) {
-//        TODO: do Iman handle with main cards?
         ArrayList<Card> cards = player.getBoard().getDeck().getMainCards();
         ArrayList<MagicCard> fieldSpellCards = findFieldSpellCards(cards);
 
@@ -209,19 +207,8 @@ public class MagicCardController {
     }
 
     private static boolean doTwinTwistersEffect(Player turnPlayer, Player notTurnPlayer) {
-        MagicCardView.showCardsInHand(turnPlayer);
-        ArrayList<Card> cardsInHand = turnPlayer.getBoard().getCardsInHand();
-        if (cardsInHand.size() == 0) return false;
-
-        while (true) {
-            int cardNumber = getCardNumber();
-            if (1 <= cardNumber && cardNumber <= cardsInHand.size()) {
-                turnPlayer.getBoard().getGraveyard().add(cardsInHand.get(cardNumber - 1));
-                cardsInHand.remove(cardNumber - 1);
-                break;
-            }
-            MagicCardView.invalidNumber();
-        }
+        boolean removeCardResult = removeOneCardFromHand(turnPlayer);
+        if (!removeCardResult) return false;
 
         MagicCardView.showMagicsZonesCards(turnPlayer, notTurnPlayer);
 
@@ -241,6 +228,24 @@ public class MagicCardController {
 
         for (int i = 0; i < numberOfChosenCards; i++) {
             doMysticalSpaceTyphoonEffect(turnPlayer, notTurnPlayer);
+        }
+
+        return true;
+    }
+
+    private static boolean removeOneCardFromHand(Player turnPlayer) {
+        MagicCardView.showCardsInHand(turnPlayer);
+        ArrayList<Card> cardsInHand = turnPlayer.getBoard().getCardsInHand();
+        if (cardsInHand.size() == 0) return false;
+
+        while (true) {
+            int cardNumber = getCardNumber();
+            if (1 <= cardNumber && cardNumber <= cardsInHand.size()) {
+                turnPlayer.getBoard().getGraveyard().add(cardsInHand.get(cardNumber - 1));
+                cardsInHand.remove(cardNumber - 1);
+                break;
+            }
+            MagicCardView.invalidNumber();
         }
 
         return true;
@@ -533,5 +538,122 @@ public class MagicCardController {
             if (doEffect) monsterCard.increaseAttackPoints(monsterCard.getDefensePoints());
             else monsterCard.decreaseAttackPoints(monsterCard.getDefensePoints());
         }
+    }
+
+
+
+//    handle trap cards
+    public static void handleMindCrushEffect(Player turnPlayer, Player notTurnPlayer) {
+        String cardName;
+        while (true) {
+            cardName = MagicCardView.getACardName();
+            if (Card.getCardByName(cardName) != null) break;
+            else MagicCardView.invalidCardName();
+        }
+
+        ArrayList<Card> cards = notTurnPlayer.getBoard().getCardsInHand();
+        if (isThereCardInArrayList(cards, cardName)) {
+
+            for (int  i = 0; i < cards.size(); i++) {
+                if (cards.get(i).getName().equals(cardName)) {
+                    notTurnPlayer.getBoard().getGraveyard().add(cards.get(i));
+                    cards.remove(i);
+                    --i;
+                }
+            }
+            MagicCardView.cardRemoved(notTurnPlayer.getUsername());
+
+        } else {
+            cards = turnPlayer.getBoard().getCardsInHand();
+            int randomNumber = (int) Math.floor(Math.random() * cards.size());
+            turnPlayer.getBoard().getGraveyard().add(cards.get(randomNumber));
+            cards.remove(randomNumber);
+            MagicCardView.cardRemoved(turnPlayer.getUsername());
+        }
+    }
+
+    private static boolean isThereCardInArrayList(ArrayList<Card> cards, String cardName) {
+        for (Card card : cards) {
+            if (card.getName().equals(cardName)) return true;
+        }
+        return false;
+    }
+
+    public static void handleCallOfTheHauntedEffect(Player player) {
+        MagicCardView.showGraveyardMonsterCards(player.getBoard(), 1);
+
+        int turnPlayerGraveyardMonsterCardsSize = Card.findNumberOfMonsterCards(player.getBoard().getGraveyard());
+        if (turnPlayerGraveyardMonsterCardsSize == 0) return;
+
+        MonsterCard chosenCard;
+        while (true) {
+            int cardNumber = getCardNumber();
+            chosenCard = findCallOfTheHauntedChosenCard(player, cardNumber);
+            if (chosenCard != null) break;
+            MagicCardView.invalidNumber();
+        }
+
+//        TODO: ehzar dar halat-e hamle chosenCard
+    }
+
+    private static MonsterCard findCallOfTheHauntedChosenCard(Player player, int cardNumber) {
+        MonsterCard chosenCard = null;
+        ArrayList<Card> graveyard = player.getBoard().getGraveyard();
+
+        int count = 0;
+        for (Card card : graveyard) {
+            if (Card.isMonsterCard(card)) {
+                ++count;
+                if (count == cardNumber) {
+                    chosenCard = (MonsterCard) card;
+                    break;
+                }
+            }
+        }
+
+        return chosenCard;
+    }
+
+    public static TrapResult doTrapEffectsInTurnPlayerAttack(Player turnPlayer, Player notTurnPlayer,
+                                                       MonsterCard attackingMonster, MonsterCard opponentMonster) {
+        if (turnPlayer.getBoard().getFaceUpMagicCardFromMagicsZoneByName("Ring of defense") != null)
+            return TrapResult.CONTINUE;
+
+        TrapResult trapResult = TrapResult.CONTINUE;
+        if (notTurnPlayer.getBoard().getFaceUpMagicCardFromMagicsZoneByName("Magic Cylinder") != null) {
+            turnPlayer.decreaseLifePoint(attackingMonster.getAttackPoints());
+            trapResult = TrapResult.STOP;
+
+        }
+        if (notTurnPlayer.getBoard().getFaceUpMagicCardFromMagicsZoneByName("Mirror Force") != null) {
+            MagicCardController.handleFieldSpellCardsEffect(turnPlayer, notTurnPlayer, attackingMonster, false);
+            MagicCardController.handleEquipSpellCardsEffect(turnPlayer, notTurnPlayer, attackingMonster, false);
+            if (opponentMonster != null) {
+                MagicCardController.handleFieldSpellCardsEffect(turnPlayer, notTurnPlayer, opponentMonster, false);
+                MagicCardController.handleEquipSpellCardsEffect(turnPlayer, notTurnPlayer, opponentMonster, false);
+            }
+
+            turnPlayer.getBoard().removeAttackPositionMonsterCards();
+            trapResult = TrapResult.STOP;
+
+        }
+        if (notTurnPlayer.getBoard().getFaceUpMagicCardFromMagicsZoneByName("Negate Attack") != null)
+            trapResult = TrapResult.NEGATE_ATTACK;
+
+        return trapResult;
+
+    }
+
+    public static TrapResult doTrapEffectsInTurnPlayerActivateSpellCard(Player turnPlayer, Player notTurnPlayer, MagicCard spellCard) {
+        if (turnPlayer.getBoard().getFaceUpMagicCardFromMagicsZoneByName("Ring of defense") != null)
+            return TrapResult.CONTINUE;
+
+        if (notTurnPlayer.getBoard().getFaceUpMagicCardFromMagicsZoneByName("Magic Jamamer") != null) {
+            removeOneCardFromHand(notTurnPlayer);
+            turnPlayer.getBoard().moveMagicCardToGraveyard(spellCard);
+            return TrapResult.STOP;
+        }
+
+        return TrapResult.CONTINUE;
     }
 }

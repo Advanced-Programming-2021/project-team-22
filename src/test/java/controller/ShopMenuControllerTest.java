@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
+
 class ShopMenuControllerTest extends MenuTest {
 
     @BeforeAll
@@ -73,5 +75,36 @@ class ShopMenuControllerTest extends MenuTest {
 
         result = shopMenuController.findCommand("shop buy Battle OX");
         Assertions.assertEquals(ShopMenuMessages.EMPTY, result);
+        shopMenuController.findCommand("increase --money 2900");
+    }
+
+    @Test
+    void findCommandShowCardMethod() {
+        ShopMenuController shopMenuController = new ShopMenuController(Player.getPlayerByUsername("John"));
+
+        ByteArrayOutputStream outContent = Utils.setByteArrayOutputStream();
+        ShopMenuMessages result = shopMenuController.findCommand("card show Battle OX");
+        Assertions.assertEquals(ShopMenuMessages.EMPTY, result);
+
+        String expectedResult = "Name: Battle OX\n" +
+                "Level: 4\n" +
+                "Type: Beast-Warrior\n" +
+                "ATK: 1700\n" +
+                "DEF: 1000\n" +
+                "Description: A monster with tremendous power, it destroys enemies with a swing of its axe.\n";
+
+        Assertions.assertEquals(expectedResult, outContent.toString());
+    }
+
+    @Test
+    void findCommandCheatCodeIncreaseMoneyMethod() {
+        Player player = Player.getPlayerByUsername("John");
+        ShopMenuController shopMenuController = new ShopMenuController(player);
+
+        ShopMenuMessages result = shopMenuController.findCommand("increase --money");
+        Assertions.assertEquals(ShopMenuMessages.INVALID_COMMAND, result);
+
+        shopMenuController.findCommand("increase --money 1");
+        Assertions.assertEquals(100001, player.getMoney());
     }
 }

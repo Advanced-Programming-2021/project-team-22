@@ -1,9 +1,8 @@
 package controller.shopmenu;
 
 import controller.Database;
+import controller.MenuRegexes;
 import controller.Utils;
-import controller.duelmenu.DuelMenuMessages;
-import controller.duelmenu.DuelMenuRegexes;
 import model.Player;
 import model.cards.Card;
 
@@ -24,12 +23,16 @@ public class ShopMenuController {
         else if (command.startsWith("shop buy")) return buyACard(command);
         else if (command.equals("shop show --all")) return ShopMenuMessages.SHOW_ALL_CARDS;
         else if (command.startsWith("increase ")) return cheatCodeIncreaseMoney(command);
+        else if (command.startsWith("card show ")) {
+            Utils.showCard(command.substring(10));
+            return ShopMenuMessages.EMPTY;
+        }
 
         return ShopMenuMessages.INVALID_COMMAND;
     }
 
     private ShopMenuMessages enterAMenu(String command) {
-        Matcher matcher = Utils.getMatcher(ShopMenuRegexes.ENTER_A_MENU.getRegex(), command);
+        Matcher matcher = Utils.getMatcher(MenuRegexes.ENTER_A_MENU.getRegex(), command);
         if (!matcher.find()) return ShopMenuMessages.INVALID_COMMAND;
 
         return ShopMenuMessages.INVALID_NAVIGATION;
@@ -47,7 +50,7 @@ public class ShopMenuController {
         if (boughtCardPrice > loggedInPlayer.getMoney()) return ShopMenuMessages.NOT_ENOUGH_MONEY;
 
         loggedInPlayer.decreaseMoney(boughtCardPrice);
-        loggedInPlayer.addCardToBoughtCards(boughtCard);
+        loggedInPlayer.createCardToBoughtCards(boughtCard);
         Database.updatePlayerInformationInDatabase(loggedInPlayer);
         return ShopMenuMessages.EMPTY;
     }
