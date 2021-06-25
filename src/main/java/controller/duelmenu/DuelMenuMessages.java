@@ -44,12 +44,12 @@ public enum DuelMenuMessages {
     INVALID_COMMAND_CHEAT_CODE("invalid command\n"),
     ACTION_CANCELED_BY_TRAP_CARD("action canceled by a trap card\n"),
     INVISIBLE_CARD("card is not visible\n"),
-    SUMMONED_SUCCESSFULLY("SUMMONED_SUCCESSFULLY\n"),
-    SUMMON_NOT_POSSIBLE("SUMMON_NOT_POSSIBLE\n"),
-    FULL_MONSTERS_ZONE("FULL_MONSTERS_ZONE\n"),
-    ALREADY_SUMMONED_OR_SET("ALREADY_SUMMONED_OR_SET\n"),
-    NOT_ENOUGH_CARD_FOR_TRIBUTE("NOT_ENOUGH_CARD_FOR_TRIBUTE\n"),
-    NO_MONSTER_ON_THIS_ADDRESS("NO_MONSTER_ON_THIS_ADDRESS\n"),
+    SUMMONED_SUCCESSFULLY("summoned successfully\n"),
+    SUMMON_NOT_POSSIBLE("action not allowed in this phase\n"),
+    FULL_MONSTERS_ZONE("monster card zone is full\n"),
+    ALREADY_SUMMONED_OR_SET("you already summoned/set on this turn\n"),
+    NOT_ENOUGH_CARD_FOR_TRIBUTE("there are not enough cards for tribute\n"),
+    NO_MONSTER_ON_THIS_ADDRESS("there no monsters one this address\n"),
     EMPTY(""),
     INVALID_COMMAND("invalid command\n");
 

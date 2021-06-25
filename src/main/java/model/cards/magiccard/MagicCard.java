@@ -48,12 +48,9 @@ public class MagicCard extends Card {
                 "\nDescription: " + this.description;
     }
 
-    public void print() {
-//        TODO: handle it --> «this.equals(null)» have error    and    «System.out.print» should be in the view
-//        if (this.equals(null))
-//            System.out.print("E     ");
-//        else if (isCardFaceUp)
-//            System.out.print("O     ");
-//        else System.out.print("H     ");
+    public String toString() {
+         if (isCardFaceUp)
+           return "O ";
+       else return "H ";
     }
 }

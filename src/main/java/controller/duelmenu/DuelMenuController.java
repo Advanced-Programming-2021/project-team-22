@@ -640,7 +640,7 @@ public class DuelMenuController {
     private void checkActiveMagicCardInOpponentTurn(Player turnPlayer, Player notTurnPlayer) {
         while (true) {
             if (DuelMenuView.activeMagicCardInOpponentTurn(notTurnPlayer)) handleYesAnswerInChangeTurn(notTurnPlayer, turnPlayer);
-            else DuelMenuView.showTurnAndBoard(turnPlayer);
+            else DuelMenuView.showTurnAndBoard(turnPlayer , notTurnPlayer);
         }
     }
 
