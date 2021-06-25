@@ -39,7 +39,7 @@ public interface SpecialMonstersFunction {
 
                 case "DO":
                     if (attackingCard.attackPoints > opponentCard.attackPoints) {
-                        opponentPlayerBoard.getGraveyard().add(opponentCard);
+                        opponentPlayerBoard.getGraveyard().add(opponentCard);//TODO:
                         opponentPlayerBoard.getMonstersZone()[numberToAttack] = null;
                         return DuelMenuMessages.DEFENSE_POSITION_MONSTER_DESTROYED;
                     } else if (attackingCard.attackPoints == opponentCard.attackPoints) {

@@ -97,24 +97,35 @@ public class MainMenuController {
                 return MainMenuMessages.UNAVAILABLE_ACTIVE_DECK;
             }
 
-//            TODO: handle MainMenuMessages.INVALID_DECK message
-//            TODO: MainMenuMessages.setInvalidDeck(opponentPlayerUsername or loggedInPlayer.getUsername());
-//            TODO: return MainMenuMessages.INVALID_DECK;
+            if (loggedInPlayer.getActivatedDeck().isValid().equals("invalid")) {
+                MainMenuMessages.setInvalidDeck(loggedInPlayer.getUsername());
+                return MainMenuMessages.INVALID_DECK;
+            } else if (opponentPlayer.getActivatedDeck().isValid().equals("invalid")) {
+                MainMenuMessages.setInvalidDeck(opponentPlayerUsername);
+                return MainMenuMessages.INVALID_DECK;
+            }
 
-            if (rounds.equals("1")) {
-                DuelMenuView duelMenuView = new DuelMenuView(loggedInPlayer, opponentPlayer, 1);
-                duelMenuView.duelMenuView();
-            } else if (rounds.equals("3")) {
-                DuelMenuView duelMenuView = new DuelMenuView(loggedInPlayer, opponentPlayer, 3);
+            if (rounds.equals("1") || rounds.equals("3")) {
+                DuelMenuView duelMenuView = new DuelMenuView(loggedInPlayer, opponentPlayer, Integer.parseInt(rounds));
                 duelMenuView.duelMenuView();
             } else {
                 return MainMenuMessages.INVALID_ROUNDS_NUMBER;
             }
 
         } else {
-//            TODO: handle entering to enter duel menu by AI
+            if (loggedInPlayer.getActivatedDeck() == null) {
+                MainMenuMessages.setUnavailableActiveDeck(loggedInPlayer.getUsername());
+                return MainMenuMessages.UNAVAILABLE_ACTIVE_DECK;
+            }
+            if (loggedInPlayer.getActivatedDeck().isValid().equals("invalid")) {
+                MainMenuMessages.setInvalidDeck(loggedInPlayer.getUsername());
+                return MainMenuMessages.INVALID_DECK;
+            }
 
-            if (!rounds.equals("1") && !rounds.equals("3")) {
+            if (rounds.equals("1") || rounds.equals("3")) {
+                DuelMenuView duelMenuView = new DuelMenuView(loggedInPlayer, Integer.parseInt(rounds));
+                duelMenuView.playWithAi();
+            } else {
                 return MainMenuMessages.INVALID_ROUNDS_NUMBER;
             }
         }

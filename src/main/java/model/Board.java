@@ -192,11 +192,12 @@ public class Board {
 
     public void removeAttackPositionMonsterCards() {
         for (int i = 1; i < monstersZone.length; i++) {
-            if (monstersZone[i] != null && !monstersZone[i].isDefensePosition());
-//                TODO: handle it! and
-//                magicCard.setIsSetInThisTurn(false);
-//                magicCard.setCardFaceUp(false);
-//                magicCard.setPowerUsed(false);
+            if (monstersZone[i] != null && !monstersZone[i].isDefensePosition()) {
+                monstersZone[i].setCardFaceUp(false);
+                monstersZone[i].setPowerUsed(false);
+                graveyard.add(monstersZone[i]);
+                monstersZone[i] = null;
+            }
         }
 
     }

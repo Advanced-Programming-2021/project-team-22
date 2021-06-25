@@ -17,7 +17,6 @@ public class DuelMenuController {
     private Player turnPlayer;
     private Player notTurnPlayer;
     private Phases phase;
-    private boolean isAITurn;
 
     public void setTurnPlayer(Player turnPlayer) {
         this.turnPlayer = turnPlayer;
@@ -484,7 +483,7 @@ public class DuelMenuController {
                     case STOP:
                         return DuelMenuMessages.ACTION_CANCELED_BY_TRAP_CARD;
                     case NEGATE_ATTACK:
-//                    TODO: ending battle phase
+                        phase = Phases.MAIN_PHASE_2;
                         return DuelMenuMessages.ACTION_CANCELED_BY_TRAP_CARD;
                 }
 
