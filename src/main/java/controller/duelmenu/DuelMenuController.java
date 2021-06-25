@@ -168,8 +168,12 @@ public class DuelMenuController {
         Matcher matcher = Utils.getMatcher(DuelMenuRegexes.CHEAT_SET_WINNER.getRegex(), command);
         if (matcher.find()) {
             String nickname = matcher.group(1);
-            if (turnPlayer.getNickname().equals(nickname)) /*TODO: handle win the player*/ ;
-            else if (notTurnPlayer.getNickname().equals(nickname)) /*TODO: handle win the player*/ ;
+            if (turnPlayer.getNickname().equals(nickname)){
+                notTurnPlayer.setLifePoint(0);
+            }
+            else if (notTurnPlayer.getNickname().equals(nickname)){
+                turnPlayer.setLifePoint(0);
+            }
             else return DuelMenuMessages.WRONG_NICKNAME_CHEAT_CODE;
         } else return DuelMenuMessages.INVALID_COMMAND_CHEAT_CODE;
 
@@ -398,7 +402,9 @@ public class DuelMenuController {
             return DuelMenuMessages.NOT_SELECTED_CARD;
         if (attackingPlayerBoard.getSelectedCard() instanceof MonsterCard)
             return DuelMenuMessages.CANT_ATTACK_WITH_CARD;
-        //TODO check battle phase
+        if (phase != Phases.BATTLE_PHASE) {
+            return DuelMenuMessages.NOT_TRUE_PHASE;
+        }
         MonsterCard card = (MonsterCard) attackingPlayerBoard.getSelectedCard();
         if (card.isAttacked())
             return DuelMenuMessages.ATTACKED_BEFORE;
