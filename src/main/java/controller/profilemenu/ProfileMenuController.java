@@ -1,6 +1,7 @@
 package controller.profilemenu;
 
 import controller.Database;
+import controller.MenuRegexes;
 import controller.Utils;
 import model.Player;
 
@@ -14,22 +15,20 @@ public class ProfileMenuController {
     }
 
     public ProfileMenuMessages findCommand(String command) {
-        String[] split = command.split("\\s+");
-        if (split.length < 2) {
-            return ProfileMenuMessages.INVALID_COMMAND;
-        } else if (split[1].equals("enter")) {
-            return ProfileMenuMessages.CANT_NAVIGATE_MENU;
-        } else if (split[1].equals("exit")) {
-            return ProfileMenuMessages.EXIT_MENU;
-        } else if (split[1].equals("show")) {
-            return ProfileMenuMessages.PROFILE_MENU;
-        } else if (split[2].equals("--nickname")) {
-            return changeNickname(command);
-        } else if (command.startsWith("profile change")) {
-            return changePassword(command);
-        }
+        if (command.startsWith("menu enter")) return enterAMenu(command);
+        else if (command.equals("menu exit")) return ProfileMenuMessages.EXIT_PROFILE_MENU;
+        else if (command.equals("menu show-current")) return ProfileMenuMessages.SHOW_MENU;
+        else if (command.startsWith("profile change --nickname ")) return changeNickname(command);
+        else if (command.startsWith("profile change ")) return changePassword(command);
 
         return ProfileMenuMessages.INVALID_COMMAND;
+    }
+
+    private static ProfileMenuMessages enterAMenu(String command) {
+        Matcher matcher = Utils.getMatcher(MenuRegexes.ENTER_A_MENU.getRegex(), command);
+        if (!matcher.find()) return ProfileMenuMessages.INVALID_COMMAND;
+
+        return ProfileMenuMessages.INVALID_NAVIGATION;
     }
 
     public ProfileMenuMessages changeNickname(String command) {

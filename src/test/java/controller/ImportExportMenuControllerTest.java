@@ -2,8 +2,6 @@ package controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import controller.Database;
-import controller.MenuTest;
 import controller.importexportmenu.ImportExportMenuController;
 import controller.importexportmenu.ImportExportMenuMessages;
 import model.cards.Card;
@@ -85,7 +83,7 @@ class ImportExportMenuControllerTest extends MenuTest {
         result = ImportExportMenuController.findCommand("import card Battle OX");
         Assertions.assertEquals(ImportExportMenuMessages.EMPTY, result);
 
-        FileUtils.deleteQuietly(new File("/Users/AMF/Desktop/Yu-Gi-Oh game/Yu-Gi-Oh game/src/database/cards/Battle OX.json"));
+        FileUtils.deleteQuietly(new File("/Users/AMF/Desktop/Yu-Gi-Oh game/finished work/phase 1/phase 1 code/src/main/resources/cards/Battle OX.json"));
 
         createCardJsonFile("Trap Hole");
         Card.getAllCards().remove("Trap Hole");
@@ -99,12 +97,12 @@ class ImportExportMenuControllerTest extends MenuTest {
         result = ImportExportMenuController.findCommand("import card Trap Hole");
         Assertions.assertEquals(ImportExportMenuMessages.EMPTY, result);
 
-        FileUtils.deleteQuietly(new File("/Users/AMF/Desktop/Yu-Gi-Oh game/Yu-Gi-Oh game/src/database/cards/Trap Hole.json"));
+        FileUtils.deleteQuietly(new File("/Users/AMF/Desktop/Yu-Gi-Oh game/finished work/phase 1/phase 1 code/src/main/resources/cards/Trap Hole.json"));
     }
 
     void createCardJsonFile(String cardName) {
         try {
-            FileWriter fileWriter = new FileWriter("src/database/cards/" + cardName + ".json");
+            FileWriter fileWriter = new FileWriter("src/main/resources/cards/" + cardName + ".json");
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             fileWriter.write(gson.toJson(Card.getCardByName(cardName)));
             fileWriter.close();
@@ -115,10 +113,10 @@ class ImportExportMenuControllerTest extends MenuTest {
     void removeNameValueFromJsonCardFile(String cardName) {
         JSONParser parser = new JSONParser();
         try {
-            Object object = parser.parse(new FileReader("src/database/cards/" + cardName + ".json"));
+            Object object = parser.parse(new FileReader("src/main/resources/cards/" + cardName + ".json"));
             JSONObject jsonObject = (JSONObject) object;
             jsonObject.remove("name");
-            FileWriter fileWriter = new FileWriter("src/database/cards/" + cardName + ".json");
+            FileWriter fileWriter = new FileWriter("src/main/resources/cards/" + cardName + ".json");
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             fileWriter.write(gson.toJson(jsonObject));
             fileWriter.close();
@@ -136,5 +134,7 @@ class ImportExportMenuControllerTest extends MenuTest {
 
         result = ImportExportMenuController.findCommand("export card Battle OX");
         Assertions.assertEquals(ImportExportMenuMessages.EMPTY, result);
+
+        FileUtils.deleteQuietly(new File("/Users/AMF/Desktop/Yu-Gi-Oh game/finished work/phase 1/phase 1 code/src/main/resources/cards/Battle OX.json"));
     }
 }

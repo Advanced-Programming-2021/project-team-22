@@ -8,20 +8,18 @@ import model.cards.monstercard.MonsterCard;
 
 import java.util.ArrayList;
 
-public class Player {
-    private static ArrayList<Player> allPlayers;
+public class Player implements Comparable<Player> {
+    private static final ArrayList<Player> allPlayers;
 
     static {
         allPlayers = new ArrayList<>();
     }
 
     @Expose
-    private ArrayList<Card> boughtCards;
+    private final ArrayList<Card> boughtCards;
     @Expose
-    private ArrayList<Deck> allMainDecks;
+    private final ArrayList<Deck> allDecks;
     private Board board;
-    @Expose
-    private Deck sideDeck;
     @Expose
     private Deck activatedDeck;
     @Expose
@@ -34,17 +32,23 @@ public class Player {
     private long score;
     @Expose
     private long money;
+    @Expose
     private int lifePoint;
+    private boolean hasSummonedInTurn;
+    private int wonRounds;
+    private int maxLifePointDuringPlay;
 
     {
         boughtCards = new ArrayList<>();
-        allMainDecks = new ArrayList<>();
+        allDecks = new ArrayList<>();
         board = null;
-        sideDeck = new Deck();
         activatedDeck = null;
         score = 0;
         money = 100000;
         lifePoint = 8000;
+        hasSummonedInTurn = false;
+        wonRounds = 0;
+        maxLifePointDuringPlay = 0;
     }
 
     public Player(String username, String password, String nickname) {
@@ -78,6 +82,10 @@ public class Player {
 
     public static void addPlayerToAllPlayers(Player player) {
         allPlayers.add(player);
+    }
+
+    public static ArrayList<Player> getAllPlayers() {
+        return allPlayers;
     }
 
     public String getUsername() {
@@ -116,27 +124,47 @@ public class Player {
         return activatedDeck;
     }
 
+    public void setActivatedDeck(Deck activatedDeck) {
+        this.activatedDeck = activatedDeck;
+        Database.updatePlayerInformationInDatabase(this);
+    }
+
+    public ArrayList<Deck> getAllDecks() {
+        return allDecks;
+    }
+
     public ArrayList<Card> getBoughtCards() {
         return boughtCards;
     }
 
+    public Card getCardByNameFromBoughtCards(String cardName) {
+        for (Card card : boughtCards) {
+            if (card.getName().equals(cardName)) return card;
+        }
+        return null;
+    }
+
     public void increaseScore(long score) {
         this.score += score;
+        Database.updatePlayerInformationInDatabase(this);
     }
 
     public void decreaseScore(long score) {
         this.score -= score;
+        Database.updatePlayerInformationInDatabase(this);
     }
 
     public void increaseMoney(long money) {
         this.money += money;
+        Database.updatePlayerInformationInDatabase(this);
     }
 
     public void decreaseMoney(long money) {
         this.money -= money;
+        Database.updatePlayerInformationInDatabase(this);
     }
 
-    public void addCardToBoughtCards(Card card) {
+    public void createCardToBoughtCards(Card card) {
         if (Card.isMonsterCard(card)) {
             this.boughtCards.add(new MonsterCard((MonsterCard) card));
         } else {
@@ -144,44 +172,41 @@ public class Player {
         }
     }
 
-    public void addMainDeck(String deckName) {
-        Deck mainDeck = new Deck(deckName);
-        this.allMainDecks.add(mainDeck);
+    public void removeCardFromBoughtCards(Card card) {
+        boughtCards.remove(card);
     }
 
-    public Boolean isMainDeckExist(String deckName) {
-        for (Deck deck : allMainDecks) {
-            if (deck.getName().equals(deckName)) return true;
-        }
-        return false;
+    public void setHasSummonedInTurn(boolean hasSummonedInTurn) {
+        this.hasSummonedInTurn = hasSummonedInTurn;
     }
 
-    public void deleteMainDeck(String deckName) {
-        Deck mainDeck = getDeckByName(deckName);
-        if (mainDeck != null) {
-            boughtCards.addAll(mainDeck.getMainCards());
-            allMainDecks.remove(mainDeck);
-        }
+    public boolean getHasSummonedInTurn() {
+        return this.hasSummonedInTurn;
     }
 
-    public Deck getDeckByName(String deckName) {
-        for (Deck deck : allMainDecks) {
-            if (deck.getName().equals(deckName)) return deck;
-        }
-        return null;
+    public void setLifePoint(int lifePoint) {
+        this.lifePoint = lifePoint;
     }
 
-    public void activateADeck(String deckName) {
-        Deck deck = getDeckByName(deckName);
-        if (deck != null) activatedDeck = deck;
+    public void setWonRounds(int wonRounds) {
+        this.wonRounds = wonRounds;
     }
 
-    public void addCardToMainDeck() {
-//        TODO: ???? but remember to remove this card from boughtCards :)
+    public int getWonRounds() {
+        return wonRounds;
     }
 
-    public void removeACard() {
-//        TODO: ???? but remember to add this card from boughtCards :)
+    public int getLifePoint() {
+        return lifePoint;
+    }
+
+    public int getMaxLifePointDuringPlay() {
+        return maxLifePointDuringPlay;
+    }
+
+    public void setMaxLifePointDuringPlay(int maxLifePointDuringPlay) {
+        if (this.maxLifePointDuringPlay < maxLifePointDuringPlay)
+            this.maxLifePointDuringPlay = maxLifePointDuringPlay;
     }
 
     public void decreaseLifePoint(int amount) {
@@ -198,5 +223,28 @@ public class Player {
 
     public Board getBoard() {
         return board;
+    }
+
+    public Deck getDeckByName(String deckName) {
+        for (Deck deck : allDecks) {
+            if (deck.getName().equals(deckName)) return deck;
+        }
+        return null;
+    }
+
+    public void addDeckToAllDecks(Deck deck) {
+        if (deck != null) allDecks.add(deck);
+        Database.updatePlayerInformationInDatabase(this);
+    }
+
+    public void removeDeckFromAllDecks(Deck deck) {
+        allDecks.remove(deck);
+        Database.updatePlayerInformationInDatabase(this);
+    }
+
+    @Override
+    public int compareTo(Player player) {
+        if (this.score != player.score) return (int) (this.score - player.score);
+        else return player.nickname.compareToIgnoreCase(this.nickname);
     }
 }

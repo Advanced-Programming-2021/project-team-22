@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
+import model.Deck;
 import model.Player;
 import model.cards.Card;
 import model.cards.CardTypes;
@@ -73,7 +74,6 @@ public class Database {
     }
 
     public static void readPlayersDataFromDatabase() {
-//        TODO: complete it by Iman's code
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
 
         File file = new File("src/main/resources/players");
@@ -87,7 +87,9 @@ public class Database {
                 Player player = gson.fromJson(fileReader, Player.class);
                 fileReader.close();
                 Player.addPlayerToAllPlayers(player);
-                addCardsToPlayer(player);
+                addBoughtCardsToPlayer(player);
+                addDeckCardsToPlayer(player);
+                handleActivatedDeck(player);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -95,13 +97,53 @@ public class Database {
 
     }
 
-    private static void addCardsToPlayer(Player player) {
+    private static void addBoughtCardsToPlayer(Player player) {
         ArrayList<Card> boughtCards = player.getBoughtCards();
         for (int i = 0; i < boughtCards.size(); i++) {
             Card fakeCard = boughtCards.get(0);
             Card originalCard = Card.getCardByName(fakeCard.getName());
             boughtCards.remove(fakeCard);
-            player.addCardToBoughtCards(originalCard);
+            player.createCardToBoughtCards(originalCard);
+        }
+    }
+
+    private static void addDeckCardsToPlayer(Player player) {
+        ArrayList<Deck> allDecks = player.getAllDecks();
+        for (Deck deck: allDecks) {
+            addDeckMainCardsToPlayer(deck);
+            addDeckSideCardsToPlayer(deck);
+        }
+    }
+
+    private static void addDeckMainCardsToPlayer(Deck deck) {
+        ArrayList<Card> mainCards = deck.getMainCards();
+        for (int i = 0; i < mainCards.size(); i++) {
+            Card fakeCard = mainCards.get(0);
+            Card originalCard = Card.getCardByName(fakeCard.getName());
+            mainCards.remove(fakeCard);
+            if (originalCard instanceof MonsterCard)
+                deck.addCardToMainDeck(new MonsterCard((MonsterCard) originalCard));
+            else deck.addCardToMainDeck(new MagicCard((MagicCard) originalCard));
+        }
+    }
+
+    private static void addDeckSideCardsToPlayer(Deck deck) {
+        ArrayList<Card> sideCards = deck.getSideCards();
+        for (int i = 0; i < sideCards.size(); i++) {
+            Card fakeCard = sideCards.get(0);
+            Card originalCard = Card.getCardByName(fakeCard.getName());
+            sideCards.remove(fakeCard);
+            if (originalCard instanceof MonsterCard)
+                deck.addCardToSideDeck(new MonsterCard((MonsterCard) originalCard));
+            else deck.addCardToSideDeck(new MagicCard((MagicCard) originalCard));
+        }
+    }
+
+    private static void handleActivatedDeck(Player player) {
+//        create the same reference for activated deck in "allDecks" and "activatedDeck" in player class
+        if (player.getActivatedDeck() != null) {
+            Deck activatedDeck = player.getDeckByName(player.getActivatedDeck().getName());
+            player.setActivatedDeck(activatedDeck);
         }
     }
 

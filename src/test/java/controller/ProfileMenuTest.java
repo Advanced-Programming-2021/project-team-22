@@ -46,12 +46,29 @@ public class ProfileMenuTest extends MenuTest {
     public void allError() {
         ProfileMenuController profileMenuController = new ProfileMenuController(Player.getPlayerByUsername("parsa"));
         Assertions.assertEquals(ProfileMenuMessages.INVALID_COMMAND, profileMenuController.findCommand("profile"));
-        Assertions.assertEquals(ProfileMenuMessages.CANT_NAVIGATE_MENU, profileMenuController.findCommand("loginmenu enter"));
+        Assertions.assertEquals(ProfileMenuMessages.INVALID_NAVIGATION, profileMenuController.findCommand("menu enter login menu"));
     }
 
     @Test
     public void checkExit() {
         ProfileMenuController profileMenuController = new ProfileMenuController(Player.getPlayerByUsername("parsa"));
-        Assertions.assertEquals(ProfileMenuMessages.EXIT_MENU , profileMenuController.findCommand("menu exit"));
+        Assertions.assertEquals(ProfileMenuMessages.EXIT_PROFILE_MENU, profileMenuController.findCommand("menu exit"));
+    }
+
+    @Test
+    public void findCommand(){
+        ProfileMenuController profileMenuController = new ProfileMenuController(Player.getPlayerByUsername("parsa"));
+        Assertions.assertEquals(ProfileMenuMessages.INVALID_COMMAND , profileMenuController.findCommand("show"));
+        Assertions.assertEquals(ProfileMenuMessages.SHOW_MENU , profileMenuController.findCommand("menu show-current"));
+    }
+
+    @Test
+    public void inputPattern(){
+        ProfileMenuController profileMenuController = new ProfileMenuController(Player.getPlayerByUsername("parsa"));
+        Assertions.assertEquals(ProfileMenuMessages.WRONG_CURRENT_PASSWORD , profileMenuController.findCommand("profile change --password --new newPass --current newPass"));
+        Assertions.assertEquals(ProfileMenuMessages.WRONG_CURRENT_PASSWORD , profileMenuController.findCommand("profile change --current newPass --P --N newPass"));
+        Assertions.assertEquals(ProfileMenuMessages.INVALID_COMMAND , profileMenuController.findCommand("^profile change --C newPass --N newPass --password"));
+        Assertions.assertEquals(ProfileMenuMessages.WRONG_CURRENT_PASSWORD , profileMenuController.findCommand("profile change --N newPass --P --C newPass"));
+        Assertions.assertEquals(ProfileMenuMessages.WRONG_CURRENT_PASSWORD , profileMenuController.findCommand("profile change --N newPass --C newPass --P"));
     }
 }

@@ -114,6 +114,15 @@ public class MonsterCard extends Card implements SpecialMonstersFunction {
         equippedBy = new ArrayList<>();
     }
 
+    public String show() {
+        return "Name: " + this.name +
+                "\nLevel: " + this.level +
+                "\nType: " + this.monsterType +
+                "\nATK: " + this.attackPoints +
+                "\nDEF: " + this.defensePoints +
+                "\nDescription: " + this.description;
+    }
+
     @Override
     public String toString() {
         if (!this.getCardFaceUp() && this.isDefensePosition) return "DH";

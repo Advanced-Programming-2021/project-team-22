@@ -9,10 +9,10 @@ import model.cards.Card;
 import java.util.TreeMap;
 
 public class ShopMenuView {
-    private Player loggedInPlayer;
+    private final Player loggedInPlayer;
 
     public ShopMenuView(Player loggedInPlayer) {
-        setLoggedInPlayer(loggedInPlayer);
+        this.loggedInPlayer = loggedInPlayer;
     }
 
     private static void showListOfCards() {
@@ -22,12 +22,9 @@ public class ShopMenuView {
         }
     }
 
-    public void setLoggedInPlayer(Player loggedInPlayer) {
-        this.loggedInPlayer = loggedInPlayer;
-    }
-
     public void shopMenuView() {
         ShopMenuController shopMenuController = new ShopMenuController(loggedInPlayer);
+
         while (true) {
             String command = Utils.getScanner().nextLine().trim();
             ShopMenuMessages result = shopMenuController.findCommand(command);
