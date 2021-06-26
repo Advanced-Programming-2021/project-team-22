@@ -109,7 +109,6 @@ public class MagicCardController {
     }
 
     private static boolean doTerraformingEffect(Player player) {
-//        TODO: do Iman handle with main cards?
         ArrayList<Card> cards = player.getBoard().getDeck().getMainCards();
         ArrayList<MagicCard> fieldSpellCards = findFieldSpellCards(cards);
 

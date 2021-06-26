@@ -1,7 +1,9 @@
 package controller.duelmenu;
 
+import controller.MenuRegexes;
 import controller.Utils;
 import model.Board;
+import model.Deck;
 import model.Player;
 import model.cards.Card;
 import model.cards.CardTypes;
@@ -16,7 +18,6 @@ public class DuelMenuController {
     private Player turnPlayer;
     private Player notTurnPlayer;
     private Phases phase;
-    private boolean isAITurn;
 
     public void setTurnPlayer(Player turnPlayer) {
         this.turnPlayer = turnPlayer;
@@ -40,6 +41,27 @@ public class DuelMenuController {
 
     public void setPhase(Phases phase) {
         this.phase = phase;
+    }
+
+    public static void preparePlayerForNextTurn(Player player) {
+        player.setHasSummonedInTurn(false);
+
+        Board board = player.getBoard();
+        board.setSelectedCard(null);
+        board.setMyCardSelected(false);
+        board.setACardInHandSelected(false);
+
+        for (Card card : board.getDeck().getMainCards()) {
+            if (card instanceof MonsterCard) ((MonsterCard) card).setAttacked(false);
+            else ((MagicCard) card).setIsSetInThisTurn(false);
+        }
+    }
+
+    public static void preparePlayerForNextGame(Player player) {
+        player.setHasSummonedInTurn(false);
+        player.setBoard(null);
+        player.setLifePoint(8000);
+        player.setMaxLifePointDuringPlay(0);
     }
 
     public static String specifyTurnPlayer(Player firstPlayer, Player secondPlayer) {
@@ -99,7 +121,6 @@ public class DuelMenuController {
     }
 
     public DuelMenuMessages initialGame(Player firstPlayer, Player secondPlayer) {
-//        TODO: handle it for ai
         String result = specifyTurnPlayer(firstPlayer, secondPlayer);
         if (result.equals("invalid choice")) return DuelMenuMessages.MINI_GAME_INVALID_CHOICE;
         else if (result.equals("draw")) return DuelMenuMessages.DRAW;
@@ -111,8 +132,8 @@ public class DuelMenuController {
         turnPlayer.createBoard();
         notTurnPlayer.createBoard();
 
-        turnPlayer.getBoard().setDeck(turnPlayer.getActivatedDeck());
-        notTurnPlayer.getBoard().setDeck(notTurnPlayer.getActivatedDeck());
+        turnPlayer.getBoard().setDeck(new Deck(turnPlayer.getActivatedDeck()));
+        notTurnPlayer.getBoard().setDeck(new Deck(notTurnPlayer.getActivatedDeck()));
 
         Collections.shuffle(turnPlayer.getActivatedDeck().getMainCards());
         Collections.shuffle(notTurnPlayer.getActivatedDeck().getMainCards());
@@ -121,8 +142,11 @@ public class DuelMenuController {
     }
 
     public DuelMenuMessages findCommand(String command) {
-//        TODO: handle menu commands --> menu exit and ...
-        if (command.startsWith("decrease ")) return cheatCodeDecreaseOpponentLifePont(command, notTurnPlayer);
+
+        if (command.startsWith("menu enter")) return enterAMenu(command);
+        else if (command.equals("menu exit")) return DuelMenuMessages.INVALID_NAVIGATION;
+        else if (command.equals("menu show-current")) return DuelMenuMessages.SHOW_MENU;
+        else if (command.startsWith("decrease ")) return cheatCodeDecreaseOpponentLifePont(command, notTurnPlayer);
         else if (command.startsWith("increase ")) return cheatCodeIncreaseLifePoint(command, turnPlayer);
         else if (command.startsWith("duel set-winner ")) return cheatCodeSetWinner(command);
         else if (command.startsWith("select hand force ")) return cheatCodeAddCardToHand(command, turnPlayer);
@@ -149,9 +173,14 @@ public class DuelMenuController {
         } else if (command.equals("cancel")) ;//cancelCommand();
         else if (command.equals("surrender")) /*TODO*/;
 
-//        TODO: handle cheat/debug commands
-
         return DuelMenuMessages.INVALID_COMMAND;
+    }
+
+    private DuelMenuMessages enterAMenu(String command) {
+        Matcher matcher = Utils.getMatcher(MenuRegexes.ENTER_A_MENU.getRegex(), command);
+        if (!matcher.find()) return DuelMenuMessages.INVALID_COMMAND;
+
+        return DuelMenuMessages.INVALID_NAVIGATION;
     }
 
     private DuelMenuMessages cheatCodeDecreaseOpponentLifePont(String command, Player player) {
@@ -207,8 +236,13 @@ public class DuelMenuController {
     }
 
     private DuelMenuMessages checkSelectCard(String command) {
-//        TODO: handle --> if there isn't any card in main deck, he/she loses
 //        TODO: maybe clean it more
+
+        if (turnPlayer.getBoard().getDeck().getMainCards().size() == 0) {
+            turnPlayer.setLifePoint(0);
+            return DuelMenuMessages.EMPTY;
+        }
+
         Matcher matcher;
         if ( (matcher = Utils.getMatcher(DuelMenuRegexes.SELECT_MONSTER_ZONE.getRegex(), command)).find() ) {
             if (!isSelectionValid(matcher)) return DuelMenuMessages.INVALID_SELECTION;
@@ -441,23 +475,19 @@ public class DuelMenuController {
 //    private DuelMenuMessages setAMonster() {
 //
 //    }
-//
+
 //    private DuelMenuMessages checkChangePosition(String command) {
 //
 //    }
-//
+
 //    private DuelMenuMessages changePosition(String command) {
 //
 //    }
-//
-//    private void updateGraveyard() {
-////        TODO: handle it!
-//    }
-//
+
 //    private DuelMenuMessages checkFlipSummon() {
 //
 //    }
-//
+
 //    private DuelMenuMessages flipSummon() {
 //
 //    }
@@ -483,7 +513,7 @@ public class DuelMenuController {
                     case STOP:
                         return DuelMenuMessages.ACTION_CANCELED_BY_TRAP_CARD;
                     case NEGATE_ATTACK:
-//                    TODO: ending battle phase
+                        phase = Phases.MAIN_PHASE_2;
                         return DuelMenuMessages.ACTION_CANCELED_BY_TRAP_CARD;
                 }
 
@@ -512,9 +542,10 @@ public class DuelMenuController {
 
         if (attackingPlayerBoard.getSelectedCard() == null || !attackingPlayerBoard.isMyCardSelected())
             return DuelMenuMessages.NOT_SELECTED_CARD;
-        if (attackingPlayerBoard.getSelectedCard() instanceof MonsterCard)
+        if (!(attackingPlayerBoard.getSelectedCard() instanceof MonsterCard))
             return DuelMenuMessages.CANT_ATTACK_WITH_CARD;
-        //TODO check battle phase
+        if (!phase.equals(Phases.BATTLE_PHASE)) return DuelMenuMessages.NOT_TRUE_PHASE;
+
         MonsterCard card = (MonsterCard) attackingPlayerBoard.getSelectedCard();
         if (card.isAttacked())
             return DuelMenuMessages.ATTACKED_BEFORE;
@@ -539,7 +570,7 @@ public class DuelMenuController {
                 case STOP:
                     return DuelMenuMessages.ACTION_CANCELED_BY_TRAP_CARD;
                 case NEGATE_ATTACK:
-//                    TODO: ending battle phase
+                    phase = Phases.MAIN_PHASE_2;
                     return DuelMenuMessages.ACTION_CANCELED_BY_TRAP_CARD;
             }
 
@@ -562,7 +593,7 @@ public class DuelMenuController {
         if (board.getSelectedCard() == null || !board.isMyCardSelected())
             return DuelMenuMessages.NOT_SELECTED_CARD;
         if (!phase.equals(Phases.BATTLE_PHASE))
-            return DuelMenuMessages.NOT_SUITABLE_PHASE;
+            return DuelMenuMessages.NOT_TRUE_PHASE;
         if (board.getSelectedCard() instanceof MonsterCard) {
             MonsterCard card = (MonsterCard) board.getSelectedCard();
             if (card.isAttacked()) return DuelMenuMessages.ATTACKED_BEFORE;
@@ -639,8 +670,12 @@ public class DuelMenuController {
 
     private void checkActiveMagicCardInOpponentTurn(Player turnPlayer, Player notTurnPlayer) {
         while (true) {
-            if (DuelMenuView.activeMagicCardInOpponentTurn(notTurnPlayer)) handleYesAnswerInChangeTurn(notTurnPlayer, turnPlayer);
-            else DuelMenuView.showTurnAndBoard(turnPlayer , notTurnPlayer);
+            if (DuelMenuView.activeMagicCardInOpponentTurn(notTurnPlayer, turnPlayer))
+                handleYesAnswerInChangeTurn(notTurnPlayer, turnPlayer);
+            else {
+                DuelMenuView.showTurnAndBoard(turnPlayer, notTurnPlayer);
+                break;
+            }
         }
     }
 
@@ -698,27 +733,16 @@ public class DuelMenuController {
 //    private DuelMenuMessages checkBack() {
 //
 //    }
-//
+
 //    private void cancelCommand() {
 //
 //    }
-//
-//    TODO: handle activeASpellInOpponentTurn
-//    TODO: -----------------------------------------------
-//    TODO: we are not sure about under functions
-//
+
 //    private DuelMenuMessages ritualSummon(String command) {
 //
 //    }
-//
+
 //    private DuelMenuMessages specialSummon(String command) {
 //
 //    }
-//
-//    private Player/*or Enum*/ checkWinner() {
-//
-//    }
-//
-//    TODO: -----------------------------------------------
-
 }

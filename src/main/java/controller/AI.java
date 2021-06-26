@@ -2,31 +2,12 @@ package controller;
 
 import controller.duelmenu.Phases;
 import model.Board;
-import model.cards.Card;
-import model.cards.CardTypes;
-import model.cards.magiccard.MagicCard;
 import model.cards.monstercard.MonsterCard;
 import model.Player;
 
-import java.util.ArrayList;
-
-public class AIClass {
+public class AI {
 
     public static String getOrder(Board machineBoard, Board playerBoard, Player AIPlayer, Player humanPlayer, Phases phaseOfGame) {
-
-        if ((phaseOfGame == Phases.MAIN_PHASE_1 || phaseOfGame == Phases.MAIN_PHASE_2)
-                && !AIPlayer.getBoard().isMagicsZoneFull()) {
-            ArrayList<Card> cardsInHand = AIPlayer.getBoard().getCardsInHand();
-
-            for (Card card : cardsInHand) {
-                if (card.getCardType().equals(CardTypes.SPELL) && !((MagicCard) card).getIcon().equals("Quick-play")) {
-                    AIPlayer.getBoard().setSelectedCard(card);
-                    break;
-                }
-            }
-
-            return "set";
-        }
 
         if (phaseOfGame == Phases.MAIN_PHASE_1) {
             if (checkExistMonstereInHand(machineBoard)) {

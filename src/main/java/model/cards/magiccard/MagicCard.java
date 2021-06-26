@@ -48,9 +48,9 @@ public class MagicCard extends Card {
                 "\nDescription: " + this.description;
     }
 
+    @Override
     public String toString() {
-         if (isCardFaceUp)
-           return "O ";
-       else return "H ";
+        if (isCardFaceUp) return "O ";
+        else return "H ";
     }
 }

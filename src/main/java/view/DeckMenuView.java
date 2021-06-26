@@ -26,7 +26,7 @@ public class DeckMenuView {
         DeckMenuController.separateKindOfCards(deck, isMain, monsterCards, magicCards);
 
         System.out.println("Deck: " + deck.getName());
-        if (isMain) System.out.println("Main Deck");
+        if (isMain) System.out.println("Main deck");
         else System.out.println("Side deck");
         System.out.println("Monsters:");
         for (MonsterCard monsterCard : monsterCards) showACard(monsterCard);
