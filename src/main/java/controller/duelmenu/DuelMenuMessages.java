@@ -3,6 +3,8 @@ package controller.duelmenu;
 import model.Player;
 
 public enum DuelMenuMessages {
+    INVALID_NAVIGATION("menu navigation is not possible\n"),
+    SHOW_MENU("Duel Menu\n"),
     MINI_GAME_INVALID_CHOICE("please enter a valid option\n"),
     DRAW("draw\nplease try again:\n"),
     SHOW_TURN_PLAYER("<username> should start first\n"),
@@ -25,13 +27,13 @@ public enum DuelMenuMessages {
     SET_SUCCESSFULLY("set successfully\n"),
     NOT_SELECTED_CARD("no card is selected yet\n"),
     ATTACKED_BEFORE("this card already attacked\n"),
-    NOT_SUITABLE_PHASE("you can’t do this action in this phase\n"),
     INVALID_CARD_SELECT("invalid selection\n"),
     NO_CARD_FOUND_IN_THE_POSITION("no card found in the given position\n"),
     CANT_ATTACK_WITH_CARD("you can’t attack with this card\n"),
     YOU_CANT_ATTACK_TO_THIS_CARD("you cant attack to this card\n"),
     ATTACK_CANCELED("attack to this card was canceled\n"),
     DIRECT_ATTACK_DONE("you opponent receives <damage> battle damage\n"),
+    DH_EQUAL_DAMAGE("opponent’s monster card was <monster card name> and no card is destroyed\n"),
     DESELECTED("card deselected\n"),
     OPPONENT_GOT_DAMAGE_IN_ATTACK("your opponent’s monster is destroyed and your opponent receives <damage> battle damage\n"),
     ATTACKING_PLAYER_CARD_DESTROYED("Your monster card is destroyed and you received <damage> battle damage\n"),
@@ -50,6 +52,8 @@ public enum DuelMenuMessages {
     ALREADY_SUMMONED_OR_SET("you already summoned/set on this turn\n"),
     NOT_ENOUGH_CARD_FOR_TRIBUTE("there are not enough cards for tribute\n"),
     NO_MONSTER_ON_THIS_ADDRESS("there no monsters one this address\n"),
+    ENTER_MAIN_MENU(""),
+    PLAY_ANOTHER_TURN(""),
     EMPTY(""),
     INVALID_COMMAND("invalid command\n");
 
@@ -80,6 +84,10 @@ public enum DuelMenuMessages {
     public static void setReceiveDamageByAttackingToDefenseCard(int damage) {
         DuelMenuMessages.RECEIVE_DAMAGE_BY_ATTACKING_TO_DEFENSE_CARD.message =
                 "no card is destroyed and you received " + damage + " battle damage\n";
+    }
+
+    public static void setDHEqualDamage(String cardName) {
+        DuelMenuMessages.DH_EQUAL_DAMAGE.message = "opponent’s monster card was " + cardName + " and no card is destroyed\n";
     }
 
     public String getMessage() {

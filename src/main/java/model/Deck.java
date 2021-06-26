@@ -2,6 +2,8 @@ package model;
 
 import com.google.gson.annotations.Expose;
 import model.cards.Card;
+import model.cards.magiccard.MagicCard;
+import model.cards.magiccard.MagicCardStatuses;
 
 import java.util.ArrayList;
 
@@ -48,7 +50,7 @@ public class Deck {
         return sideCards.size() >= 15;
     }
 
-    public boolean isThreeCardsAvailable(String cardName) {
+    public boolean isNumberOfCardsReachedToLimitation(String cardName) {
         int number = 0;
         for (Card card : mainCards) {
             if (card.getName().equals(cardName)) ++number;
@@ -57,7 +59,10 @@ public class Deck {
             if (card.getName().equals(cardName)) ++number;
         }
 
-        return number >= 3;
+        Card card = Card.getCardByName(cardName);
+        if (card instanceof MagicCard && ((MagicCard) card).getStatus().equals(MagicCardStatuses.LIMITED))
+            return number >= 1;
+        else return number >= 3;
     }
 
     public void addCardToMainDeck(Card card) {

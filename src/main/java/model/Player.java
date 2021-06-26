@@ -149,11 +149,6 @@ public class Player implements Comparable<Player> {
         Database.updatePlayerInformationInDatabase(this);
     }
 
-    public void decreaseScore(long score) {
-        this.score -= score;
-        Database.updatePlayerInformationInDatabase(this);
-    }
-
     public void increaseMoney(long money) {
         this.money += money;
         Database.updatePlayerInformationInDatabase(this);
@@ -223,6 +218,10 @@ public class Player implements Comparable<Player> {
 
     public Board getBoard() {
         return board;
+    }
+
+    public void setBoard(Board board) {
+        this.board = board;
     }
 
     public Deck getDeckByName(String deckName) {

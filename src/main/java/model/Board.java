@@ -12,7 +12,7 @@ public class Board {
     private ArrayList<Card> graveyard;
     private ArrayList<Card> cardsInHand;
     private Deck deck;
-    private MagicCard fieldZone;//TODO: maybe it should be from these classes --> Spell / fieldSpell
+    private MagicCard fieldZone;
     private Card selectedCard;
 //    if this boolean equals "false" so we can conclude that opponent card selected or nothing selected
     private boolean isMyCardSelected;
@@ -29,7 +29,7 @@ public class Board {
     }
 
     public void setDeck(Deck deck) {
-        this.deck = deck;//TODO: maybe we should have a copy of deck in duel menu --> if all changes don't apply in main deck
+        this.deck = deck;
     }
 
     public MonsterCard[] getMonstersZone() {
@@ -227,11 +227,11 @@ public class Board {
         for (int i = 1; i <= 5; i++) {
             if (monstersZone[i] == null) {
                 monstersZone[i] = (MonsterCard) selectedCard;
-                monstersZone[i].setCardFaceUp(false);//TODO check attack or deffensive???
+                monstersZone[i].setCardFaceUp(true);
+                monstersZone[i].setDefensePosition(false);
                 break;
             }
         }
-        selectedCard = null;
     }
 
     private void removeSelectedCardFromHand() {

@@ -74,7 +74,6 @@ public class LoginMenuController {
             return LoginMenuMessages.NICKNAME_EXISTS;
         }
 
-//        TODO: handle to have "strong password" error
         createUser(username, password, nickname);
         return LoginMenuMessages.USER_CREATED;
     }

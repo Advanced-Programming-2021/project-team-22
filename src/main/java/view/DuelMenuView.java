@@ -14,14 +14,15 @@ import model.cards.Card;
 import model.cards.magiccard.MagicCard;
 import model.cards.monstercard.MonsterCard;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 public class DuelMenuView {
     private Player firstPlayer;
     private Player secondPlayer;
-    private int numberOfRounds;
+    private final int numberOfRounds;
     private Integer turnFlag;
-    private AIClass AIClass;
+    private final AIClass AIClass;
 
     {
         turnFlag = 0;
@@ -35,19 +36,19 @@ public class DuelMenuView {
     }
 
     public DuelMenuView(Player firstPlayer, int numberOfRounds) {
-        Player AI = new Player("", "", "");
+        Player AIPlayer = new Player("", "", "");
 
         firstPlayer.createBoard();
-        AI.createBoard();
+        AIPlayer.createBoard();
 
         Collections.shuffle(firstPlayer.getActivatedDeck().getMainCards());
 
-        addDeckToAI(AI);
+        addDeckToAI(AIPlayer);
         firstPlayer.getBoard().setDeck(new Deck(firstPlayer.getActivatedDeck()));
-        AI.getBoard().setDeck(new Deck(AI.getActivatedDeck()));
+        AIPlayer.getBoard().setDeck(new Deck(AIPlayer.getActivatedDeck()));
 
         this.firstPlayer = firstPlayer;
-        this.secondPlayer = AI;
+        this.secondPlayer = AIPlayer;
         this.numberOfRounds = numberOfRounds;
     }
 
@@ -255,7 +256,7 @@ public class DuelMenuView {
         System.out.println("spell/trap didn't activate");
     }
 
-    public void duelMenuView() {
+    public DuelMenuMessages duelMenuView() {
         DuelMenuController duelMenuController = new DuelMenuController();
 
         DuelMenuMessages resultOfInitialGame = null;
@@ -265,21 +266,34 @@ public class DuelMenuView {
         }
 
         while (true) {
-            if (checkWinner()) giveScores();
+            if (checkWinner()) {
+                DuelMenuMessages result = giveScores();
+                if (result.equals(DuelMenuMessages.ENTER_MAIN_MENU)) break;
+                else if (result.equals(DuelMenuMessages.PLAY_ANOTHER_TURN)) return DuelMenuMessages.PLAY_ANOTHER_TURN;
+            }
 
             if (turnFlag == 0) {
                 while (true) {
                     showBoard(firstPlayer.getBoard(), secondPlayer.getBoard());
                     if (turnFlag == 1) {
+                        DuelMenuController.preparePlayerForNextTurn(firstPlayer);
+                        DuelMenuController.preparePlayerForNextTurn(secondPlayer);
                         Player holdPlayer = duelMenuController.getTurnPlayer();
                         duelMenuController.setTurnPlayer(duelMenuController.getNotTurnPlayer());
                         duelMenuController.setNotTurnPlayer(holdPlayer);
                         break;
                     }
                     System.out.println("it is " + duelMenuController.getTurnPlayer().getNickname() + "turn");
-                    if (duelMenuController.getPhase() == Phases.DRAW_PHASE && duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().size() > 0) {
-                        duelMenuController.getTurnPlayer().getBoard().getCardsInHand().add(duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().get(0));
-                        duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().remove(0);
+
+                    ArrayList<Card> turnPlayerMainCards = duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards();
+                    if (duelMenuController.getPhase() == Phases.DRAW_PHASE && turnPlayerMainCards.size() > 0) {
+                        MagicCard timeSeal = duelMenuController.getNotTurnPlayer().getBoard().getFaceUpMagicCardFromMagicsZoneByName("Time Seal");
+                        if (timeSeal == null || !timeSeal.isSetInThisTurn()) {
+                            int indexOfLastMainCard = turnPlayerMainCards.size() - 1;
+                            duelMenuController.getTurnPlayer().getBoard().getCardsInHand().add(turnPlayerMainCards.get(indexOfLastMainCard));
+                            duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().remove(indexOfLastMainCard);
+                        }
+
                         setPhase(duelMenuController);
                     }
                     getOrder(duelMenuController);
@@ -290,6 +304,8 @@ public class DuelMenuView {
                 while (true) {
                     showBoard(duelMenuController.getTurnPlayer().getBoard(), duelMenuController.getNotTurnPlayer().getBoard());
                     if (turnFlag == 0) {
+                        DuelMenuController.preparePlayerForNextTurn(firstPlayer);
+                        DuelMenuController.preparePlayerForNextTurn(secondPlayer);
                         Player holdPlayer = duelMenuController.getTurnPlayer();
                         duelMenuController.setTurnPlayer(duelMenuController.getNotTurnPlayer());
                         duelMenuController.setNotTurnPlayer(holdPlayer);
@@ -297,37 +313,57 @@ public class DuelMenuView {
                     }
                     System.out.println("it is " + duelMenuController.getTurnPlayer().getNickname() + "turn");
 
-                    if (duelMenuController.getPhase() == Phases.DRAW_PHASE && duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().size() > 0) {
-                        duelMenuController.getTurnPlayer().getBoard().getCardsInHand().add(duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().get(0));
-                        duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().remove(0);
-                        setPhase(duelMenuController);
+                    ArrayList<Card> turnPlayerMainCards = duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards();
+                    if (duelMenuController.getPhase() == Phases.DRAW_PHASE && turnPlayerMainCards.size() > 0) {
+                        MagicCard timeSeal = duelMenuController.getNotTurnPlayer().getBoard().getFaceUpMagicCardFromMagicsZoneByName("Time Seal");
+                        if (timeSeal == null || !timeSeal.isSetInThisTurn()) {
+                            int indexOfLastMainCard = turnPlayerMainCards.size() - 1;
+                            duelMenuController.getTurnPlayer().getBoard().getCardsInHand().add(turnPlayerMainCards.get(indexOfLastMainCard));
+                            duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().remove(indexOfLastMainCard);
+                        }
 
+                        setPhase(duelMenuController);
                     }
                     getOrder(duelMenuController);
                 }
             }
 
         }
+
+        return DuelMenuMessages.EMPTY;
     }
 
-    public void playWithAi() {
+    public DuelMenuMessages playWithAI() {
         DuelMenuController duelMenuController = new DuelMenuController();
         while (true) {
-            if (checkWinner()) giveScores();
+            if (checkWinner()) {
+                DuelMenuMessages result = giveScores();
+                if (result.equals(DuelMenuMessages.ENTER_MAIN_MENU)) break;
+                else if (result.equals(DuelMenuMessages.PLAY_ANOTHER_TURN)) return DuelMenuMessages.PLAY_ANOTHER_TURN;
+            }
 
             if (turnFlag == 0) {
                 while (true) {
                     showBoard(firstPlayer.getBoard(), secondPlayer.getBoard());
                     if (turnFlag == 1) {
+                        DuelMenuController.preparePlayerForNextTurn(firstPlayer);
+                        DuelMenuController.preparePlayerForNextTurn(secondPlayer);
                         Player holdPlayer = duelMenuController.getTurnPlayer();
                         duelMenuController.setTurnPlayer(duelMenuController.getNotTurnPlayer());
                         duelMenuController.setNotTurnPlayer(holdPlayer);
                         break;
                     }
                     System.out.println("it is AI turn");
-                    if (duelMenuController.getPhase() == Phases.DRAW_PHASE && duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().size() > 0) {
-                        duelMenuController.getTurnPlayer().getBoard().getCardsInHand().add(duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().get(0));
-                        duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().remove(0);
+
+                    ArrayList<Card> turnPlayerMainCards = duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards();
+                    if (duelMenuController.getPhase() == Phases.DRAW_PHASE && turnPlayerMainCards.size() > 0) {
+                        MagicCard timeSeal = duelMenuController.getNotTurnPlayer().getBoard().getFaceUpMagicCardFromMagicsZoneByName("Time Seal");
+                        if (timeSeal == null || !timeSeal.isSetInThisTurn()) {
+                            int indexOfLastMainCard = turnPlayerMainCards.size() - 1;
+                            duelMenuController.getTurnPlayer().getBoard().getCardsInHand().add(turnPlayerMainCards.get(indexOfLastMainCard));
+                            duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().remove(indexOfLastMainCard);
+                        }
+
                         setPhase(duelMenuController);
                     }
                     String command = AIClass.getOrder(secondPlayer.getBoard(), firstPlayer.getBoard(), secondPlayer, firstPlayer, duelMenuController.getPhase());
@@ -340,56 +376,71 @@ public class DuelMenuView {
                 while (true) {
                     showBoard(duelMenuController.getTurnPlayer().getBoard(), duelMenuController.getNotTurnPlayer().getBoard());
                     if (turnFlag == 0) {
+                        DuelMenuController.preparePlayerForNextTurn(firstPlayer);
+                        DuelMenuController.preparePlayerForNextTurn(secondPlayer);
                         Player holdPlayer = duelMenuController.getTurnPlayer();
                         duelMenuController.setTurnPlayer(duelMenuController.getNotTurnPlayer());
                         duelMenuController.setNotTurnPlayer(holdPlayer);
                         break;
                     }
                     System.out.println("it is " + duelMenuController.getTurnPlayer().getNickname() + " turn");
-                    if (duelMenuController.getPhase() == Phases.DRAW_PHASE && duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().size() > 0) {
-                        duelMenuController.getTurnPlayer().getBoard().getCardsInHand().add(duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().get(0));
-                        duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().remove(0);
-                        setPhase(duelMenuController);
 
+                    ArrayList<Card> turnPlayerMainCards = duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards();
+                    if (duelMenuController.getPhase() == Phases.DRAW_PHASE && turnPlayerMainCards.size() > 0) {
+                        MagicCard timeSeal = duelMenuController.getNotTurnPlayer().getBoard().getFaceUpMagicCardFromMagicsZoneByName("Time Seal");
+                        if (timeSeal == null || !timeSeal.isSetInThisTurn()) {
+                            int indexOfLastMainCard = turnPlayerMainCards.size() - 1;
+                            duelMenuController.getTurnPlayer().getBoard().getCardsInHand().add(turnPlayerMainCards.get(indexOfLastMainCard));
+                            duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().remove(indexOfLastMainCard);
+                        }
+
+                        setPhase(duelMenuController);
                     }
                     getOrder(duelMenuController);
                 }
             }
 
         }
+
+        return DuelMenuMessages.EMPTY;
     }
 
-    private void giveScores() {
+    private DuelMenuMessages giveScores() {
         if (numberOfRounds == 3) {
             if (firstPlayer.getLifePoint() <= 0) {
                 secondPlayer.setWonRounds(secondPlayer.getWonRounds() + 1);
                 secondPlayer.setMaxLifePointDuringPlay(secondPlayer.getLifePoint());
                 firstPlayer.setMaxLifePointDuringPlay(firstPlayer.getLifePoint());
                 System.out.println(secondPlayer.getUsername() + " won\nnew game started");
-                duelMenuView();
+                return DuelMenuMessages.PLAY_ANOTHER_TURN;
             }
             if (secondPlayer.getLifePoint() <= 0) {
                 firstPlayer.setWonRounds(firstPlayer.getWonRounds() + 1);
                 secondPlayer.setMaxLifePointDuringPlay(secondPlayer.getLifePoint());
                 firstPlayer.setMaxLifePointDuringPlay(firstPlayer.getLifePoint());
                 System.out.println(firstPlayer.getUsername() + " won\nnew game started");
-                duelMenuView();
+                return DuelMenuMessages.PLAY_ANOTHER_TURN;
             }
             if (firstPlayer.getWonRounds() == 2) {
                 firstPlayer.increaseMoney(3000 + 3L * firstPlayer.getMaxLifePointDuringPlay());
                 firstPlayer.increaseScore(3000);
                 secondPlayer.increaseMoney(300);
                 System.out.println(firstPlayer.getUsername() + " won");
-                new MainMenuView(firstPlayer).mainMenuView();
+                DuelMenuController.preparePlayerForNextGame(firstPlayer);
+                DuelMenuController.preparePlayerForNextGame(secondPlayer);
+                return DuelMenuMessages.ENTER_MAIN_MENU;
             }
             if (secondPlayer.getWonRounds() == 2) {
                 secondPlayer.increaseMoney(3000 + 3L * secondPlayer.getMaxLifePointDuringPlay());
                 secondPlayer.increaseScore(3000);
                 firstPlayer.increaseMoney(300);
                 System.out.println(secondPlayer.getUsername() + " won");
-                new MainMenuView(firstPlayer).mainMenuView();
+                DuelMenuController.preparePlayerForNextGame(firstPlayer);
+                DuelMenuController.preparePlayerForNextGame(secondPlayer);
+                return DuelMenuMessages.ENTER_MAIN_MENU;
             }
-        } else if (numberOfRounds == 1) {
+        } else {
+//            so we can conclude that numberOfRounds == 1
             if (firstPlayer.getLifePoint() <= 0) {
                 secondPlayer.increaseScore(1000);
                 secondPlayer.increaseMoney(secondPlayer.getLifePoint() + 1000);
@@ -402,8 +453,12 @@ public class DuelMenuView {
                 secondPlayer.increaseMoney(100);
                 System.out.println(firstPlayer.getUsername() + " won");
             }
-            new MainMenuView(firstPlayer).mainMenuView();
+            DuelMenuController.preparePlayerForNextGame(firstPlayer);
+            DuelMenuController.preparePlayerForNextGame(secondPlayer);
+            return DuelMenuMessages.ENTER_MAIN_MENU;
         }
+
+        return DuelMenuMessages.EMPTY;
     }
 
     private boolean checkWinner() {
