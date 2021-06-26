@@ -344,7 +344,7 @@ public class DuelMenuView {
 
             if (turnFlag == 0) {
                 while (true) {
-                    showBoard(firstPlayer.getBoard(), secondPlayer.getBoard());
+                    showBoard(secondPlayer.getBoard(), firstPlayer.getBoard());
                     if (turnFlag == 1) {
                         DuelMenuController.preparePlayerForNextTurn(firstPlayer);
                         DuelMenuController.preparePlayerForNextTurn(secondPlayer);
@@ -467,7 +467,7 @@ public class DuelMenuView {
     }
 
     private void getOrder(DuelMenuController duelMenuController) {
-        System.out.println("this is turn of" + duelMenuController.getTurnPlayer().getUsername());
+      //  System.out.println("this is turn of" + duelMenuController.getTurnPlayer().getUsername());
         String command = Utils.getScanner().nextLine().trim();
         if (command.equals("next Phase")) {
             setPhase(duelMenuController);

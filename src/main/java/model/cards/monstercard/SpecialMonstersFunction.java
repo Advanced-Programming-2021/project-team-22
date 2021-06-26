@@ -92,8 +92,7 @@ public interface SpecialMonstersFunction {
 
         switch (opponentCard.getName()) {
             case "Command knight":
-                commandKnightFunction(opponentPlayerBoard);
-                break;
+                return commandKnightFunction(opponentPlayerBoard);
             case "Yomi Ship":
                 return yomiShipFunction(attackingPlayerBoard, attackingCard, opponentCard);
             case "Suijin":
@@ -142,7 +141,7 @@ public interface SpecialMonstersFunction {
     }
 
     default DuelMenuMessages suijinFunction(MonsterCard attackingCard) {
-//        attackingCard.setAttackLevel(0);//TODO: undo it!!
+        attackingCard.setAttackPoints(0);
         return null;
     }
 

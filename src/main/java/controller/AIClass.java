@@ -52,9 +52,9 @@ public class AIClass {
             int numberOfMonsterToAttack = -1;
             selectMachineMonsterCardToAttack(machineBoard, AIPlayer);
             if (canAttackToFaceUpMonster(machineBoard, playerBoard) != -1) {
-                return "attack" + canAttackToFaceUpMonster(machineBoard, playerBoard);
+                return "attack " + canAttackToFaceUpMonster(machineBoard, playerBoard);
             } else if (canAttackToFaceDownCard(playerBoard) != -1) {
-                return "attack" + canAttackToFaceDownCard(playerBoard);
+                return "attack " + canAttackToFaceDownCard(playerBoard);
             }
         }
         return null;

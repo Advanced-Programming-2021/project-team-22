@@ -492,7 +492,7 @@ public class DuelMenuController {
 //
 //    }
 
-    private DuelMenuMessages attack(String command) {
+    public DuelMenuMessages attack(String command) {
         Board attackingPlayerBoard = turnPlayer.getBoard();
         Board opponentPlayerBoard = notTurnPlayer.getBoard();
 
