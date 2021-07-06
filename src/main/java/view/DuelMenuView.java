@@ -5,22 +5,49 @@ import controller.Utils;
 import controller.duelmenu.DuelMenuController;
 import controller.duelmenu.DuelMenuMessages;
 import controller.duelmenu.Phases;
+import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 import model.Board;
 import model.Player;
 import model.cards.Card;
 import model.cards.magiccard.MagicCard;
 import model.cards.monstercard.MonsterCard;
 
+import java.net.URL;
 import java.util.ArrayList;
 
 public class DuelMenuView {
+    private static Rectangle[] ownMonsterRectangles = new Rectangle[6];
+    private static Rectangle[] ownMagicRectangles = new Rectangle[6];
+    private static Rectangle[] opponentMonsterRectangles = new Rectangle[6];
+    private static Rectangle[] opponentMagicRectangles = new Rectangle[6];
+    private Button playOrStopMusic;
+    private Button setPause;
+    private ImageView imageView;
+    Stage stage;
     private Player firstPlayer;
     private Player secondPlayer;
     private final int numberOfRounds;
     private Integer turnFlag;
     private final AIClass AIClass;
+    private Pane root;
+    private DuelMenuController duelMenuController;
+    private javafx.scene.control.ScrollPane scrollPane;
+    private boolean pause;
 
     {
+        pause = false;
         turnFlag = 0;
         AIClass = new AIClass();
     }
@@ -46,7 +73,7 @@ public class DuelMenuView {
     public static void showGraveyard(Board board) {
         if (board.getGraveyard().size() != 0) {
             for (int i = 1; i <= board.getGraveyard().size(); i++) {
-                printCard(i , board.getGraveyard().get(i));
+                printCard(i, board.getGraveyard().get(i));
             }
         } else System.out.println("graveyard empty");
         while (true) {
@@ -231,6 +258,17 @@ public class DuelMenuView {
 
     public DuelMenuMessages duelMenuView() {
         DuelMenuController duelMenuController = new DuelMenuController();
+        this.duelMenuController = duelMenuController;
+        URL url = getClass().getResource("/view/Board.fxml");
+        try {
+            root = FXMLLoader.load(url);
+        } catch (Exception e) {
+            System.out.println("cant load board!");
+        }
+        Scene scene = new Scene(root, 700, 600);
+        setScene(scene);
+        stage.setScene(scene);
+        stage.show();
 
         DuelMenuMessages resultOfInitialGame = null;
         while (resultOfInitialGame == null || !resultOfInitialGame.equals(DuelMenuMessages.SHOW_TURN_PLAYER)) {
@@ -269,7 +307,7 @@ public class DuelMenuView {
 
                         setPhase(duelMenuController);
                     }
-                    getOrder(duelMenuController);
+                    // getOrder(duelMenuController);
 
                 }
             }
@@ -297,7 +335,7 @@ public class DuelMenuView {
 
                         setPhase(duelMenuController);
                     }
-                    getOrder(duelMenuController);
+                    // getOrder(duelMenuController);
                 }
             }
 
@@ -469,6 +507,597 @@ public class DuelMenuView {
             duelMenuController.setPhase(Phases.DRAW_PHASE);
             turnFlag++;
             turnFlag %= 2;
+            //TODO send a message to server!!!
         }
+    }
+
+    public void showOwnGrave() {
+        GridPane gridPane = new GridPane();
+        ArrayList<Card> graveyard = duelMenuController.getTurnPlayer().getBoard().getGraveyard();
+        for (int i = 0; i < graveyard.size(); i++) {
+            //TODO add photo address Image img = new Image(getClass().getResource().toExternalForm());
+            //rectangle.setFill(new ImagePattern(img));
+        }
+        scrollPane.setContent(gridPane);
+    }
+
+
+    public void setScene(Scene scene) {
+        scrollPane = (ScrollPane) scene.lookup("#graveYard");
+        scrollPane.setVisible(false);
+        scene.lookup("#graveYard").setVisible(false);
+        scene.lookup("#settingsMenu").setVisible(false);
+
+        ownMonsterRectangles[1] = (Rectangle) scene.lookup("#ownMonster1");
+        ownMonsterRectangles[2] = (Rectangle) scene.lookup("#ownMonster2");
+        ownMonsterRectangles[3] = (Rectangle) scene.lookup("#ownMonster3");
+        ownMonsterRectangles[4] = (Rectangle) scene.lookup("#ownMonster4");
+        ownMonsterRectangles[5] = (Rectangle) scene.lookup("#ownMonster5");
+
+        ownMagicRectangles[1] = (Rectangle) scene.lookup("#ownMagic1");
+        ownMagicRectangles[2] = (Rectangle) scene.lookup("#ownMagic2");
+        ownMagicRectangles[3] = (Rectangle) scene.lookup("#ownMagic3");
+        ownMagicRectangles[4] = (Rectangle) scene.lookup("#ownMagic4");
+        ownMagicRectangles[5] = (Rectangle) scene.lookup("#ownMagic5");
+
+        opponentMonsterRectangles[1] = (Rectangle) scene.lookup("#opponentMonster1");
+        opponentMonsterRectangles[2] = (Rectangle) scene.lookup("#opponentMonster2");
+        opponentMonsterRectangles[3] = (Rectangle) scene.lookup("#opponentMonster3");
+        opponentMonsterRectangles[4] = (Rectangle) scene.lookup("#opponentMonster4");
+        opponentMonsterRectangles[5] = (Rectangle) scene.lookup("#opponentMonster5");
+
+        opponentMagicRectangles[1] = (Rectangle) scene.lookup("#opponentMagic1");
+        opponentMagicRectangles[2] = (Rectangle) scene.lookup("#opponentMagic2");
+        opponentMagicRectangles[3] = (Rectangle) scene.lookup("#opponentMagic3");
+        opponentMagicRectangles[4] = (Rectangle) scene.lookup("#opponentMagic4");
+        opponentMagicRectangles[5] = (Rectangle) scene.lookup("#opponentMagic5");
+        imageView = (ImageView) scene.lookup("#showSelectedCard");
+
+        scene.lookup("#settingsMenuButton").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        scene.lookup("#settingsMenu").setVisible(true);
+                    }
+                });
+        scene.lookup("#closeSettings").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        scene.lookup("#settingsMenu").setVisible(false);
+                    }
+                });
+        playOrStopMusic = (Button) scene.lookup("#musicButton");
+        setPause = (Button) scene.lookup("#pauseGame");
+        playOrStopMusic.setOnMouseClicked(this::setMusic);
+        setPause.setOnMouseClicked(this::pauseGame);
+        scene.lookup("#graveYard").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {//TODO add start to show button
+                    @Override
+                    public void handle(MouseEvent e) {
+                        scene.lookup("#graveYard").setVisible(false);
+                    }
+                });
+
+
+        scene.lookup("#ownMonster1").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("select --monster 1");
+                        }
+                        scene.lookup("#changeMonster1").setVisible(true);
+
+
+                    }
+                });
+        scene.lookup("#changeMonster1").addEventHandler(MouseEvent.MOUSE_EXITED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("ppp");
+                        scene.lookup("#changeMonster1").setVisible(false);
+                    }
+                });
+        scene.lookup("#changeMonster2").addEventHandler(MouseEvent.MOUSE_EXITED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("ppp");
+                        scene.lookup("#changeMonster2").setVisible(false);
+                    }
+                });
+        scene.lookup("#ownMonster2").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("select --monster 2");
+                        }
+                        scene.lookup("#changeMonster2").setVisible(true);
+
+
+                    }
+                });
+        scene.lookup("#changeMonster3").addEventHandler(MouseEvent.MOUSE_EXITED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("ppp");
+                        scene.lookup("#changeMonster3").setVisible(false);
+                    }
+                });
+        scene.lookup("#ownMonster3").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("select --monster 3");
+                        }
+                        scene.lookup("#changeMonster3").setVisible(true);
+
+
+                    }
+                });
+        scene.lookup("#changeMonster4").addEventHandler(MouseEvent.MOUSE_EXITED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("ppp");
+
+                        scene.lookup("#changeMonster4").setVisible(false);
+                    }
+                });
+        scene.lookup("#ownMonster4").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("select --monster 4");
+                        }
+                        scene.lookup("#changeMonster4").setVisible(true);
+
+
+                    }
+                });
+        scene.lookup("#changeMonster5").addEventHandler(MouseEvent.MOUSE_EXITED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("ppp");
+                        scene.lookup("#changeMonster5").setVisible(false);
+                    }
+                });
+        scene.lookup("#ownMonster5").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("select --monster 5");
+                        }
+                        scene.lookup("#changeMonster5").setVisible(true);
+
+
+                    }
+                });
+
+
+        scene.lookup("#ownMagic1").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("select --spell 1");
+                        }
+                        scene.lookup("#activeMagic1").setVisible(true);
+
+
+                    }
+                });
+        scene.lookup("#activeMagic1").addEventHandler(MouseEvent.MOUSE_EXITED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("ppp");
+
+                        scene.lookup("#activeMagic1").setVisible(false);
+                    }
+                });
+        scene.lookup("#ownMagic2").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("select --spell 2");
+                        }
+                        scene.lookup("#activeMagic2").setVisible(true);
+
+
+                    }
+                });
+        scene.lookup("#activeMagic2").addEventHandler(MouseEvent.MOUSE_EXITED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("ppp");
+
+                        scene.lookup("#activeMagic2").setVisible(false);
+                    }
+                });
+        scene.lookup("#ownMagic3").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("select --spell 3");
+                        }
+                        scene.lookup("#activeMagic3").setVisible(true);
+
+
+                    }
+                });
+        scene.lookup("#activeMagic3").addEventHandler(MouseEvent.MOUSE_EXITED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("ppp");
+                        scene.lookup("#activeMagic3").setVisible(false);
+                    }
+                });
+        scene.lookup("#ownMagic4").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("select --spell 4");
+                        }
+                        scene.lookup("#activeMagic4").setVisible(true);
+
+
+                    }
+                });
+        scene.lookup("#activeMagic4").addEventHandler(MouseEvent.MOUSE_EXITED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("ppp");
+                        scene.lookup("#activeMagic4").setVisible(false);
+                    }
+                });
+        scene.lookup("#ownMagic5").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("select --spell 5");
+                        }
+                        //TODO show selected card
+                        scene.lookup("#activeMagic5").setVisible(true);
+
+
+                    }
+                });
+        scene.lookup("#activeMagic5").addEventHandler(MouseEvent.MOUSE_EXITED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("ppp");
+                        scene.lookup("#activeMagic5").setVisible(false);
+                    }
+                });
+
+
+        scene.lookup("#opponentMagic5").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("select --spell --opponent 5");
+                        }
+                        //TODO show selected card
+
+
+                    }
+                });
+        scene.lookup("#opponentMagic4").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("select --spell --opponent 4");
+                        }
+                        //TODO show selected card
+
+
+                    }
+                });
+        scene.lookup("#opponentMagic3").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("select --spell --opponent 3");
+                        }
+                        //TODO show selected card
+
+
+                    }
+                });
+        scene.lookup("#opponentMagic2").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("select --spell --opponent 2");
+                        }
+                        //TODO show selected card
+
+
+                    }
+                });
+        scene.lookup("#opponentMagic1").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("select --spell --opponent 1");
+                        }
+                        //TODO show selected card
+
+
+                    }
+                });
+
+        //-------------------------------------------------handle attack button
+
+
+        scene.lookup("#opponentMonster1").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("select --monster --opponent 1");
+                        }
+                        scene.lookup("#attackToOpponentMonster1").setVisible(true);
+
+
+                    }
+                });
+        scene.lookup("#attackToOpponentMonster1").addEventHandler(MouseEvent.MOUSE_EXITED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("ppp");
+                        scene.lookup("#attackToOpponentMonster1").setVisible(false);
+                    }
+                });
+        scene.lookup("#opponentMonster2").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("select --monster --opponent 2");
+                        }
+                        scene.lookup("#attackToOpponentMonster2").setVisible(true);
+
+
+                    }
+                });
+        scene.lookup("#attackToOpponentMonster2").addEventHandler(MouseEvent.MOUSE_EXITED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("ppp");
+                        scene.lookup("#attackToOpponentMonster2").setVisible(false);
+                    }
+                });
+        scene.lookup("#opponentMonster3").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("select --monster --opponent 3");
+                        }
+                        scene.lookup("#attackToOpponentMonster3").setVisible(true);
+
+
+                    }
+                });
+        scene.lookup("#attackToOpponentMonster3").addEventHandler(MouseEvent.MOUSE_EXITED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("ppp");
+                        scene.lookup("#attackToOpponentMonster3").setVisible(false);
+                    }
+                });
+        scene.lookup("#opponentMonster4").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("select --monster --opponent 4");
+                        }
+                        scene.lookup("#attackToOpponentMonster4").setVisible(true);
+
+
+                    }
+                });
+        scene.lookup("#attackToOpponentMonster4").addEventHandler(MouseEvent.MOUSE_EXITED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("ppp");
+                        scene.lookup("#attackToOpponentMonster4").setVisible(false);
+                    }
+                });
+        scene.lookup("#opponentMonster5").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("select --monster --opponent 5");
+                        }
+                        scene.lookup("#attackToOpponentMonster5").setVisible(true);
+
+
+                    }
+                });
+        scene.lookup("#attackToOpponentMonster5").addEventHandler(MouseEvent.MOUSE_EXITED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("ppp");
+                        scene.lookup("#attackToOpponentMonster5").setVisible(false);
+                    }
+                });
+
+        scene.lookup("#attackToOpponentMonster1").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("attack 1");
+                        }
+                    }
+                });
+        scene.lookup("#attackToOpponentMonster2").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("attack 2");
+                        }
+                    }
+                });
+        scene.lookup("#attackToOpponentMonster3").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("attack 3");
+                        }
+                    }
+                });
+        scene.lookup("#attackToOpponentMonster4").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("attack 4");
+                        }
+                    }
+                });
+        scene.lookup("#attackToOpponentMonster5").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("attack 5");
+                        }
+                    }
+                });
+
+
+        scene.lookup("#activeMagic1").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("ppp");
+                        if (!pause) {//TODO ask about order
+                            DuelMenuMessages result = duelMenuController.findCommand("");
+                        }
+                    }
+                });
+        scene.lookup("#activeMagic2").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("ppp");
+                        if (!pause) {//TODO ask about order
+                            DuelMenuMessages result = duelMenuController.findCommand("");
+                        }
+                    }
+                });
+        scene.lookup("#activeMagic3").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("ppp");
+                        if (!pause) {//TODO ask about order
+                            DuelMenuMessages result = duelMenuController.findCommand("");
+                        }
+                    }
+                });
+        scene.lookup("#activeMagic4").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("ppp");
+                        if (!pause) {//TODO ask about order
+                            DuelMenuMessages result = duelMenuController.findCommand("");
+                        }
+                    }
+                });
+        scene.lookup("#activeMagic5").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("ppp");
+                        if (!pause) {//TODO ask about order
+                            DuelMenuMessages result = duelMenuController.findCommand("");
+                        }
+                    }
+                });
+
+
+        scene.lookup("#nextPhaseButton").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("ppp");
+                        if (!pause) {
+                            setPhase(duelMenuController);
+                        }
+                    }
+                });
+
+
+    }
+
+    private void pauseGame(MouseEvent mouseEvent) {
+        if (pause)
+            pause = false;
+        if (!pause)
+            pause = true;
+    }
+
+    private void setMusic(MouseEvent mouseEvent) {
     }
 }
