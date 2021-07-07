@@ -5,6 +5,7 @@ module Graphic.Copy {
     requires java.desktop;
     requires com.google.gson;
     requires opencsv;
+    requires javafx.media;
 
 
     opens view to javafx.fxml;

@@ -11,7 +11,7 @@ public class Card {
     protected static HashMap<String, Card> allCards;
 
     static {
-         allCards = new HashMap<>();
+        allCards = new HashMap<>();
     }
 
     @Expose
@@ -19,20 +19,24 @@ public class Card {
     protected final String description;
     protected final CardTypes cardType;
     protected final int price;
-//    if this boolean equals "false" so we can conclude that card is "face down"
+    //    if this boolean equals "false" so we can conclude that card is "face down"
     protected transient boolean isCardFaceUp;
     protected transient boolean isPowerUsed;
+    protected transient String frontImageAddress;
+    protected transient String backImageAddress;
 
     {
         isCardFaceUp = false;
         isPowerUsed = false;
+        backImageAddress = "/Project-Assets-1.0.0/Assets/Cards/Monsters/Unknown.jpg";
     }
 
-    public Card(String name, String description, CardTypes cardType, int price) {
+    public Card(String name, String description, CardTypes cardType, int price, String frontImageAddress) {
         this.name = name;
         this.description = description;
         this.cardType = cardType;
         this.price = price;
+        this.frontImageAddress = frontImageAddress;
     }
 
     public static Card getCardByName(String name) {
@@ -103,5 +107,17 @@ public class Card {
 
     public void setCardFaceUp(Boolean cardFaceUp) {
         isCardFaceUp = cardFaceUp;
+    }
+
+    public void setFrontImageAddress(String frontImageAddress) {
+        this.frontImageAddress = frontImageAddress;
+    }
+
+    public String getFrontImageAddress() {
+        return frontImageAddress;
+    }
+
+    public String getBackImageAddress() {
+        return backImageAddress;
     }
 }

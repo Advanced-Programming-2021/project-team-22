@@ -12,15 +12,16 @@ public class MagicCard extends Card {
         isSetInThisTurn = false;
     }
 
-    public MagicCard(String name, CardTypes cardType, String icon, String description, MagicCardStatuses status, int price) {
-        super(name, description, cardType, price);
+    public MagicCard(String name, CardTypes cardType, String icon, String description, MagicCardStatuses status, int price,
+                     String frontImageAddress) {
+        super(name, description, cardType, price, frontImageAddress);
         this.icon = icon;
         this.status = status;
         allCards.put(name, this);
     }
 
     public MagicCard(MagicCard magicCard) {
-        super(magicCard.name, magicCard.description, magicCard.cardType, magicCard.price);
+        super(magicCard.name, magicCard.description, magicCard.cardType, magicCard.price, magicCard.frontImageAddress);
         this.icon = magicCard.icon;
         this.status = magicCard.status;
     }
@@ -50,7 +51,7 @@ public class MagicCard extends Card {
 
     @Override
     public String toString() {
-        if (isCardFaceUp) return "O ";
-        else return "H ";
+        if (isCardFaceUp) return "O     ";
+        else return "H     ";
     }
 }

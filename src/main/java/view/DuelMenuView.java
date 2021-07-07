@@ -15,11 +15,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
@@ -559,13 +561,37 @@ public class DuelMenuView {
     public void showOwnGrave() {
         GridPane gridPane = new GridPane();
         ArrayList<Card> graveyard = duelMenuController.getTurnPlayer().getBoard().getGraveyard();
-        for (int i = 0; i < graveyard.size(); i++) {
-            //TODO add photo address Image img = new Image(getClass().getResource().toExternalForm());
-            //rectangle.setFill(new ImagePattern(img));
-        }
-        scrollPane.setContent(gridPane);
+        addNodesToGridpane(gridPane, graveyard);
     }
 
+    public void shoeOpponentGrave() {
+        GridPane gridPane = new GridPane();
+        ArrayList<Card> graveyard = duelMenuController.getNotTurnPlayer().getBoard().getGraveyard();
+        addNodesToGridpane(gridPane, graveyard);
+    }
+
+    private void addNodesToGridpane(GridPane gridPane, ArrayList<Card> graveyard) {
+        for (int i = 0; i < graveyard.size(); i++) {
+            Rectangle rectangle = new Rectangle();
+            Image img = new Image(getClass().getResource(graveyard.get(i).getFrontImageAddress()).toExternalForm());
+            rectangle.setFill(new ImagePattern(img));
+            rectangle.setHeight(50);
+            rectangle.setWidth(80);
+            gridPane.add(rectangle, 0, i);
+        }
+        scrollPane.setContent(gridPane);
+        scrollPane.setVisible(true);
+        EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e) {
+                scrollPane.setVisible(false);
+            }
+        };
+        scrollPane.setOnMouseClicked(this::hideGraveyard);
+    }
+
+    public void hideGraveyard(MouseEvent mouseEvent) {
+        scrollPane.setVisible(false);
+    }
 
     public void showCheatText(Scene scene) {
         scene.lookup("#cheatcodeMenu").setVisible(true);
@@ -623,7 +649,7 @@ public class DuelMenuView {
         opponentCardsInHand[4] = (Rectangle) scene.lookup("#opponentHandCard4");
 
 
-        KeyCombination keyCombination = KeyCombination.keyCombination("CTRL+SHIFT+U");
+        KeyCombination keyCombination = KeyCombination.keyCombination("CTRL+SHIFT+C");
         Runnable runnable = () -> showCheatText(scene);
         scene.getAccelerators().put(keyCombination, runnable);
 
@@ -663,6 +689,9 @@ public class DuelMenuView {
                         if (!pause) {
                             DuelMenuMessages result = duelMenuController.findCommand("select --monster 1");
                         }
+                        if (showCardCheck(duelMenuController.getTurnPlayer().getBoard())) {
+                            imageView = new ImageView(new Image(getClass().getResource(duelMenuController.getTurnPlayer().getBoard().getSelectedCard().getFrontImageAddress()).toExternalForm()));
+                        }
                         scene.lookup("#changeMonster1").setVisible(true);
 
 
@@ -692,6 +721,9 @@ public class DuelMenuView {
                         if (!pause) {
                             DuelMenuMessages result = duelMenuController.findCommand("select --monster 2");
                         }
+                        if (showCardCheck(duelMenuController.getTurnPlayer().getBoard())) {
+                            imageView = new ImageView(new Image(getClass().getResource(duelMenuController.getTurnPlayer().getBoard().getSelectedCard().getFrontImageAddress()).toExternalForm()));
+                        }
                         scene.lookup("#changeMonster2").setVisible(true);
 
 
@@ -712,6 +744,9 @@ public class DuelMenuView {
                         System.out.println("gfd");
                         if (!pause) {
                             DuelMenuMessages result = duelMenuController.findCommand("select --monster 3");
+                        }
+                        if (showCardCheck(duelMenuController.getTurnPlayer().getBoard())) {
+                            imageView = new ImageView(new Image(getClass().getResource(duelMenuController.getTurnPlayer().getBoard().getSelectedCard().getFrontImageAddress()).toExternalForm()));
                         }
                         scene.lookup("#changeMonster3").setVisible(true);
 
@@ -735,6 +770,9 @@ public class DuelMenuView {
                         if (!pause) {
                             DuelMenuMessages result = duelMenuController.findCommand("select --monster 4");
                         }
+                        if (showCardCheck(duelMenuController.getTurnPlayer().getBoard())) {
+                            imageView = new ImageView(new Image(getClass().getResource(duelMenuController.getTurnPlayer().getBoard().getSelectedCard().getFrontImageAddress()).toExternalForm()));
+                        }
                         scene.lookup("#changeMonster4").setVisible(true);
 
 
@@ -756,6 +794,9 @@ public class DuelMenuView {
                         if (!pause) {
                             DuelMenuMessages result = duelMenuController.findCommand("select --monster 5");
                         }
+                        if (showCardCheck(duelMenuController.getTurnPlayer().getBoard())) {
+                            imageView = new ImageView(new Image(getClass().getResource(duelMenuController.getTurnPlayer().getBoard().getSelectedCard().getFrontImageAddress()).toExternalForm()));
+                        }
                         scene.lookup("#changeMonster5").setVisible(true);
 
 
@@ -770,6 +811,9 @@ public class DuelMenuView {
                         System.out.println("gfd");
                         if (!pause) {
                             DuelMenuMessages result = duelMenuController.findCommand("select --spell 1");
+                        }
+                        if (showCardCheck(duelMenuController.getTurnPlayer().getBoard())) {
+                            imageView = new ImageView(new Image(getClass().getResource(duelMenuController.getTurnPlayer().getBoard().getSelectedCard().getFrontImageAddress()).toExternalForm()));
                         }
                         scene.lookup("#activeMagic1").setVisible(true);
 
@@ -793,6 +837,9 @@ public class DuelMenuView {
                         if (!pause) {
                             DuelMenuMessages result = duelMenuController.findCommand("select --spell 2");
                         }
+                        if (showCardCheck(duelMenuController.getTurnPlayer().getBoard())) {
+                            imageView = new ImageView(new Image(getClass().getResource(duelMenuController.getTurnPlayer().getBoard().getSelectedCard().getFrontImageAddress()).toExternalForm()));
+                        }
                         scene.lookup("#activeMagic2").setVisible(true);
 
 
@@ -815,6 +862,9 @@ public class DuelMenuView {
                         if (!pause) {
                             DuelMenuMessages result = duelMenuController.findCommand("select --spell 3");
                         }
+                        if (showCardCheck(duelMenuController.getTurnPlayer().getBoard())) {
+                            imageView = new ImageView(new Image(getClass().getResource(duelMenuController.getTurnPlayer().getBoard().getSelectedCard().getFrontImageAddress()).toExternalForm()));
+                        }
                         scene.lookup("#activeMagic3").setVisible(true);
 
 
@@ -835,6 +885,9 @@ public class DuelMenuView {
                         System.out.println("gfd");
                         if (!pause) {
                             DuelMenuMessages result = duelMenuController.findCommand("select --spell 4");
+                        }
+                        if (showCardCheck(duelMenuController.getTurnPlayer().getBoard())) {
+                            imageView = new ImageView(new Image(getClass().getResource(duelMenuController.getTurnPlayer().getBoard().getSelectedCard().getFrontImageAddress()).toExternalForm()));
                         }
                         scene.lookup("#activeMagic4").setVisible(true);
 
@@ -857,7 +910,9 @@ public class DuelMenuView {
                         if (!pause) {
                             DuelMenuMessages result = duelMenuController.findCommand("select --spell 5");
                         }
-                        //TODO show selected card
+                        if (showCardCheck(duelMenuController.getTurnPlayer().getBoard())) {
+                            imageView = new ImageView(new Image(getClass().getResource(duelMenuController.getTurnPlayer().getBoard().getSelectedCard().getFrontImageAddress()).toExternalForm()));
+                        }
                         scene.lookup("#activeMagic5").setVisible(true);
 
 
@@ -881,7 +936,9 @@ public class DuelMenuView {
                         if (!pause) {
                             DuelMenuMessages result = duelMenuController.findCommand("select --spell --opponent 5");
                         }
-                        //TODO show selected card
+                        if (showCardCheck(duelMenuController.getTurnPlayer().getBoard())) {
+                            imageView = new ImageView(new Image(getClass().getResource(duelMenuController.getTurnPlayer().getBoard().getSelectedCard().getFrontImageAddress()).toExternalForm()));
+                        }
 
 
                     }
@@ -894,7 +951,9 @@ public class DuelMenuView {
                         if (!pause) {
                             DuelMenuMessages result = duelMenuController.findCommand("select --spell --opponent 4");
                         }
-                        //TODO show selected card
+                        if (showCardCheck(duelMenuController.getTurnPlayer().getBoard())) {
+                            imageView = new ImageView(new Image(getClass().getResource(duelMenuController.getTurnPlayer().getBoard().getSelectedCard().getFrontImageAddress()).toExternalForm()));
+                        }
 
 
                     }
@@ -907,7 +966,9 @@ public class DuelMenuView {
                         if (!pause) {
                             DuelMenuMessages result = duelMenuController.findCommand("select --spell --opponent 3");
                         }
-                        //TODO show selected card
+                        if (showCardCheck(duelMenuController.getTurnPlayer().getBoard())) {
+                            imageView = new ImageView(new Image(getClass().getResource(duelMenuController.getTurnPlayer().getBoard().getSelectedCard().getFrontImageAddress()).toExternalForm()));
+                        }
 
 
                     }
@@ -920,7 +981,9 @@ public class DuelMenuView {
                         if (!pause) {
                             DuelMenuMessages result = duelMenuController.findCommand("select --spell --opponent 2");
                         }
-                        //TODO show selected card
+                        if (showCardCheck(duelMenuController.getTurnPlayer().getBoard())) {
+                            imageView = new ImageView(new Image(getClass().getResource(duelMenuController.getTurnPlayer().getBoard().getSelectedCard().getFrontImageAddress()).toExternalForm()));
+                        }
 
 
                     }
@@ -933,7 +996,9 @@ public class DuelMenuView {
                         if (!pause) {
                             DuelMenuMessages result = duelMenuController.findCommand("select --spell --opponent 1");
                         }
-                        //TODO show selected card
+                        if (showCardCheck(duelMenuController.getTurnPlayer().getBoard())) {
+                            imageView = new ImageView(new Image(getClass().getResource(duelMenuController.getTurnPlayer().getBoard().getSelectedCard().getFrontImageAddress()).toExternalForm()));
+                        }
 
 
                     }
@@ -949,6 +1014,9 @@ public class DuelMenuView {
                         System.out.println("gfd");
                         if (!pause) {
                             DuelMenuMessages result = duelMenuController.findCommand("select --monster --opponent 1");
+                        }
+                        if (showCardCheck(duelMenuController.getTurnPlayer().getBoard())) {
+                            imageView = new ImageView(new Image(getClass().getResource(duelMenuController.getTurnPlayer().getBoard().getSelectedCard().getFrontImageAddress()).toExternalForm()));
                         }
                         scene.lookup("#attackToOpponentMonster1").setVisible(true);
 
@@ -971,6 +1039,9 @@ public class DuelMenuView {
                         if (!pause) {
                             DuelMenuMessages result = duelMenuController.findCommand("select --monster --opponent 2");
                         }
+                        if (showCardCheck(duelMenuController.getTurnPlayer().getBoard())) {
+                            imageView = new ImageView(new Image(getClass().getResource(duelMenuController.getTurnPlayer().getBoard().getSelectedCard().getFrontImageAddress()).toExternalForm()));
+                        }
                         scene.lookup("#attackToOpponentMonster2").setVisible(true);
 
 
@@ -991,6 +1062,9 @@ public class DuelMenuView {
                         System.out.println("gfd");
                         if (!pause) {
                             DuelMenuMessages result = duelMenuController.findCommand("select --monster --opponent 3");
+                        }
+                        if (showCardCheck(duelMenuController.getTurnPlayer().getBoard())) {
+                            imageView = new ImageView(new Image(getClass().getResource(duelMenuController.getTurnPlayer().getBoard().getSelectedCard().getFrontImageAddress()).toExternalForm()));
                         }
                         scene.lookup("#attackToOpponentMonster3").setVisible(true);
 
@@ -1013,6 +1087,9 @@ public class DuelMenuView {
                         if (!pause) {
                             DuelMenuMessages result = duelMenuController.findCommand("select --monster --opponent 4");
                         }
+                        if (showCardCheck(duelMenuController.getTurnPlayer().getBoard())) {
+                            imageView = new ImageView(new Image(getClass().getResource(duelMenuController.getTurnPlayer().getBoard().getSelectedCard().getFrontImageAddress()).toExternalForm()));
+                        }
                         scene.lookup("#attackToOpponentMonster4").setVisible(true);
 
 
@@ -1033,6 +1110,9 @@ public class DuelMenuView {
                         System.out.println("gfd");
                         if (!pause) {
                             DuelMenuMessages result = duelMenuController.findCommand("select --monster --opponent 5");
+                        }
+                        if (showCardCheck(duelMenuController.getTurnPlayer().getBoard())) {
+                            imageView = new ImageView(new Image(getClass().getResource(duelMenuController.getTurnPlayer().getBoard().getSelectedCard().getFrontImageAddress()).toExternalForm()));
                         }
                         scene.lookup("#attackToOpponentMonster5").setVisible(true);
 
