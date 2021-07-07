@@ -32,6 +32,8 @@ public class DuelMenuView {
     private static Rectangle[] ownMagicRectangles = new Rectangle[6];
     private static Rectangle[] opponentMonsterRectangles = new Rectangle[6];
     private static Rectangle[] opponentMagicRectangles = new Rectangle[6];
+    private static Rectangle[] ownCardsInHand = new Rectangle[5];
+    private static Rectangle[] opponentCardsInHand = new Rectangle[5];
     private Button playOrStopMusic;
     private Button setPause;
     private ImageView imageView;
@@ -259,6 +261,14 @@ public class DuelMenuView {
     public DuelMenuMessages duelMenuView() {
         DuelMenuController duelMenuController = new DuelMenuController();
         this.duelMenuController = duelMenuController;
+
+        DuelMenuMessages resultOfInitialGame = null;
+        while (resultOfInitialGame == null || !resultOfInitialGame.equals(DuelMenuMessages.SHOW_TURN_PLAYER)) {
+            resultOfInitialGame = duelMenuController.initialGame(firstPlayer, secondPlayer);
+            System.out.print(resultOfInitialGame.getMessage());
+        }
+
+
         URL url = getClass().getResource("/view/Board.fxml");
         try {
             root = FXMLLoader.load(url);
@@ -270,17 +280,15 @@ public class DuelMenuView {
         stage.setScene(scene);
         stage.show();
 
-        DuelMenuMessages resultOfInitialGame = null;
-        while (resultOfInitialGame == null || !resultOfInitialGame.equals(DuelMenuMessages.SHOW_TURN_PLAYER)) {
-            resultOfInitialGame = duelMenuController.initialGame(firstPlayer, secondPlayer);
-            System.out.print(resultOfInitialGame.getMessage());
-        }
+        if (firstPlayer.equals(duelMenuController.getTurnPlayer()))
+            turnFlag = 1;
 
         while (true) {
             if (checkWinner()) {
                 DuelMenuMessages result = giveScores();
                 if (result.equals(DuelMenuMessages.ENTER_MAIN_MENU)) break;
-                else if (result.equals(DuelMenuMessages.PLAY_ANOTHER_TURN)) return DuelMenuMessages.PLAY_ANOTHER_TURN;
+                else if (result.equals(DuelMenuMessages.PLAY_ANOTHER_TURN))
+                    return DuelMenuMessages.PLAY_ANOTHER_TURN;
             }
 
             if (turnFlag == 0) {
@@ -308,7 +316,7 @@ public class DuelMenuView {
                         setPhase(duelMenuController);
                     }
                     // getOrder(duelMenuController);
-
+//TODO get order by network
                 }
             }
             if (turnFlag == 1) {
@@ -336,6 +344,7 @@ public class DuelMenuView {
                         setPhase(duelMenuController);
                     }
                     // getOrder(duelMenuController);
+                    //TODO gets order by graphic page
                 }
             }
 
@@ -373,6 +382,8 @@ public class DuelMenuView {
                         MagicCard timeSeal = duelMenuController.getNotTurnPlayer().getBoard().getFaceUpMagicCardFromMagicsZoneByName("Time Seal");
                         if (timeSeal == null || !timeSeal.isSetInThisTurn()) {
                             int indexOfLastMainCard = turnPlayerMainCards.size() - 1;
+                            //TODO here added grahpic
+                            // opponentCardsInHand[ duelMenuController.getTurnPlayer().getBoard().getCardsInHand().size()].setFill();
                             duelMenuController.getTurnPlayer().getBoard().getCardsInHand().add(turnPlayerMainCards.get(indexOfLastMainCard));
                             duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().remove(indexOfLastMainCard);
                         }
@@ -403,6 +414,8 @@ public class DuelMenuView {
                         MagicCard timeSeal = duelMenuController.getNotTurnPlayer().getBoard().getFaceUpMagicCardFromMagicsZoneByName("Time Seal");
                         if (timeSeal == null || !timeSeal.isSetInThisTurn()) {
                             int indexOfLastMainCard = turnPlayerMainCards.size() - 1;
+                            //TODO here added grahpic
+                            // ownCardsInHand[ duelMenuController.getTurnPlayer().getBoard().getCardsInHand().size()].setFill();
                             duelMenuController.getTurnPlayer().getBoard().getCardsInHand().add(turnPlayerMainCards.get(indexOfLastMainCard));
                             duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().remove(indexOfLastMainCard);
                         }
@@ -552,6 +565,16 @@ public class DuelMenuView {
         opponentMagicRectangles[4] = (Rectangle) scene.lookup("#opponentMagic4");
         opponentMagicRectangles[5] = (Rectangle) scene.lookup("#opponentMagic5");
         imageView = (ImageView) scene.lookup("#showSelectedCard");
+
+        ownCardsInHand[1] = (Rectangle) scene.lookup("#ownHandCard1");
+        ownCardsInHand[2] = (Rectangle) scene.lookup("#ownHandCard2");
+        ownCardsInHand[3] = (Rectangle) scene.lookup("#ownHandCard3");
+        ownCardsInHand[4] = (Rectangle) scene.lookup("#ownHandCard4");
+
+        opponentCardsInHand[1] = (Rectangle) scene.lookup("#opponentHandCard1");
+        opponentCardsInHand[2] = (Rectangle) scene.lookup("#opponentHandCard2");
+        opponentCardsInHand[3] = (Rectangle) scene.lookup("#opponentHandCard3");
+        opponentCardsInHand[4] = (Rectangle) scene.lookup("#opponentHandCard4");
 
         scene.lookup("#settingsMenuButton").addEventHandler(MouseEvent.MOUSE_CLICKED,
                 new EventHandler<MouseEvent>() {

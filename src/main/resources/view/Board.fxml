@@ -55,16 +55,16 @@
       <Button id="attackToOpponentMonster1" layoutX="259.0" layoutY="245.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="69.0" text="attack" />
       <Button id="attackToOpponentMonster3" layoutX="341.0" layoutY="246.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="69.0" text="attack" />
       <Button id="attackToOpponentMonster5" layoutX="416.0" layoutY="245.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="69.0" text="attack" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="77.0" layoutX="568.0" stroke="BLACK" strokeType="INSIDE" width="69.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="77.0" layoutX="568.0" layoutY="507.0" stroke="BLACK" strokeType="INSIDE" width="69.0" />
+      <Rectangle id="opponentImage" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="77.0" layoutX="568.0" stroke="BLACK" strokeType="INSIDE" width="69.0" />
+      <Rectangle id="ownImage" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="77.0" layoutX="568.0" layoutY="507.0" stroke="BLACK" strokeType="INSIDE" width="69.0" />
       <Label layoutX="572.0" layoutY="464.0" prefHeight="43.0" prefWidth="50.0" text="name" />
-      <Label layoutX="622.0" layoutY="464.0" prefHeight="43.0" prefWidth="82.0" text="Label" />
+      <Label id="ownUsername" layoutX="622.0" layoutY="464.0" prefHeight="43.0" prefWidth="82.0" text="Label" />
       <Label layoutX="573.0" layoutY="429.0" text="nick" />
-      <Label layoutX="614.0" layoutY="429.0" prefHeight="37.0" prefWidth="91.0" text="Label" />
+      <Label id="ownNiackname" layoutX="614.0" layoutY="429.0" prefHeight="37.0" prefWidth="91.0" text="Label" />
       <Label layoutX="570.0" layoutY="77.0" text="name" />
-      <Label layoutX="619.0" layoutY="77.0" prefHeight="37.0" prefWidth="82.0" text="Label" />
+      <Label id="opponentName" layoutX="619.0" layoutY="77.0" prefHeight="37.0" prefWidth="82.0" text="Label" />
       <Label layoutX="568.0" layoutY="114.0" text="nick" />
-      <Label layoutX="608.0" layoutY="114.0" prefHeight="37.0" prefWidth="91.0" text="Label" />
+      <Label id="opponentNickname" layoutX="608.0" layoutY="114.0" prefHeight="37.0" prefWidth="91.0" text="Label" />
       <Label layoutX="637.0" prefHeight="77.0" prefWidth="69.0" text="8000" />
       <Label layoutX="638.0" layoutY="508.0" prefHeight="77.0" prefWidth="69.0" text="Label" />
       <ImageView id="showSelectedCard" fitHeight="277.0" fitWidth="133.0" layoutX="570.0" layoutY="150.0" pickOnBounds="true" preserveRatio="true" />
@@ -75,14 +75,14 @@
       <Button id="activeMagic4" layoutX="416.0" layoutY="467.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="69.0" text="Active" />
       <Button id="settingsMenuButton" layoutX="506.0" layoutY="2.0" mnemonicParsing="false" text="settings" />
       <Button id="nextPhaseButton" layoutY="524.0" mnemonicParsing="false" text="next phase" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="134.0" layoutX="56.0" layoutY="-83.0" stroke="BLACK" strokeType="INSIDE" width="77.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="119.0" layoutX="160.0" layoutY="-68.0" stroke="BLACK" strokeType="INSIDE" width="82.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="134.0" layoutX="266.0" layoutY="-83.0" stroke="BLACK" strokeType="INSIDE" width="91.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="119.0" layoutX="371.0" layoutY="-68.0" stroke="BLACK" strokeType="INSIDE" width="91.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="134.0" layoutX="95.0" layoutY="525.0" stroke="BLACK" strokeType="INSIDE" width="97.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="154.0" layoutX="211.0" layoutY="525.0" stroke="BLACK" strokeType="INSIDE" width="97.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="162.0" layoutX="322.0" layoutY="532.0" stroke="BLACK" strokeType="INSIDE" width="108.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="162.0" layoutX="438.0" layoutY="532.0" stroke="BLACK" strokeType="INSIDE" width="117.0" />
+      <Rectangle id="opponentHandCard1" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="119.0" layoutX="36.0" layoutY="-68.0" stroke="BLACK" strokeType="INSIDE" width="82.0" />
+      <Rectangle id="opponentHandCard2" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="119.0" layoutX="134.0" layoutY="-68.0" stroke="BLACK" strokeType="INSIDE" width="82.0" />
+      <Rectangle id="opponentHandCard3" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="119.0" layoutX="230.0" layoutY="-68.0" stroke="BLACK" strokeType="INSIDE" width="82.0" />
+      <Rectangle id="opponentHandCard4" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="119.0" layoutX="328.0" layoutY="-68.0" stroke="BLACK" strokeType="INSIDE" width="82.0" />
+      <Rectangle id="ownHandCard1" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="134.0" layoutX="85.0" layoutY="525.0" stroke="BLACK" strokeType="INSIDE" width="97.0" />
+      <Rectangle id="ownHandCard2" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="134.0" layoutX="190.0" layoutY="525.0" stroke="BLACK" strokeType="INSIDE" width="97.0" />
+      <Rectangle id="ownHandCard3" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="134.0" layoutX="294.0" layoutY="525.0" stroke="BLACK" strokeType="INSIDE" width="97.0" />
+      <Rectangle id="ownHandCard4" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="134.0" layoutX="402.0" layoutY="525.0" stroke="BLACK" strokeType="INSIDE" width="97.0" />
       <ScrollPane id="graveYard" layoutX="184.0" layoutY="113.0" prefHeight="314.0" prefWidth="290.0" />
       <VBox id="settingsMenu" layoutX="452.0" layoutY="64.0" prefHeight="200.0" prefWidth="108.0">
          <children>
