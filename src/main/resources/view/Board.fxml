@@ -83,12 +83,18 @@
       <Rectangle id="ownHandCard2" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="134.0" layoutX="190.0" layoutY="525.0" stroke="BLACK" strokeType="INSIDE" width="97.0" />
       <Rectangle id="ownHandCard3" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="134.0" layoutX="294.0" layoutY="525.0" stroke="BLACK" strokeType="INSIDE" width="97.0" />
       <Rectangle id="ownHandCard4" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="134.0" layoutX="402.0" layoutY="525.0" stroke="BLACK" strokeType="INSIDE" width="97.0" />
-      <ScrollPane id="graveYard" layoutX="184.0" layoutY="113.0" prefHeight="314.0" prefWidth="290.0" />
+      <ScrollPane id="graveYard" layoutX="174.0" layoutY="95.0" prefHeight="314.0" prefWidth="290.0" />
       <VBox id="settingsMenu" layoutX="452.0" layoutY="64.0" prefHeight="200.0" prefWidth="108.0">
          <children>
             <Button id="musicButton" mnemonicParsing="false" prefHeight="38.0" prefWidth="117.0" text="play/stop " />
             <Button id="pauseGame" mnemonicParsing="false" prefHeight="38.0" prefWidth="88.0" text="pause" />
             <Button id="closeSettings" mnemonicParsing="false" prefHeight="38.0" prefWidth="90.0" text="back" />
+         </children>
+      </VBox>
+      <VBox id="cheatcodeMenu" layoutX="405.0" layoutY="281.0" prefHeight="200.0" prefWidth="151.0">
+         <children>
+            <Label prefHeight="39.0" prefWidth="130.0" text="     enter cheat code" />
+            <TextField id="cheatcodeText" prefHeight="43.0" prefWidth="130.0" />
          </children>
       </VBox>
    </children>

@@ -5,13 +5,16 @@ import controller.Utils;
 import controller.duelmenu.DuelMenuController;
 import controller.duelmenu.DuelMenuMessages;
 import controller.duelmenu.Phases;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -535,11 +538,25 @@ public class DuelMenuView {
     }
 
 
+    public void showCheatText(Scene scene) {
+        scene.lookup("#cheatcodeMenu").setVisible(true);
+        TextField textField = (TextField) scene.lookup("#cheatcodeText");
+        EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e) {
+                DuelMenuMessages result = duelMenuController.findCommand(textField.getText());
+                scene.lookup("#cheatcodeMenu").setVisible(false);
+            }
+        };
+
+        textField.setOnAction(event);
+    }
+
     public void setScene(Scene scene) {
         scrollPane = (ScrollPane) scene.lookup("#graveYard");
         scrollPane.setVisible(false);
         scene.lookup("#graveYard").setVisible(false);
         scene.lookup("#settingsMenu").setVisible(false);
+        scene.lookup("#cheatcodeMenu").setVisible(false);
 
         ownMonsterRectangles[1] = (Rectangle) scene.lookup("#ownMonster1");
         ownMonsterRectangles[2] = (Rectangle) scene.lookup("#ownMonster2");
@@ -575,6 +592,12 @@ public class DuelMenuView {
         opponentCardsInHand[2] = (Rectangle) scene.lookup("#opponentHandCard2");
         opponentCardsInHand[3] = (Rectangle) scene.lookup("#opponentHandCard3");
         opponentCardsInHand[4] = (Rectangle) scene.lookup("#opponentHandCard4");
+
+
+        KeyCombination keyCombination = KeyCombination.keyCombination("CTRL+SHIFT+U");
+        Runnable runnable = () -> showCheatText(scene);
+        scene.getAccelerators().put(keyCombination, runnable);
+
 
         scene.lookup("#settingsMenuButton").addEventHandler(MouseEvent.MOUSE_CLICKED,
                 new EventHandler<MouseEvent>() {
