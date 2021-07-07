@@ -5,22 +5,25 @@ import controller.Utils;
 import controller.duelmenu.DuelMenuController;
 import controller.duelmenu.DuelMenuMessages;
 import controller.duelmenu.Phases;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import model.Board;
 import model.Player;
 import model.cards.Card;
@@ -29,6 +32,7 @@ import model.cards.monstercard.MonsterCard;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class DuelMenuView {
     private static Rectangle[] ownMonsterRectangles = new Rectangle[6];
@@ -491,8 +495,33 @@ public class DuelMenuView {
     }
 
     private boolean checkWinner() {
-        return firstPlayer.getLifePoint() <= 0 || secondPlayer.getLifePoint() <= 0 ||
-                firstPlayer.getWonRounds() == 2 || secondPlayer.getWonRounds() == 2;
+        if (shoWinnerPopup(firstPlayer, secondPlayer)) return true;
+        if (shoWinnerPopup(secondPlayer, firstPlayer)) return true;
+        return false;
+    }
+
+    private boolean shoWinnerPopup(Player firstPlayer, Player secondPlayer) {
+        if (firstPlayer.getLifePoint() <= 0 || secondPlayer.getWonRounds() == 2) {
+            AtomicInteger flag = new AtomicInteger();
+            Label label = new Label(secondPlayer.getNickname() + "is winner of this round!");
+            Popup popup = new Popup();
+            popup.getContent().add(label);
+            Timeline timeline = new Timeline(
+                    new KeyFrame(Duration.seconds(1), e -> {
+                        if (flag.get() == 0) {
+                            flag.getAndIncrement();
+                            popup.show(stage);
+                        }
+                        if (flag.get() == 1) {
+                            popup.hide();
+                        }
+                    })
+            );
+            timeline.setCycleCount(2);
+            timeline.play();
+            return true;
+        }
+        return false;
     }
 
     private void getOrder(DuelMenuController duelMenuController) {
