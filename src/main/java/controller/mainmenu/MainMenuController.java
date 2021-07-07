@@ -2,6 +2,7 @@ package controller.mainmenu;
 
 import controller.MenuRegexes;
 import controller.Utils;
+import controller.duelmenu.DuelMenuMessages;
 import model.Player;
 import view.*;
 
@@ -51,8 +52,8 @@ public class MainMenuController {
             profileMenuView.profileMenuView();
 
         } else if (menu.equalsIgnoreCase("Shop")) {
-            ShopMenuView shopMenuView = new ShopMenuView(loggedInPlayer);
-            shopMenuView.shopMenuView();
+//            ShopMenuView shopMenuView = new ShopMenuView(loggedInPlayer);
+//            shopMenuView.shopMenuView();
 
         } else if (menu.equalsIgnoreCase("ImportExport")) {
             ImportExportMenuView importExportMenuView = new ImportExportMenuView();
@@ -63,7 +64,6 @@ public class MainMenuController {
     }
 
     private MainMenuMessages enterDuelMenu(String command) {
-//        TODO: clean and optimise this code according to AI
         Matcher matcher;
         String opponentPlayerCommand, rounds;
         if (( matcher = Utils.getMatcher(MainMenuRegexes.ENTER_DUEL_MENU_FIRST_PATTERN.getRegex(), command) ).find() ||
@@ -80,7 +80,7 @@ public class MainMenuController {
             return MainMenuMessages.INVALID_COMMAND;
         }
 
-        if (opponentPlayerCommand.startsWith("second-player")) {
+        if (opponentPlayerCommand != null) {
             String opponentPlayerUsername = opponentPlayerCommand.substring(14);
             Player opponentPlayer = Player.getPlayerByUsername(opponentPlayerUsername);
             if (opponentPlayer == null) {
@@ -105,9 +105,17 @@ public class MainMenuController {
                 return MainMenuMessages.INVALID_DECK;
             }
 
-            if (rounds.equals("1") || rounds.equals("3")) {
-                DuelMenuView duelMenuView = new DuelMenuView(loggedInPlayer, opponentPlayer, Integer.parseInt(rounds));
+            if (rounds.equals("1")) {
+                DuelMenuView duelMenuView = new DuelMenuView(loggedInPlayer, opponentPlayer, 1);
                 duelMenuView.duelMenuView();
+
+            } else if (rounds.equals("3")) {
+                DuelMenuView duelMenuView = new DuelMenuView(loggedInPlayer, opponentPlayer, 3);
+                DuelMenuMessages result = DuelMenuMessages.PLAY_ANOTHER_TURN;
+                while (result.equals(DuelMenuMessages.PLAY_ANOTHER_TURN)) {
+                    result = duelMenuView.duelMenuView();
+                }
+
             } else {
                 return MainMenuMessages.INVALID_ROUNDS_NUMBER;
             }
@@ -122,9 +130,17 @@ public class MainMenuController {
                 return MainMenuMessages.INVALID_DECK;
             }
 
-            if (rounds.equals("1") || rounds.equals("3")) {
-                DuelMenuView duelMenuView = new DuelMenuView(loggedInPlayer, Integer.parseInt(rounds));
-                duelMenuView.playWithAi();
+            if (rounds.equals("1")) {
+                DuelMenuView duelMenuView = new DuelMenuView(loggedInPlayer, 1);
+                duelMenuView.playWithAI();
+
+            } else if (rounds.equals("3")) {
+                DuelMenuView duelMenuView = new DuelMenuView(loggedInPlayer, 3);
+                DuelMenuMessages result = DuelMenuMessages.PLAY_ANOTHER_TURN;
+                while (result.equals(DuelMenuMessages.PLAY_ANOTHER_TURN)) {
+                    result = duelMenuView.playWithAI();
+                }
+
             } else {
                 return MainMenuMessages.INVALID_ROUNDS_NUMBER;
             }

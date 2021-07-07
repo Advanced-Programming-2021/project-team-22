@@ -34,7 +34,7 @@ public class Database {
             }
 
 
-            FileReader magicCardFileReader = new FileReader("src/main/resources/cards/SpellTrap.csv");
+            FileReader magicCardFileReader = new FileReader("src/main/resources/cards/SpellTrap Upgraded.csv");
             CSVReader magicCardCSVReader = new CSVReaderBuilder(magicCardFileReader).withSkipLines(1).build();
 
             String[] magicCardData;
@@ -58,8 +58,10 @@ public class Database {
         int defensePoints = Integer.parseInt(data[6]);
         String description = data[7];
         int price = Integer.parseInt(data[8]);
+        String frontImageAddress = "/Project-Assets-1.0.0/Assets/Cards/Monsters/" + getNameForFrontImageAddress(name) + ".jpg";
 
-        new MonsterCard(name, level, monsterCardAttributes, monsterType, cardType, attackPoints, defensePoints, description, price);
+        new MonsterCard(name, level, monsterCardAttributes, monsterType, cardType, attackPoints,
+                defensePoints, description, price, frontImageAddress);
     }
 
     private static void createNewMagicCard(String[] data) {
@@ -69,8 +71,16 @@ public class Database {
         String description = data[3];
         MagicCardStatuses status = MagicCardStatuses.valueOf(data[4].toUpperCase());
         int price = Integer.parseInt(data[5]);
+        String frontImageAddress = "/Project-Assets-1.0.0/Assets/Cards/SpellTrap/" + getNameForFrontImageAddress(name) + ".jpg";
 
-        new MagicCard(name, cardType, icon, description, status,price);
+        new MagicCard(name, cardType, icon, description, status, price, frontImageAddress);
+    }
+
+    private static String getNameForFrontImageAddress(String name) {
+        name = name.replaceAll(" ", "").replaceAll("-", "").replaceAll("'", "");
+        if (name.startsWith("Terratiger")) name = "Terratiger";
+
+        return name;
     }
 
     public static void readPlayersDataFromDatabase() {

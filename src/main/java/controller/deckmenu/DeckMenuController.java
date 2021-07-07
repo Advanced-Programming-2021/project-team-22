@@ -8,6 +8,7 @@ import model.Player;
 import model.cards.Card;
 import model.cards.SortCardByName;
 import model.cards.magiccard.MagicCard;
+import model.cards.magiccard.MagicCardStatuses;
 import model.cards.monstercard.MonsterCard;
 import view.DeckMenuView;
 
@@ -177,9 +178,14 @@ public class DeckMenuController {
         if (isMain && deck.isMainDeckFull()) return DeckMenuMessages.FULL_MAIN_DECK;
         if (!isMain && deck.isSideDeckFull()) return DeckMenuMessages.FULL_SIDE_DECK;
 
-        if (deck.isThreeCardsAvailable(cardName)) {
-            DeckMenuMessages.setThreeCardsAvailable(cardName, deckName);
-            return DeckMenuMessages.THREE_CARDS_AVAILABLE;
+        if (deck.isNumberOfCardsReachedToLimitation(cardName)) {
+            if (card instanceof MagicCard && ((MagicCard) card).getStatus().equals(MagicCardStatuses.LIMITED)) {
+                DeckMenuMessages.setOneCardAvailable(cardName, deckName);
+                return DeckMenuMessages.ONE_CARD_AVAILABLE;
+            } else {
+                DeckMenuMessages.setThreeCardsAvailable(cardName, deckName);
+                return DeckMenuMessages.THREE_CARDS_AVAILABLE;
+            }
         }
 
 

@@ -1,0 +1,20 @@
+.borderPane {
+    -fx-background-image: url("/images/background.jpg");
+    -fx-background-size: stretch;
+}
+
+.generalButton {
+    -fx-background-color: rgb(25, 212, 63);
+    -fx-background-radius: 5px;
+}
+
+.generalButton:hover {
+    -fx-cursor: hand;
+    -fx-background-color: black;
+    -fx-text-fill: rgb(25, 212, 63);
+}
+
+.generalButton:pressed {
+    -fx-text-fill: white;
+    -fx-translate-y: 1;
+}

@@ -2,6 +2,8 @@ package controller.duelmenu;
 
 import controller.MenuRegexes;
 import controller.Utils;
+import controller.deckmenu.DeckMenuController;
+import controller.shopmenu.ShopMenuController;
 import model.Board;
 import model.Deck;
 import model.Player;
@@ -58,6 +60,7 @@ public class DuelMenuController {
     }
 
     public static void preparePlayerForNextGame(Player player) {
+        player.setHasSummonedInTurn(false);
         player.setBoard(null);
         player.setLifePoint(8000);
         player.setMaxLifePointDuringPlay(0);
@@ -130,14 +133,73 @@ public class DuelMenuController {
 
         turnPlayer.createBoard();
         notTurnPlayer.createBoard();
+        phase = Phases.DRAW_PHASE;
 
         turnPlayer.getBoard().setDeck(new Deck(turnPlayer.getActivatedDeck()));
         notTurnPlayer.getBoard().setDeck(new Deck(notTurnPlayer.getActivatedDeck()));
 
-        Collections.shuffle(turnPlayer.getActivatedDeck().getMainCards());
-        Collections.shuffle(notTurnPlayer.getActivatedDeck().getMainCards());
+        Collections.shuffle(turnPlayer.getBoard().getDeck().getMainCards());
+        Collections.shuffle(notTurnPlayer.getBoard().getDeck().getMainCards());
+
+        for (int i = 0; i < 4; i++) {
+            int indexOfLastMainCard = turnPlayer.getBoard().getDeck().getMainCards().size() - 1;
+            turnPlayer.getBoard().getCardsInHand().add(turnPlayer.getBoard().getDeck().getMainCards().get(indexOfLastMainCard));
+            turnPlayer.getBoard().getDeck().getMainCards().remove(indexOfLastMainCard);
+
+            indexOfLastMainCard = notTurnPlayer.getBoard().getDeck().getMainCards().size() - 1;
+            notTurnPlayer.getBoard().getCardsInHand().add(notTurnPlayer.getBoard().getDeck().getMainCards().get(indexOfLastMainCard));
+            notTurnPlayer.getBoard().getDeck().getMainCards().remove(indexOfLastMainCard);
+        }
 
         return DuelMenuMessages.SHOW_TURN_PLAYER;
+    }
+
+    public void initialGameWithAI(Player AIPlayer, Player secondPlayer) {
+        this.turnPlayer = AIPlayer;
+        this.notTurnPlayer = secondPlayer;
+        phase = Phases.DRAW_PHASE;
+
+        secondPlayer.createBoard();
+        AIPlayer.createBoard();
+
+        addDeckToAI(AIPlayer);
+        secondPlayer.getBoard().setDeck(new Deck(secondPlayer.getActivatedDeck()));
+        AIPlayer.getBoard().setDeck(new Deck(AIPlayer.getActivatedDeck()));
+
+        Collections.shuffle(secondPlayer.getBoard().getDeck().getMainCards());
+        Collections.shuffle(AIPlayer.getBoard().getDeck().getMainCards());
+
+        for (int i = 0; i < 4; i++) {
+            int indexOfLastMainCard = AIPlayer.getBoard().getDeck().getMainCards().size() - 1;
+            AIPlayer.getBoard().getCardsInHand().add(AIPlayer.getBoard().getDeck().getMainCards().get(indexOfLastMainCard));
+            AIPlayer.getBoard().getDeck().getMainCards().remove(indexOfLastMainCard);
+
+            indexOfLastMainCard = secondPlayer.getBoard().getDeck().getMainCards().size() - 1;
+            secondPlayer.getBoard().getCardsInHand().add(secondPlayer.getBoard().getDeck().getMainCards().get(indexOfLastMainCard));
+            secondPlayer.getBoard().getDeck().getMainCards().remove(indexOfLastMainCard);
+        }
+    }
+
+    private static void addDeckToAI(Player AI) {
+        ShopMenuController shopMenuController = new ShopMenuController(AI);
+        shopMenuController.findCommand("increase --M 1000000");
+        int numberOfCards = 0;
+        for (String cardName : Card.getAllCards().keySet()) {
+            shopMenuController.findCommand("shop buy " + cardName);
+            ++numberOfCards;
+            if (numberOfCards == 50) break;
+        }
+
+        DeckMenuController deckMenuController = new DeckMenuController(AI);
+        deckMenuController.findCommand("deck create :)");
+
+        for (String cardName : Card.getAllCards().keySet()) {
+            deckMenuController.findCommand("deck add-card --card " + cardName + " --deck :)");
+            ++numberOfCards;
+            if (numberOfCards == 50) break;
+        }
+
+        deckMenuController.findCommand("deck set-activate :)");
     }
 
     public DuelMenuMessages findCommand(String command) {
@@ -224,9 +286,13 @@ public class DuelMenuController {
 
                 Card card = Card.getCardByName(cardName);
                 if (Card.isMonsterCard(card)) {
-                    player.getBoard().getCardsInHand().add(new MonsterCard((MonsterCard) card));
+                    MonsterCard monsterCard = new MonsterCard((MonsterCard) card);
+                    player.getBoard().getCardsInHand().add(monsterCard);
+                    player.getBoard().setSelectedCard(monsterCard);
                 } else {
-                    player.getBoard().getCardsInHand().add(new MagicCard((MagicCard) card));
+                    MagicCard magicCard = new MagicCard((MagicCard) card);
+                    player.getBoard().getCardsInHand().add(magicCard);
+                    player.getBoard().setSelectedCard(magicCard);
                 }
                 return DuelMenuMessages.EMPTY;
 
@@ -235,8 +301,13 @@ public class DuelMenuController {
     }
 
     private DuelMenuMessages checkSelectCard(String command) {
-//        TODO: handle --> if there isn't any card in main deck, he/she loses
 //        TODO: maybe clean it more
+
+        if (turnPlayer.getBoard().getDeck().getMainCards().size() == 0) {
+            turnPlayer.setLifePoint(0);
+            return DuelMenuMessages.EMPTY;
+        }
+
         Matcher matcher;
         if ( (matcher = Utils.getMatcher(DuelMenuRegexes.SELECT_MONSTER_ZONE.getRegex(), command)).find() ) {
             if (!isSelectionValid(matcher)) return DuelMenuMessages.INVALID_SELECTION;
@@ -288,17 +359,17 @@ public class DuelMenuController {
 
         } else if ( (matcher = Utils.getMatcher(DuelMenuRegexes.SELECT_CARDS_IN_HAND.getRegex(), command)).find() ) {
             int number = Integer.parseInt(matcher.group(1));
-            if (number > turnPlayer.getBoard().getCardsInHand().size()) {
+            if (number > turnPlayer.getBoard().getCardsInHand().size() || number < 1) {
                 return DuelMenuMessages.INVALID_SELECTION;
             }
             turnPlayer.getBoard().setSelectedCard(turnPlayer.getBoard().getCardsInHand().get(number - 1));
             turnPlayer.getBoard().setMyCardSelected(true);
             turnPlayer.getBoard().setACardInHandSelected(true);
 
-        } else  {
+        } else {
             turnPlayer.getBoard().setSelectedCard(null);
             turnPlayer.getBoard().setMyCardSelected(false);
-            return DuelMenuMessages.INVALID_SELECTION;
+            return DuelMenuMessages.INVALID_COMMAND;
         }
 
         return DuelMenuMessages.CARD_SELECTED;
@@ -366,10 +437,9 @@ public class DuelMenuController {
 
     private DuelMenuMessages summonMonster() {
         Board turnPlayerBoard = turnPlayer.getBoard();
-        DuelMenuMessages result = null;
-        result = checkSummonMonster();
-        if (result != null)
-            return result;
+        DuelMenuMessages result = checkSummonMonster();
+        if (result != null) return result;
+
         turnPlayer.setHasSummonedInTurn(true);
         MonsterCard selectedMonster = (MonsterCard) turnPlayerBoard.getSelectedCard();
         if (selectedMonster.getLevel() <= 4) {
@@ -390,7 +460,7 @@ public class DuelMenuController {
         if (!turnPlayerBoard.isMyCardSelected()) {
             return DuelMenuMessages.UNAVAILABLE_SELECTED_CARD;
         }
-        if (turnPlayerBoard.isACardInHandSelected() || !model.cards.Card.isMonsterCard(selectedCard) || selectedCard.getCardType() == CardTypes.RITUAL) {
+        if (!turnPlayerBoard.isACardInHandSelected() || !Card.isMonsterCard(selectedCard) || selectedCard.getCardType() == CardTypes.RITUAL) {
             return DuelMenuMessages.SUMMON_NOT_POSSIBLE;
         } else if (phase != Phases.MAIN_PHASE_1 && phase != Phases.MAIN_PHASE_2) {
             return DuelMenuMessages.NOT_TRUE_PHASE;
@@ -527,7 +597,7 @@ public class DuelMenuController {
             }
             return result;
 
-        } else return DuelMenuMessages.INVALID_CARD_SELECT;
+        } else return DuelMenuMessages.INVALID_SELECTION;
     }
 
     private DuelMenuMessages checkAttack(int numberOfChosenCard) {
@@ -536,9 +606,10 @@ public class DuelMenuController {
 
         if (attackingPlayerBoard.getSelectedCard() == null || !attackingPlayerBoard.isMyCardSelected())
             return DuelMenuMessages.NOT_SELECTED_CARD;
-        if (attackingPlayerBoard.getSelectedCard() instanceof MonsterCard)
+        if (!(attackingPlayerBoard.getSelectedCard() instanceof MonsterCard))
             return DuelMenuMessages.CANT_ATTACK_WITH_CARD;
-        //TODO check battle phase
+        if (!phase.equals(Phases.BATTLE_PHASE)) return DuelMenuMessages.NOT_TRUE_PHASE;
+
         MonsterCard card = (MonsterCard) attackingPlayerBoard.getSelectedCard();
         if (card.isAttacked())
             return DuelMenuMessages.ATTACKED_BEFORE;
@@ -586,7 +657,7 @@ public class DuelMenuController {
         if (board.getSelectedCard() == null || !board.isMyCardSelected())
             return DuelMenuMessages.NOT_SELECTED_CARD;
         if (!phase.equals(Phases.BATTLE_PHASE))
-            return DuelMenuMessages.NOT_SUITABLE_PHASE;
+            return DuelMenuMessages.NOT_TRUE_PHASE;
         if (board.getSelectedCard() instanceof MonsterCard) {
             MonsterCard card = (MonsterCard) board.getSelectedCard();
             if (card.isAttacked()) return DuelMenuMessages.ATTACKED_BEFORE;
@@ -651,13 +722,16 @@ public class DuelMenuController {
     }
 
     private DuelMenuMessages activeATrapCard(Card selectedCard, Player turnPlayer, Player notTurnPlayer) {
-        MagicCard spellCard = (MagicCard) selectedCard;
-        if (spellCard.isSetInThisTurn()) return DuelMenuMessages.SET_IN_THIS_TURN;
-        spellCard.setPowerUsed(true);
-        spellCard.setCardFaceUp(true);
+        MagicCard trapCard = (MagicCard) selectedCard;
+        if (trapCard.isSetInThisTurn()) return DuelMenuMessages.SET_IN_THIS_TURN;
 
-        if (spellCard.getName().equals("Mind Crush")) MagicCardController.handleMindCrushEffect(turnPlayer, notTurnPlayer);
-        else if (spellCard.getName().equals("Call of The Haunted")) MagicCardController.handleCallOfTheHauntedEffect(turnPlayer);
+        Board board= turnPlayer.getBoard();
+        if (board.isACardInHandSelected()) board.addMagicCardToMagicsZone(trapCard);
+        trapCard.setPowerUsed(true);
+        trapCard.setCardFaceUp(true);
+
+        if (trapCard.getName().equals("Mind Crush")) MagicCardController.handleMindCrushEffect(turnPlayer, notTurnPlayer);
+        else if (trapCard.getName().equals("Call of The Haunted")) MagicCardController.handleCallOfTheHauntedEffect(turnPlayer);
         return DuelMenuMessages.TRAP_ACTIVATED;
     }
 

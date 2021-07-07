@@ -13,6 +13,7 @@ public enum DeckMenuMessages {
     FULL_MAIN_DECK("main deck is full\n"),
     FULL_SIDE_DECK("side deck is full\n"),
     THREE_CARDS_AVAILABLE("there are already three cards with name <card name> in deck <deck name>\n"),
+    ONE_CARD_AVAILABLE("there are already one card with name <card name> in deck <deck name>\n"),
     CARD_ADDED("card added to deck successfully\n"),
     UNAVAILABLE_CARD_IN_MAIN_DECK("card with name <card name> does not exist in main deck\n"),
     UNAVAILABLE_CARD_IN_SIDE_DECK("card with name <card name> does not exist in side deck\n"),
@@ -42,6 +43,10 @@ public enum DeckMenuMessages {
 
     public static void setThreeCardsAvailable(String cardName, String deckName) {
         THREE_CARDS_AVAILABLE.message = "there are already three cards with name " + cardName + " in deck " + deckName + "\n";
+    }
+
+    public static void setOneCardAvailable(String cardName, String deckName) {
+        ONE_CARD_AVAILABLE.message = "there are already one card with name " + cardName + " in deck " + deckName + "\n";
     }
 
     public static void setUnavailableCardInMainDeck(String cardName) {

@@ -16,16 +16,15 @@ public class AIClass {
 
         if ((phaseOfGame == Phases.MAIN_PHASE_1 || phaseOfGame == Phases.MAIN_PHASE_2)
                 && !AIPlayer.getBoard().isMagicsZoneFull()) {
-            ArrayList<Card> cardsInHand = AIPlayer.getBoard().getCardsInHand();
 
+            ArrayList<Card> cardsInHand = AIPlayer.getBoard().getCardsInHand();
             for (Card card : cardsInHand) {
                 if (card.getCardType().equals(CardTypes.SPELL) && !((MagicCard) card).getIcon().equals("Quick-play")) {
                     AIPlayer.getBoard().setSelectedCard(card);
-                    break;
+                    return "set";
                 }
             }
 
-            return "set";
         }
 
         if (phaseOfGame == Phases.MAIN_PHASE_1) {
@@ -48,16 +47,17 @@ public class AIClass {
         }
 
 
-        if (phaseOfGame == Phases.BATTLE_PHASE) {
+        if (phaseOfGame == Phases.BATTLE_PHASE && AIPlayer.getBoard().isMonsterZoneEmpty()) {
             int numberOfMonsterToAttack = -1;
             selectMachineMonsterCardToAttack(machineBoard, AIPlayer);
             if (canAttackToFaceUpMonster(machineBoard, playerBoard) != -1) {
-                return "attack" + canAttackToFaceUpMonster(machineBoard, playerBoard);
+                return "attack " + canAttackToFaceUpMonster(machineBoard, playerBoard);
             } else if (canAttackToFaceDownCard(playerBoard) != -1) {
-                return "attack" + canAttackToFaceDownCard(playerBoard);
+                return "attack " + canAttackToFaceDownCard(playerBoard);
             }
         }
-        return null;
+
+        return "increase --LP 0";
     }
 
     private static void payTribute(Board machineBoard) {
@@ -147,7 +147,8 @@ public class AIClass {
         MonsterCard[] monsterArray = board.getMonstersZone();
         MonsterCard monsterCard = monsterArray[1];
         for (int i = 2; i <= 5; i++) {
-            if (monsterCard.getAttackPoints() < monsterArray[i].getAttackPoints())
+            if (monsterCard != null && monsterArray[i] != null &&
+                    monsterCard.getAttackPoints() < monsterArray[i].getAttackPoints())
                 monsterCard = monsterArray[i];
             board.setMyCardSelected(true);
             board.setSelectedCard(monsterCard);
@@ -158,12 +159,14 @@ public class AIClass {
         MonsterCard[] monsterArray = playerBoard.getMonstersZone();
         MonsterCard monsterToAttack = (MonsterCard) machineBoard.getSelectedCard();
         for (int i = 1; i <= 5; i++) {
-            if (monsterArray[i].toString().equals("OO") && monsterArray[i].getAttackPoints() < monsterToAttack.getAttackPoints())
+            if (monsterToAttack != null && monsterArray[i] != null && monsterArray[i].toString().equals("OO") &&
+                    monsterArray[i].getAttackPoints() < monsterToAttack.getAttackPoints())
                 return i;
         }
 
         for (int i = 1; i <= 5; i++) {
-            if (monsterArray[i].toString().equals("DO") && monsterArray[i].getAttackPoints() < monsterToAttack.getAttackPoints()) {
+            if (monsterToAttack != null && monsterArray[i] != null && monsterArray[i].toString().equals("DO") &&
+                    monsterArray[i].getAttackPoints() < monsterToAttack.getAttackPoints()) {
             }
             return i;
         }

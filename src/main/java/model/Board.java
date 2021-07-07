@@ -204,10 +204,16 @@ public class Board {
 
     public boolean isMonsterZoneFull() {
         for (int i = 1; i <= 5; i++) {
-            if (monstersZone[i] == null)
-                return false;
+            if (monstersZone[i] == null) return false;
         }
         return true;
+    }
+
+    public boolean isMonsterZoneEmpty() {
+        for (int i = 1; i <= 5; i++) {
+            if (monstersZone[i] != null) return true;
+        }
+        return false;
     }
 
     public boolean isThereOneMonsterForTribute() {
@@ -227,11 +233,11 @@ public class Board {
         for (int i = 1; i <= 5; i++) {
             if (monstersZone[i] == null) {
                 monstersZone[i] = (MonsterCard) selectedCard;
-                monstersZone[i].setCardFaceUp(false);//TODO check attack or deffensive???
+                monstersZone[i].setCardFaceUp(true);
+                monstersZone[i].setDefensePosition(false);
                 break;
             }
         }
-        selectedCard = null;
     }
 
     private void removeSelectedCardFromHand() {

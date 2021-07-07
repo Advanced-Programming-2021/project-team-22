@@ -31,7 +31,7 @@ public class ProfileMenuController {
         return ProfileMenuMessages.INVALID_NAVIGATION;
     }
 
-    public ProfileMenuMessages changeNickname(String command) {
+    private ProfileMenuMessages changeNickname(String command) {
         Matcher matcher = Utils.getMatcher(ProfileMenuRegexes.CHANGE_NICKNAME.getRegex(), command);
 
         ProfileMenuMessages holdEnum = checkChangeNickName(matcher);
@@ -44,7 +44,7 @@ public class ProfileMenuController {
         return holdEnum;
     }
 
-    public ProfileMenuMessages checkChangeNickName(Matcher matcher) {
+    private ProfileMenuMessages checkChangeNickName(Matcher matcher) {
         if (matcher.find()) {
             String nickname = matcher.group(1);
             if (Player.isNicknameExist(nickname)) {
@@ -56,7 +56,7 @@ public class ProfileMenuController {
 
     }
 
-    public ProfileMenuMessages changePassword(String command) {
+    private ProfileMenuMessages changePassword(String command) {
         String currentPassword, newPassword;
         Matcher matcher;
         if ((matcher = Utils.getMatcher(ProfileMenuRegexes.CHANGE_PASSWORD_FIRST_PATTERN.getRegex(), command)).find()) {
@@ -90,7 +90,7 @@ public class ProfileMenuController {
         return holdEnum;
     }
 
-    public ProfileMenuMessages checkChangePassword(String currentPassword, String newPassword) {
+    private ProfileMenuMessages checkChangePassword(String currentPassword, String newPassword) {
         if (!loggedInPlayer.getPassword().equals(currentPassword)) return ProfileMenuMessages.WRONG_CURRENT_PASSWORD;
         if (currentPassword.equals(newPassword)) return ProfileMenuMessages.SAME_PASSWORD;
         return null;

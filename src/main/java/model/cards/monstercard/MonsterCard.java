@@ -25,8 +25,8 @@ public class MonsterCard extends Card implements SpecialMonstersFunction {
     }
 
     public MonsterCard(String name, short level, MonsterCardAttributes attribute, String monsterType, CardTypes cardType,
-                       int attackPoints, int defensePoints, String description, int price) {
-        super(name, description, cardType, price);
+                       int attackPoints, int defensePoints, String description, int price, String frontImageAddress) {
+        super(name, description, cardType, price, frontImageAddress);
         this.level = level;
         this.attribute = attribute;
         this.monsterType = monsterType;
@@ -36,7 +36,7 @@ public class MonsterCard extends Card implements SpecialMonstersFunction {
     }
 
     public MonsterCard(MonsterCard monsterCard) {
-        super(monsterCard.name, monsterCard.description, monsterCard.cardType, monsterCard.price);
+        super(monsterCard.name, monsterCard.description, monsterCard.cardType, monsterCard.price, monsterCard.frontImageAddress);
         this.level = monsterCard.level;
         this.attribute = monsterCard.attribute;
         this.monsterType = monsterCard.monsterType;
@@ -132,9 +132,9 @@ public class MonsterCard extends Card implements SpecialMonstersFunction {
 
     @Override
     public String toString() {
-        if (!this.getCardFaceUp() && this.isDefensePosition) return "DH";
-        else if (this.getCardFaceUp() && this.isDefensePosition) return "DO";
-        else if (this.getCardFaceUp() && !this.isDefensePosition) return "OO";
-        return "E ";
+        if (!this.getCardFaceUp() && this.isDefensePosition) return "DH    ";
+        else if (this.getCardFaceUp() && this.isDefensePosition) return "DO    ";
+        else if (this.getCardFaceUp() && !this.isDefensePosition) return "OO    ";
+        return "E     ";
     }
 }
