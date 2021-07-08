@@ -167,6 +167,14 @@ public class Player implements Comparable<Player> {
         }
     }
 
+    public int getNumberOfAvailableCard(String cardName) {
+        int number = 0;
+        for (Card card : boughtCards) {
+            if (card.getName().equals(cardName)) ++number;
+        }
+        return number;
+    }
+
     public void removeCardFromBoughtCards(Card card) {
         boughtCards.remove(card);
     }

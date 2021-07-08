@@ -9,10 +9,14 @@ import view.*;
 import java.util.regex.Matcher;
 
 public class MainMenuController {
-    private final Player loggedInPlayer;
+    private static Player loggedInPlayer;
 
-    public MainMenuController(Player loggedInPlayer) {
-        this.loggedInPlayer = loggedInPlayer;
+    public static Player getLoggedInPlayer() {
+        return loggedInPlayer;
+    }
+
+    public static void setLoggedInPlayer(Player loggedInPlayer) {
+        MainMenuController.loggedInPlayer = loggedInPlayer;
     }
 
     public MainMenuMessages findCommand(String command) {

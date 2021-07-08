@@ -3,6 +3,7 @@ package view;
 import controller.Utils;
 import controller.loginmenu.LoginMenuController;
 import controller.loginmenu.LoginMenuMessages;
+import controller.mainmenu.MainMenuController;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -94,9 +95,8 @@ public class LoginMenuView extends Application {
         if (!loginMenuMessages.equals(LoginMenuMessages.USER_LOGGED_IN)) message.setText(loginMenuMessages.getMessage());
         else {
             try {
-                MainMenuView mainMenuView = new MainMenuView();
-                mainMenuView.setLoggedInPlayer(Player.getPlayerByUsername(username));
-                mainMenuView.start(Utils.getStage());
+                MainMenuController.setLoggedInPlayer(Player.getPlayerByUsername(username));
+                new MainMenuView().start(Utils.getStage());
             } catch (Exception exception) {
                 exception.printStackTrace();
             }

@@ -19,8 +19,8 @@ public class ImportExportMenuController {
         if (command.startsWith("menu enter")) return enterAMenu(command);
         else if (command.equals("menu exit")) return ImportExportMenuMessages.EXIT_IMPORT_EXPORT_MENU;
         else if (command.equals("menu show-current")) return ImportExportMenuMessages.SHOW_MENU;
-        else if (command.startsWith("import card")) return importCard(command);
-        else if (command.startsWith("export card")) return exportCard(command);
+        else if (command.startsWith("import showSelectedCard")) return importCard(command);
+        else if (command.startsWith("export showSelectedCard")) return exportCard(command);
 
         return ImportExportMenuMessages.INVALID_COMMAND;
     }
@@ -44,14 +44,14 @@ public class ImportExportMenuController {
 
             if (Card.getCardByName(cardName) != null) return ImportExportMenuMessages.AVAILABLE_CARD;
             if (monsterCard.getAttribute() == null) {
-//                so we understand that the card is a magic card
+//                so we understand that the showSelectedCard is a magic showSelectedCard
                 fileReader = new FileReader("src/main/resources/cards/" + cardName + ".json");
                 MagicCard magicCard = gson.fromJson(fileReader, MagicCard.class);
                 Card.addCardToAllCards(magicCard);
                 if (isCardIncomplete(magicCard) || isMagicCardIncomplete(magicCard))
                     return ImportExportMenuMessages.INVALID_FILE;
             } else {
-//                so we understand that the card is a monster card
+//                so we understand that the showSelectedCard is a monster showSelectedCard
                 monsterCard.createEquippedByArrayList();
                 Card.addCardToAllCards(monsterCard);
                 if (isCardIncomplete(monsterCard) || isMonsterCardIncomplete(monsterCard))

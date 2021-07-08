@@ -109,7 +109,7 @@ public interface SpecialMonstersFunction {
     default DuelMenuMessages texchangerFunction(MonsterCard opponentCard) {
         if (!opponentCard.isPowerUsed()) {
             opponentCard.setPowerUsed(true);
-//            TODO: choosing a card ehzar???????
+//            TODO: choosing a showSelectedCard ehzar???????
             return DuelMenuMessages.ATTACK_CANCELED;
         }
         return null;

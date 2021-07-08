@@ -1,0 +1,23 @@
+.shopBorderPane {
+    -fx-background-color: rgb(36, 17, 33);
+    -fx-background-size: stretch;
+}
+
+.scrollPane {
+    -fx-background-color: transparent;
+    -fx-fill: transparent;
+    -fx-progress-color: transparent;
+    -fx-background: transparent;
+}
+
+.gridPane {
+    -fx-background-color: transparent;
+}
+
+.cheatField {
+    -fx-background-color: transparent;
+    -fx-border-color: red;
+    -fx-border-width: 4px;
+    -fx-border-radius: 2px;
+    -fx-text-fill: #0fc0c1;
+}

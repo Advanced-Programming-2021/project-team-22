@@ -183,11 +183,11 @@ public class DuelMenuView {
 
     private static boolean showCardCheck(Board board) {
         if (board.getSelectedCard() == null) {
-            System.out.println("you have not selected card");
+            System.out.println("you have not selected showSelectedCard");
             return false;
         }
         if (!board.isMyCardSelected() && !board.getSelectedCard().getCardFaceUp()) {
-            System.out.println("you can't see this card!");
+            System.out.println("you can't see this showSelectedCard!");
             return false;
         }
         return true;
@@ -214,11 +214,11 @@ public class DuelMenuView {
     }
 
     public static void showUnavailableCard() {
-        System.out.println("your entered card name is unavailable in your magics zone or that card is activated before");
+        System.out.println("your entered showSelectedCard name is unavailable in your magics zone or that showSelectedCard is activated before");
     }
 
     public static void showCantActivateCard() {
-        System.out.println("you can't activate this card");
+        System.out.println("you can't activate this showSelectedCard");
     }
 
     public static void showActiveSuccessfullyInOpponentTurn() {

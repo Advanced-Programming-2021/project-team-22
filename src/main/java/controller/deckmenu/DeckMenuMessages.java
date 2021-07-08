@@ -9,15 +9,15 @@ public enum DeckMenuMessages {
     UNAVAILABLE_DECK("deck with name <deck name> does not exist\n"),
     DECK_DELETED("deck deleted successfully\n"),
     DECK_ACTIVATED("deck activated successfully\n"),
-    UNAVAILABLE_CARD("card with name <card name> does not exist\n"),
+    UNAVAILABLE_CARD("showSelectedCard with name <showSelectedCard name> does not exist\n"),
     FULL_MAIN_DECK("main deck is full\n"),
     FULL_SIDE_DECK("side deck is full\n"),
-    THREE_CARDS_AVAILABLE("there are already three cards with name <card name> in deck <deck name>\n"),
-    ONE_CARD_AVAILABLE("there are already one card with name <card name> in deck <deck name>\n"),
-    CARD_ADDED("card added to deck successfully\n"),
-    UNAVAILABLE_CARD_IN_MAIN_DECK("card with name <card name> does not exist in main deck\n"),
-    UNAVAILABLE_CARD_IN_SIDE_DECK("card with name <card name> does not exist in side deck\n"),
-    CARD_REMOVED("card removed form deck successfully\n"),
+    THREE_CARDS_AVAILABLE("there are already three cards with name <showSelectedCard name> in deck <deck name>\n"),
+    ONE_CARD_AVAILABLE("there are already one showSelectedCard with name <showSelectedCard name> in deck <deck name>\n"),
+    CARD_ADDED("showSelectedCard added to deck successfully\n"),
+    UNAVAILABLE_CARD_IN_MAIN_DECK("showSelectedCard with name <showSelectedCard name> does not exist in main deck\n"),
+    UNAVAILABLE_CARD_IN_SIDE_DECK("showSelectedCard with name <showSelectedCard name> does not exist in side deck\n"),
+    CARD_REMOVED("showSelectedCard removed form deck successfully\n"),
     SHOW_ALL_DECKS(""),
     SHOW_ALL_CARDS(""),
     EMPTY(""),
@@ -38,7 +38,7 @@ public enum DeckMenuMessages {
     }
 
     public static void setUnavailableCard(String cardName) {
-        UNAVAILABLE_CARD.message = "card with name " + cardName + " does not exist\n";
+        UNAVAILABLE_CARD.message = "showSelectedCard with name " + cardName + " does not exist\n";
     }
 
     public static void setThreeCardsAvailable(String cardName, String deckName) {
@@ -46,15 +46,15 @@ public enum DeckMenuMessages {
     }
 
     public static void setOneCardAvailable(String cardName, String deckName) {
-        ONE_CARD_AVAILABLE.message = "there are already one card with name " + cardName + " in deck " + deckName + "\n";
+        ONE_CARD_AVAILABLE.message = "there are already one showSelectedCard with name " + cardName + " in deck " + deckName + "\n";
     }
 
     public static void setUnavailableCardInMainDeck(String cardName) {
-        UNAVAILABLE_CARD_IN_MAIN_DECK.message = "card with name " + cardName + " does not exist in main deck\n";
+        UNAVAILABLE_CARD_IN_MAIN_DECK.message = "showSelectedCard with name " + cardName + " does not exist in main deck\n";
     }
 
     public static void setUnavailableCardInSideDeck(String cardName) {
-        UNAVAILABLE_CARD_IN_SIDE_DECK.message = "card with name " + cardName + " does not exist in side deck\n";
+        UNAVAILABLE_CARD_IN_SIDE_DECK.message = "showSelectedCard with name " + cardName + " does not exist in side deck\n";
     }
 
     public String getMessage() {

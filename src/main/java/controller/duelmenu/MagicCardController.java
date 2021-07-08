@@ -46,14 +46,14 @@ public class MagicCardController {
                 return doMysticalSpaceTyphoonEffect(turnPlayer, notTurnPlayer);
             case "Ring of defense":
                 return true;
-//                it's the only ritual spell card
+//                it's the only ritual spell showSelectedCard
             case "Advanced Ritual Art":
                 return doAdvancedRitualArtEffect();
         }
 
 //        handle equip spell cards
         return chooseMonsterToEquip(turnPlayer, notTurnPlayer, spellCard);
-//        any other kind of card doesn't enter to this method
+//        any other kind of showSelectedCard doesn't enter to this method
     }
 
 
@@ -294,7 +294,7 @@ public class MagicCardController {
         return true;
     }
 
-//    it's the only ritual spell card
+//    it's the only ritual spell showSelectedCard
     private static boolean doAdvancedRitualArtEffect() {
 //        TODO: handle it based on Iman's code
         return false;
@@ -303,8 +303,8 @@ public class MagicCardController {
 
 //    handle field spell cards
     public static void handleFieldSpellCardsEffect(Player firstPlayer, Player secondPlayer, MonsterCard monsterCard, boolean doEffect) {
-//        doEffect is true --> do the card effect
-//        doEffect is false --> undo the card effect
+//        doEffect is true --> do the showSelectedCard effect
+//        doEffect is false --> undo the showSelectedCard effect
         MagicCard firstPlayerFieldZoneCard = firstPlayer.getBoard().getFieldZone();
         MagicCard secondPlayerFieldZoneCard = secondPlayer.getBoard().getFieldZone();
         Player monsterCardOwner = findMonsterCardOwner(firstPlayer, secondPlayer, monsterCard);
@@ -322,8 +322,8 @@ public class MagicCardController {
 
     private static void handleEachFieldSpellCardEffect(Player monsterCardOwner, MonsterCard monsterCard, MagicCard fieldZoneCard,
                                                        boolean doEffect) {
-//        doEffect is true --> do the card effect
-//        doEffect is false --> undo the card effect
+//        doEffect is true --> do the showSelectedCard effect
+//        doEffect is false --> undo the showSelectedCard effect
         if (fieldZoneCard == null || !fieldZoneCard.getCardFaceUp()) return;
 
         switch (fieldZoneCard.getName()) {
@@ -343,8 +343,8 @@ public class MagicCardController {
     }
 
     private static void handleYamiEffect(MonsterCard monsterCard, boolean doEffect) {
-//        doEffect is true --> do the card effect
-//        doEffect is false --> undo the card effect
+//        doEffect is true --> do the showSelectedCard effect
+//        doEffect is false --> undo the showSelectedCard effect
 
         String monsterCardType = monsterCard.getMonsterType();
         if (monsterCardType.equals("Fiend") || monsterCardType.equals("Spellcaster")) {
@@ -367,8 +367,8 @@ public class MagicCardController {
     }
 
     private static void handleForestEffect(MonsterCard monsterCard, boolean doEffect) {
-//        doEffect is true --> do the card effect
-//        doEffect is false --> undo the card effect
+//        doEffect is true --> do the showSelectedCard effect
+//        doEffect is false --> undo the showSelectedCard effect
 
         String monsterCardType = monsterCard.getMonsterType();
         if (monsterCardType.equals("Insect") || monsterCardType.equals("Beast") ||
@@ -384,8 +384,8 @@ public class MagicCardController {
     }
 
     private static void handleClosedForestEffect(Player monsterCardOwner, MonsterCard monsterCard, boolean doEffect) {
-//        doEffect is true --> do the card effect
-//        doEffect is false --> undo the card effect
+//        doEffect is true --> do the showSelectedCard effect
+//        doEffect is false --> undo the showSelectedCard effect
 
         int graveyardMonsterCardsSize = Card.findNumberOfMonsterCards(monsterCardOwner.getBoard().getGraveyard());
         MonsterCard[] monstersZone = monsterCardOwner.getBoard().getMonstersZone();
@@ -400,8 +400,8 @@ public class MagicCardController {
     }
 
     private static void handleUmiirukaEffect(MonsterCard monsterCard, boolean doEffect) {
-//        doEffect is true --> do the card effect
-//        doEffect is false --> undo the card effect
+//        doEffect is true --> do the showSelectedCard effect
+//        doEffect is false --> undo the showSelectedCard effect
 
         if (monsterCard.getMonsterType().equals("Aqua")) {
             if (doEffect) {
@@ -465,8 +465,8 @@ public class MagicCardController {
     }
 
     public static void handleEquipSpellCardsEffect(Player firstPlayer, Player secondPlayer, MonsterCard monsterCard, boolean doEffect) {
-//        doEffect is true --> do the card effect
-//        doEffect is false --> undo the card effect
+//        doEffect is true --> do the showSelectedCard effect
+//        doEffect is false --> undo the showSelectedCard effect
 
         Player monsterCardOwner = findMonsterCardOwner(firstPlayer, secondPlayer, monsterCard);
         for (MagicCard spellCard : monsterCard.getEquippedBy()) {
@@ -488,8 +488,8 @@ public class MagicCardController {
     }
 
     private static void handleSwordOfDarkDestructionEffect(MonsterCard monsterCard, boolean doEffect) {
-//        doEffect is true --> do the card effect
-//        doEffect is false --> undo the card effect
+//        doEffect is true --> do the showSelectedCard effect
+//        doEffect is false --> undo the showSelectedCard effect
 
         String monsterCardType = monsterCard.getMonsterType();
         if (monsterCardType.equals("Fiend") || monsterCardType.equals("Spellcaster")) {
@@ -505,16 +505,16 @@ public class MagicCardController {
     }
 
     private static void handleBlackPendantEffect(MonsterCard monsterCard, boolean doEffect) {
-//        doEffect is true --> do the card effect
-//        doEffect is false --> undo the card effect
+//        doEffect is true --> do the showSelectedCard effect
+//        doEffect is false --> undo the showSelectedCard effect
 
         if (doEffect) monsterCard.increaseAttackPoints(500);
         else monsterCard.decreaseAttackPoints(500);
     }
 
     private static void handleUnitedWeStandEffect(Player monsterCardOwner, MonsterCard monsterCard, boolean doEffect) {
-//        doEffect is true --> do the card effect
-//        doEffect is false --> undo the card effect
+//        doEffect is true --> do the showSelectedCard effect
+//        doEffect is false --> undo the showSelectedCard effect
 
         int numberOfFaceUpMonsterCards = monsterCardOwner.getBoard().getNumberOfFaceUpMonsterCards();
         if (doEffect) {
@@ -527,8 +527,8 @@ public class MagicCardController {
     }
 
     private static void handleMagnumShieldEffect(MonsterCard monsterCard, boolean doEffect) {
-//        doEffect is true --> do the card effect
-//        doEffect is false --> undo the card effect
+//        doEffect is true --> do the showSelectedCard effect
+//        doEffect is false --> undo the showSelectedCard effect
 
 //        I know that Magnum Shield just equipped Warrior monster cards
         if (monsterCard.isDefensePosition()) {

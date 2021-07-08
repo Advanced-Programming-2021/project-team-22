@@ -3,13 +3,13 @@ package view;
 import controller.Utils;
 import controller.mainmenu.MainMenuController;
 import controller.mainmenu.MainMenuMessages;
+import controller.shopmenu.ShopMenuController;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import model.Player;
@@ -17,8 +17,6 @@ import model.Player;
 import java.util.Objects;
 
 public class MainMenuView extends Application {
-    private Player loggedInPlayer;
-
     public BorderPane borderPane;
     public Button duelButton;
     public Button deckButton;
@@ -27,23 +25,6 @@ public class MainMenuView extends Application {
     public Button shopButton;
     public Button importExportButton;
     public Button logOutButton;
-
-    public void setLoggedInPlayer(Player loggedInPlayer) {
-        this.loggedInPlayer = loggedInPlayer;
-    }
-
-    public void mainMenuView() {
-        MainMenuController mainMenuController = new MainMenuController(loggedInPlayer);
-        while (true) {
-            String command = Utils.getScanner().nextLine().trim();
-            MainMenuMessages result = mainMenuController.findCommand(command);
-
-            System.out.print(result.getMessage());
-
-            if (result.equals(MainMenuMessages.EXIT_MAIN_MENU) ||
-            result.equals(MainMenuMessages.USER_LOGGED_OUT)) break;
-        }
-    }
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -78,9 +59,8 @@ public class MainMenuView extends Application {
         shopButton.setOnMouseClicked(mouseEvent -> {
             try {
                 Utils.playButtonClickSFX();
-                ShopMenuView shopMenuView = new ShopMenuView();
-                shopMenuView.setLoggedInPlayer(loggedInPlayer);
-                shopMenuView.start(Utils.getStage());
+                ShopMenuController.setLoggedInPlayer(MainMenuController.getLoggedInPlayer());
+                new ShopMenuView().start(Utils.getStage());
             } catch (Exception exception) {
                 exception.printStackTrace();
             }

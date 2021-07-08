@@ -1,8 +1,8 @@
 package controller.importexportmenu;
 
 public enum ImportExportMenuRegexes {
-    IMPORT_CARD("^import card ([^\n]+)$"),
-    EXPORT_CARD("^export card ([^\n]+)$");
+    IMPORT_CARD("^import showSelectedCard ([^\n]+)$"),
+    EXPORT_CARD("^export showSelectedCard ([^\n]+)$");
 
     private final String regex;
 

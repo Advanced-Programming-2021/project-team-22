@@ -47,14 +47,14 @@ public class DeckMenuController {
         if (command.startsWith("menu enter")) return enterAMenu(command);
         else if (command.equals("menu exit")) return DeckMenuMessages.EXIT_DECK_MENU;
         else if (command.equals("menu show-current")) return DeckMenuMessages.SHOW_MENU;
-        else if (command.startsWith("card show ")) {
+        else if (command.startsWith("showSelectedCard show ")) {
             Utils.showCard(command.substring(10));
             return DeckMenuMessages.EMPTY;
         } else if (command.startsWith("deck create ")) return createDeck(command);
         else if (command.startsWith("deck delete ")) return deleteDeck(command);
         else if (command.startsWith("deck set-activate ")) return activateADeck(command);
-        else if (command.startsWith("deck add-card ")) return addCard(command);
-        else if (command.startsWith("deck rm-card ")) return removeCard(command);
+        else if (command.startsWith("deck add-showSelectedCard ")) return addCard(command);
+        else if (command.startsWith("deck rm-showSelectedCard ")) return removeCard(command);
         else if (command.equals("deck show --all")) return DeckMenuMessages.SHOW_ALL_DECKS;
         else if (command.equals("deck show --cards")) return DeckMenuMessages.SHOW_ALL_CARDS;
         else if (command.startsWith("deck show ")) return showADeck(command);

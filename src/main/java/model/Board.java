@@ -14,7 +14,7 @@ public class Board {
     private Deck deck;
     private MagicCard fieldZone;
     private Card selectedCard;
-//    if this boolean equals "false" so we can conclude that opponent card selected or nothing selected
+//    if this boolean equals "false" so we can conclude that opponent showSelectedCard selected or nothing selected
     private boolean isMyCardSelected;
     private boolean isACardInHandSelected;
 
@@ -173,7 +173,7 @@ public class Board {
     }
 
     public MagicCard getFaceDownMagicCardFromMagicsZoneByName(String cardName) {
-//        this function returns the first faceDown card
+//        this function returns the first faceDown showSelectedCard
         for (int i = 1; i < magicsZone.length; i++) {
             if (magicsZone[i] != null && magicsZone[i].getName().equals(cardName) && !magicsZone[i].getCardFaceUp())
                 return magicsZone[i];
@@ -182,7 +182,7 @@ public class Board {
     }
 
     public MagicCard getFaceUpMagicCardFromMagicsZoneByName(String cardName) {
-//        this function returns the first faceUp card
+//        this function returns the first faceUp showSelectedCard
         for (int i = 1; i < magicsZone.length; i++) {
             if (magicsZone[i] != null && magicsZone[i].getName().equals(cardName) && magicsZone[i].getCardFaceUp())
                 return magicsZone[i];

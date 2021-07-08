@@ -101,7 +101,7 @@
                   <Insets top="7.0" />
                </VBox.margin>
             </HBox>
-            <Label fx:id="message" textFill="#18d0f0" styleClass="checkBox">
+            <Label fx:id="message" textFill="#18d0f0">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>

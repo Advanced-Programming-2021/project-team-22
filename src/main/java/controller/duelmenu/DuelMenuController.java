@@ -182,10 +182,10 @@ public class DuelMenuController {
 
     private static void addDeckToAI(Player AI) {
         ShopMenuController shopMenuController = new ShopMenuController(AI);
-        shopMenuController.findCommand("increase --M 1000000");
+//        shopMenuController.findCommand("increase --M 1000000");
         int numberOfCards = 0;
         for (String cardName : Card.getAllCards().keySet()) {
-            shopMenuController.findCommand("shop buy " + cardName);
+//            shopMenuController.findCommand("shop buy " + cardName);
             ++numberOfCards;
             if (numberOfCards == 50) break;
         }
@@ -194,7 +194,7 @@ public class DuelMenuController {
         deckMenuController.findCommand("deck create :)");
 
         for (String cardName : Card.getAllCards().keySet()) {
-            deckMenuController.findCommand("deck add-card --card " + cardName + " --deck :)");
+            deckMenuController.findCommand("deck add-showSelectedCard --showSelectedCard " + cardName + " --deck :)");
             ++numberOfCards;
             if (numberOfCards == 50) break;
         }
@@ -226,8 +226,8 @@ public class DuelMenuController {
             return DuelMenuMessages.EMPTY;
 
         } else if (command.equals("back")) ;//checkBack();
-        else if (command.equals("card show --selected")) return showSelectedCard();
-        else if (command.startsWith("card show ")) {
+        else if (command.equals("showSelectedCard show --selected")) return showSelectedCard();
+        else if (command.startsWith("showSelectedCard show ")) {
             Utils.showCard(command.substring(10));
             return DuelMenuMessages.EMPTY;
 
@@ -756,7 +756,7 @@ public class DuelMenuController {
             else if (magicCard.getCardType().equals(CardTypes.SPELL) && !magicCard.getIcon().equals("Quick-play"))
                 DuelMenuView.showCantActivateCard();
             else {
-//                so we can activate magic card
+//                so we can activate magic showSelectedCard
                 if (activeMagicCardInOpponentTurn(turnPlayer, notTurnPlayer, magicCard)) DuelMenuView.showActiveSuccessfullyInOpponentTurn();
                 else DuelMenuView.showActiveUnsuccessfullyInOpponentTurn();
             }
