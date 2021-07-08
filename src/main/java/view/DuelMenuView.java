@@ -15,6 +15,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Shadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
@@ -43,6 +45,12 @@ public class DuelMenuView {
     private static Rectangle[] opponentMagicRectangles = new Rectangle[6];
     private static Rectangle[] ownCardsInHand = new Rectangle[5];
     private static Rectangle[] opponentCardsInHand = new Rectangle[5];
+    private Rectangle drawPhase;
+    private Rectangle standbyPhase;
+    private Rectangle mainPhase1;
+    private Rectangle battlePhase;
+    private Rectangle mainPhase2;
+    private Rectangle endPhase;
     private Button playOrStopMusic;
     private Button setPause;
     private ImageView imageView;
@@ -570,17 +578,30 @@ public class DuelMenuView {
     }
 
     public void setPhase(DuelMenuController duelMenuController) {
+        DropShadow shadow = new DropShadow();
         if (duelMenuController.getPhase().equals(Phases.DRAW_PHASE)) {
+            drawPhase.setEffect(null);
+            standbyPhase.setEffect(shadow);
             duelMenuController.setPhase(Phases.STANDBY_PHASE);
         } else if (duelMenuController.getPhase().equals(Phases.STANDBY_PHASE)) {
+            standbyPhase.setEffect(null);
+            mainPhase1.setEffect(shadow);
             duelMenuController.setPhase(Phases.MAIN_PHASE_1);
         } else if (duelMenuController.getPhase().equals(Phases.MAIN_PHASE_1)) {
+            mainPhase1.setEffect(null);
+            battlePhase.setEffect(shadow);
             duelMenuController.setPhase(Phases.BATTLE_PHASE);
         } else if (duelMenuController.getPhase().equals(Phases.BATTLE_PHASE)) {
+            battlePhase.setEffect(null);
+            mainPhase2.setEffect(shadow);
             duelMenuController.setPhase(Phases.MAIN_PHASE_2);
         } else if (duelMenuController.getPhase().equals(Phases.MAIN_PHASE_2)) {
+            mainPhase2.setEffect(null);
+            endPhase.setEffect(shadow);
             duelMenuController.setPhase(Phases.END_PHASE);
         } else if (duelMenuController.getPhase().equals(Phases.END_PHASE)) {
+            endPhase.setEffect(null);
+            drawPhase.setEffect(shadow);
             duelMenuController.setPhase(Phases.DRAW_PHASE);
             turnFlag++;
             turnFlag %= 2;
@@ -594,7 +615,7 @@ public class DuelMenuView {
         addNodesToGridpane(gridPane, graveyard);
     }
 
-    public void shoeOpponentGrave() {
+    public void showOpponentGrave() {
         GridPane gridPane = new GridPane();
         ArrayList<Card> graveyard = duelMenuController.getNotTurnPlayer().getBoard().getGraveyard();
         addNodesToGridpane(gridPane, graveyard);
@@ -644,6 +665,16 @@ public class DuelMenuView {
         scene.lookup("#settingsMenu").setVisible(false);
         scene.lookup("#cheatcodeMenu").setVisible(false);
 
+        Label ownUsername = (Label) scene.lookup("#cheatcodeMenu");
+        Label ownNickname = (Label) scene.lookup("#ownNiackname");
+        Label opponentName = (Label) scene.lookup("#opponentName");
+        Label opponentNickname = (Label) scene.lookup("#opponentNickname");
+
+        ownUsername.setText(firstPlayer.getUsername());
+        ownNickname.setText(firstPlayer.getNickname());
+        opponentName.setText(secondPlayer.getUsername());
+        opponentNickname.setText(secondPlayer.getNickname());
+//TODO set profile images!!!!
         ownMonsterRectangles[1] = (Rectangle) scene.lookup("#ownMonster1");
         ownMonsterRectangles[2] = (Rectangle) scene.lookup("#ownMonster2");
         ownMonsterRectangles[3] = (Rectangle) scene.lookup("#ownMonster3");
@@ -680,9 +711,46 @@ public class DuelMenuView {
         opponentCardsInHand[4] = (Rectangle) scene.lookup("#opponentHandCard4");
 
 
+        drawPhase = (Rectangle) scene.lookup("#drawPhase");
+        standbyPhase = (Rectangle) scene.lookup("#standbyPhase");
+        mainPhase1 = (Rectangle) scene.lookup("#mainPhase1");
+        battlePhase = (Rectangle) scene.lookup("#battlePhase");
+        mainPhase2 = (Rectangle) scene.lookup("#mainPhase2");
+        endPhase = (Rectangle) scene.lookup("#endPhase");
+
+        Image img = new Image(getClass().getResource("/images/drawPhase.png").toExternalForm());
+        drawPhase.setFill(new ImagePattern(img));
+        img = new Image(getClass().getResource("/images/standbyPhase.png").toExternalForm());
+        standbyPhase.setFill(new ImagePattern(img));
+        img = new Image(getClass().getResource("/images/mainPhase.png").toExternalForm());
+        mainPhase1.setFill(new ImagePattern(img));
+        img = new Image(getClass().getResource("/images/battlePhase.png").toExternalForm());
+        battlePhase.setFill(new ImagePattern(img));
+        img = new Image(getClass().getResource("/images/mainPhase2.png").toExternalForm());
+        mainPhase2.setFill(new ImagePattern(img));
+        img = new Image(getClass().getResource("/images/standbyPhase.png").toExternalForm());
+        standbyPhase.setFill(new ImagePattern(img));
+
+
         KeyCombination keyCombination = KeyCombination.keyCombination("CTRL+SHIFT+C");
         Runnable runnable = () -> showCheatText(scene);
         scene.getAccelerators().put(keyCombination, runnable);
+
+
+        scene.lookup("#ownGraveyard").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        showOwnGrave();
+                    }
+                });
+        scene.lookup("#opponentGraveyard").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        showOpponentGrave();
+                    }
+                });
 
 
         scene.lookup("#settingsMenuButton").addEventHandler(MouseEvent.MOUSE_CLICKED,
