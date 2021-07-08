@@ -267,6 +267,36 @@ public class DuelMenuView {
         System.out.println("spell/trap didn't activate");
     }
 
+
+    public ImageView getImageView() {
+        return imageView;
+    }
+
+    public static Rectangle[] getOpponentCardsInHand() {
+        return opponentCardsInHand;
+    }
+
+    public static Rectangle[] getOpponentMagicRectangles() {
+        return opponentMagicRectangles;
+    }
+
+    public static Rectangle[] getOpponentMonsterRectangles() {
+        return opponentMonsterRectangles;
+    }
+
+    public static Rectangle[] getOwnCardsInHand() {
+        return ownCardsInHand;
+    }
+
+    public static Rectangle[] getOwnMagicRectangles() {
+        return ownMagicRectangles;
+    }
+
+    public static Rectangle[] getOwnMonsterRectangles() {
+        return ownMonsterRectangles;
+    }
+
+
     public DuelMenuMessages duelMenuView() {
         DuelMenuController duelMenuController = new DuelMenuController();
         this.duelMenuController = duelMenuController;
@@ -584,6 +614,7 @@ public class DuelMenuView {
         EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
                 scrollPane.setVisible(false);
+                scrollPane.setContent(null);
             }
         };
         scrollPane.setOnMouseClicked(this::hideGraveyard);
