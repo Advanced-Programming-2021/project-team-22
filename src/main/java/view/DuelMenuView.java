@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class DuelMenuView {
+    private static Scene scene;
     private static Rectangle[] ownMonsterRectangles = new Rectangle[6];
     private static Rectangle[] ownMagicRectangles = new Rectangle[6];
     private static Rectangle[] opponentMonsterRectangles = new Rectangle[6];
@@ -322,7 +323,7 @@ public class DuelMenuView {
         } catch (Exception e) {
             System.out.println("cant load board!");
         }
-        Scene scene = new Scene(root, 700, 600);
+        scene = new Scene(root, 700, 600);
         setScene(scene);
         stage.setScene(scene);
         stage.show();
@@ -657,6 +658,7 @@ public class DuelMenuView {
 
         textField.setOnAction(event);
     }
+
 
     public void setScene(Scene scene) {
         scrollPane = (ScrollPane) scene.lookup("#graveYard");
@@ -1354,4 +1356,39 @@ public class DuelMenuView {
 
     private void setMusic(MouseEvent mouseEvent) {
     }
+
+
+    public void takeTribute() {
+        MonsterCard[] monsterCards = duelMenuController.getTurnPlayer().getBoard().getMonstersZone();
+        GridPane gridPane = new GridPane();
+        for (int i = 1; i <= 5; i++) {
+            if (monsterCards[i] != null) {
+                Rectangle rectangle = new Rectangle();
+                Image img = new Image(getClass().getResource(monsterCards[i].getFrontImageAddress()).toExternalForm());
+                rectangle.setFill(new ImagePattern(img));
+                rectangle.setHeight(50);
+                rectangle.setWidth(80);
+                int finalI = i;
+                rectangle.addEventHandler(MouseEvent.MOUSE_CLICKED,
+                        new EventHandler<MouseEvent>() {
+                            @Override
+                            public void handle(MouseEvent e) {
+                                duelMenuController.getTurnPlayer().getBoard().getGraveyard().add(duelMenuController.getTurnPlayer().getBoard().getMonstersZone()[finalI]);
+                                duelMenuController.getTurnPlayer().getBoard().getMonstersZone()[finalI] = null;
+                            }
+                        });
+                gridPane.add(rectangle, 0, i);
+            }
+        }
+        scrollPane.setContent(gridPane);
+        scrollPane.setVisible(true);
+        EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e) {
+                scrollPane.setVisible(false);
+                scrollPane.setContent(null);
+            }
+        };
+        scrollPane.setOnMouseClicked(this::hideGraveyard);
+    }
+
 }
