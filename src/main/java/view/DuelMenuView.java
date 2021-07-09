@@ -23,6 +23,8 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Popup;
@@ -34,6 +36,7 @@ import model.cards.Card;
 import model.cards.magiccard.MagicCard;
 import model.cards.monstercard.MonsterCard;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -65,6 +68,7 @@ public class DuelMenuView {
     private DuelMenuController duelMenuController;
     private javafx.scene.control.ScrollPane scrollPane;
     private boolean pause;
+    private MediaPlayer mediaPlayer;
 
     {
         pause = false;
@@ -333,6 +337,7 @@ public class DuelMenuView {
 
         while (true) {
             if (checkWinner()) {
+                winningSound();
                 DuelMenuMessages result = giveScores();
                 if (result.equals(DuelMenuMessages.ENTER_MAIN_MENU)) break;
                 else if (result.equals(DuelMenuMessages.PLAY_ANOTHER_TURN))
@@ -1640,4 +1645,10 @@ public class DuelMenuView {
         scrollPane.setOnMouseClicked(this::hideGraveyard);
     }
 
+    public void winningSound() {
+        String path = "src/main/resources/sounds/winningAlarm.wav";
+        Media media = new Media(new File(path).toURI().toString());
+        mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.play();
+    }
 }

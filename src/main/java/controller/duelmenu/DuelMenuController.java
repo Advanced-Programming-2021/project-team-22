@@ -4,6 +4,8 @@ import controller.MenuRegexes;
 import controller.Utils;
 import controller.deckmenu.DeckMenuController;
 import controller.shopmenu.ShopMenuController;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import model.Board;
 import model.Deck;
 import model.Player;
@@ -13,6 +15,7 @@ import model.cards.magiccard.MagicCard;
 import model.cards.monstercard.MonsterCard;
 import view.DuelMenuView;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.regex.Matcher;
 
@@ -20,6 +23,7 @@ public class DuelMenuController {
     private Player turnPlayer;
     private Player notTurnPlayer;
     private Phases phase;
+    private MediaPlayer mediaPlayer;
 
     public void setTurnPlayer(Player turnPlayer) {
         this.turnPlayer = turnPlayer;
@@ -421,6 +425,7 @@ public class DuelMenuController {
             turnPlayerBoard.getSelectedCard().setCardFaceUp(false);
             turnPlayerBoard.setSummonCardOnMonsterZone();
             turnPlayer.getBoard().setSelectedCard(null);
+            summonSound();
         } else if (selectedMonster.getLevel() == 5 || selectedMonster.getLevel() == 6) {
             return summonWithOneTribute();
         } else if (selectedMonster.getLevel() == 7 || selectedMonster.getLevel() == 8) {
@@ -463,6 +468,7 @@ public class DuelMenuController {
 //        }
 //        turnPlayerBoard.removeTribute(address);
         turnPlayerBoard.setSummonCardOnMonsterZone();
+        summonSound();
         return DuelMenuMessages.SUMMONED_SUCCESSFULLY;
     }
 
@@ -492,6 +498,7 @@ public class DuelMenuController {
 //        turnPlayerBoard.removeTribute(address);
 //        turnPlayerBoard.removeTribute(address2);
         turnPlayerBoard.setSummonCardOnMonsterZone();
+        summonSound();
         return DuelMenuMessages.SUMMONED_SUCCESSFULLY;
     }
 
@@ -790,19 +797,11 @@ public class DuelMenuController {
         return DuelMenuMessages.EMPTY;
     }
 
-//    private DuelMenuMessages checkBack() {
-//
-//    }
 
-//    private void cancelCommand() {
-//
-//    }
-
-//    private DuelMenuMessages ritualSummon(String command) {
-//
-//    }
-
-//    private DuelMenuMessages specialSummon(String command) {
-//
-//    }
+    public void summonSound() {
+        String path = "src/main/resources/sounds/summonAlarm.wav";
+        Media media = new Media(new File(path).toURI().toString());
+        mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.play();
+    }
 }
