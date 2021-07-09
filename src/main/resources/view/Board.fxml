@@ -100,11 +100,11 @@
       <Button id="setOwnHandCard1" layoutX="116.0" layoutY="528.0" mnemonicParsing="false" text="set" />
       <Button id="setOwnHandCard2" layoutX="221.0" layoutY="528.0" mnemonicParsing="false" text="set" />
       <Button id="setOwnHandCard3" layoutX="321.0" layoutY="528.0" mnemonicParsing="false" text="set" />
-      <Button id="setOwnHAndCard4" layoutX="433.0" layoutY="528.0" mnemonicParsing="false" text="set" />
-      <Button layoutX="100.0" layoutY="567.0" mnemonicParsing="false" text="summon" />
-      <Button layoutX="205.0" layoutY="565.0" mnemonicParsing="false" text="summon" />
-      <Button layoutX="305.0" layoutY="565.0" mnemonicParsing="false" text="summon" />
-      <Button layoutX="417.0" layoutY="565.0" mnemonicParsing="false" text="summon" />
+      <Button id="setOwnHandCard4" layoutX="433.0" layoutY="528.0" mnemonicParsing="false" text="set" />
+      <Button id="summonOwnCard1" layoutX="100.0" layoutY="567.0" mnemonicParsing="false" text="summon" />
+      <Button id="summonOwnCard2" layoutX="205.0" layoutY="565.0" mnemonicParsing="false" text="summon" />
+      <Button id="summonOwnCard3" layoutX="305.0" layoutY="565.0" mnemonicParsing="false" text="summon" />
+      <Button id="summonOwnCard4" layoutX="417.0" layoutY="565.0" mnemonicParsing="false" text="summon" />
       <Rectangle id="ownGraveyard" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="92.0" layoutX="499.0" layoutY="334.0" stroke="BLACK" strokeType="INSIDE" width="69.0" />
       <Rectangle id="opponentGraveyard" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="92.0" layoutX="31.0" layoutY="164.0" stroke="BLACK" strokeType="INSIDE" width="69.0" />
    </children>

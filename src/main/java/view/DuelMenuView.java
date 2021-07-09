@@ -1105,6 +1105,255 @@ public class DuelMenuView {
                     }
                 });
 
+
+        scene.lookup("#ownHandCard1").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("select --hand 1");
+                        }
+                        if (showCardCheck(duelMenuController.getTurnPlayer().getBoard())) {
+                            imageView = new ImageView(new Image(getClass().getResource(duelMenuController.getTurnPlayer().getBoard().getSelectedCard().getFrontImageAddress()).toExternalForm()));
+                        }
+                        scene.lookup("#setOwnHandCard1").setVisible(true);
+                        scene.lookup("#summonOwnCard1").setVisible(true);
+                    }
+                });
+        scene.lookup("#ownHandCard2").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("select --hand 2");
+                        }
+                        if (showCardCheck(duelMenuController.getTurnPlayer().getBoard())) {
+                            imageView = new ImageView(new Image(getClass().getResource(duelMenuController.getTurnPlayer().getBoard().getSelectedCard().getFrontImageAddress()).toExternalForm()));
+                        }
+                        scene.lookup("#setOwnHandCard2").setVisible(true);
+                        scene.lookup("#summonOwnCard2").setVisible(true);
+                    }
+                });
+        scene.lookup("#ownHandCard3").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("select --hand 3");
+                        }
+                        if (showCardCheck(duelMenuController.getTurnPlayer().getBoard())) {
+                            imageView = new ImageView(new Image(getClass().getResource(duelMenuController.getTurnPlayer().getBoard().getSelectedCard().getFrontImageAddress()).toExternalForm()));
+                        }
+                        scene.lookup("#setOwnHandCard3").setVisible(true);
+                        scene.lookup("#summonOwnCard3").setVisible(true);
+                    }
+                });
+        scene.lookup("#ownHandCard4").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("select --hand 4");
+                        }
+                        if (showCardCheck(duelMenuController.getTurnPlayer().getBoard())) {
+                            imageView = new ImageView(new Image(getClass().getResource(duelMenuController.getTurnPlayer().getBoard().getSelectedCard().getFrontImageAddress()).toExternalForm()));
+                        }
+                        scene.lookup("#setOwnHandCard4").setVisible(true);
+                        scene.lookup("#summonOwnCard4").setVisible(true);
+                    }
+                });
+
+
+        scene.lookup("#summonOwnCard1").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("summon");
+                        }
+
+                        scene.lookup("#setOwnHandCard1").setVisible(false);
+                        scene.lookup("#summonOwnCard1").setVisible(false);
+
+                    }
+                });
+        scene.lookup("#summonOwnCard2").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("summon");
+                        }
+
+                        scene.lookup("#setOwnHandCard2").setVisible(false);
+                        scene.lookup("#summonOwnCard2").setVisible(false);
+
+                    }
+                });
+        scene.lookup("#summonOwnCard3").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("summon");
+                        }
+
+                        scene.lookup("#setOwnHandCard3").setVisible(false);
+                        scene.lookup("#summonOwnCard3").setVisible(false);
+
+                    }
+                });
+        scene.lookup("#summonOwnCard4").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("summon");
+                        }
+
+                        scene.lookup("#setOwnHandCard4").setVisible(false);
+                        scene.lookup("#summonOwnCard4").setVisible(false);
+
+                    }
+                });
+        scene.lookup("#setOwnHandCard1").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("set");
+                        }
+
+                        scene.lookup("#setOwnHandCard1").setVisible(false);
+                        scene.lookup("#summonOwnCard1").setVisible(false);
+
+                    }
+                });
+        scene.lookup("#setOwnHandCard2").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("set");
+                        }
+
+                        scene.lookup("#setOwnHandCard2").setVisible(false);
+                        scene.lookup("#summonOwnCard2").setVisible(false);
+
+                    }
+                });
+        scene.lookup("#setOwnHandCard3").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("set");
+                        }
+
+                        scene.lookup("#setOwnHandCard3").setVisible(false);
+                        scene.lookup("#summonOwnCard3").setVisible(false);
+
+                    }
+                });
+        scene.lookup("#setOwnHandCard4").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("set");
+                        }
+
+                        scene.lookup("#setOwnHandCard4").setVisible(false);
+                        scene.lookup("#summonOwnCard4").setVisible(false);
+
+                    }
+                });
+
+
+        scene.lookup("#setOwnHandCard1").addEventHandler(MouseEvent.MOUSE_EXITED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("ppp");
+                        scene.lookup("#setOwnHandCard1").setVisible(false);
+                    }
+                });
+        scene.lookup("#setOwnHandCard2").addEventHandler(MouseEvent.MOUSE_EXITED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("ppp");
+                        scene.lookup("#setOwnHandCard2").setVisible(false);
+                    }
+                });
+        scene.lookup("#setOwnHandCard3").addEventHandler(MouseEvent.MOUSE_EXITED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("ppp");
+                        scene.lookup("#setOwnHandCard3").setVisible(false);
+                    }
+                });
+        scene.lookup("#setOwnHandCard4").addEventHandler(MouseEvent.MOUSE_EXITED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("ppp");
+                        scene.lookup("#setOwnHandCard4").setVisible(false);
+                    }
+                });
+
+
+        scene.lookup("#summonOwnCard1").addEventHandler(MouseEvent.MOUSE_EXITED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("ppp");
+                        scene.lookup("#summonOwnCard1").setVisible(false);
+                    }
+                });
+        scene.lookup("#summonOwnCard2").addEventHandler(MouseEvent.MOUSE_EXITED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("ppp");
+                        scene.lookup("#summonOwnCard2").setVisible(false);
+                    }
+                });
+        scene.lookup("#summonOwnCard3").addEventHandler(MouseEvent.MOUSE_EXITED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("ppp");
+                        scene.lookup("#summonOwnCard3").setVisible(false);
+                    }
+                });
+        scene.lookup("#summonOwnCard4").addEventHandler(MouseEvent.MOUSE_EXITED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("ppp");
+                        scene.lookup("#summonOwnCard4").setVisible(false);
+                    }
+                });
+
+
+        scene.lookup("#attackToOpponentMonster1").addEventHandler(MouseEvent.MOUSE_EXITED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("ppp");
+                        scene.lookup("#attackToOpponentMonster1").setVisible(false);
+                    }
+                });
         //-------------------------------------------------handle attack button
 
 
@@ -1286,8 +1535,8 @@ public class DuelMenuView {
                     @Override
                     public void handle(MouseEvent e) {
                         System.out.println("ppp");
-                        if (!pause) {//TODO ask about order
-                            DuelMenuMessages result = duelMenuController.findCommand("");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("active effect");
                         }
                     }
                 });
@@ -1296,8 +1545,8 @@ public class DuelMenuView {
                     @Override
                     public void handle(MouseEvent e) {
                         System.out.println("ppp");
-                        if (!pause) {//TODO ask about order
-                            DuelMenuMessages result = duelMenuController.findCommand("");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("active effect");
                         }
                     }
                 });
@@ -1306,8 +1555,8 @@ public class DuelMenuView {
                     @Override
                     public void handle(MouseEvent e) {
                         System.out.println("ppp");
-                        if (!pause) {//TODO ask about order
-                            DuelMenuMessages result = duelMenuController.findCommand("");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("active effect");
                         }
                     }
                 });
@@ -1316,8 +1565,8 @@ public class DuelMenuView {
                     @Override
                     public void handle(MouseEvent e) {
                         System.out.println("ppp");
-                        if (!pause) {//TODO ask about order
-                            DuelMenuMessages result = duelMenuController.findCommand("");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("active effect");
                         }
                     }
                 });
@@ -1326,8 +1575,8 @@ public class DuelMenuView {
                     @Override
                     public void handle(MouseEvent e) {
                         System.out.println("ppp");
-                        if (!pause) {//TODO ask about order
-                            DuelMenuMessages result = duelMenuController.findCommand("");
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("active effect");
                         }
                     }
                 });
