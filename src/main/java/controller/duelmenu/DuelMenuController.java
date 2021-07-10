@@ -4,8 +4,15 @@ import controller.MenuRegexes;
 import controller.Utils;
 import controller.deckmenu.DeckMenuController;
 import controller.shopmenu.ShopMenuController;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Rectangle;
 import model.Board;
 import model.Deck;
 import model.Player;
@@ -24,6 +31,7 @@ public class DuelMenuController {
     private Player notTurnPlayer;
     private Phases phase;
     private MediaPlayer mediaPlayer;
+    private static boolean flag = true;
 
     public void setTurnPlayer(Player turnPlayer) {
         this.turnPlayer = turnPlayer;
@@ -425,6 +433,7 @@ public class DuelMenuController {
             turnPlayerBoard.getSelectedCard().setCardFaceUp(false);
             turnPlayerBoard.setSummonCardOnMonsterZone();
             turnPlayer.getBoard().setSelectedCard(null);
+            DuelMenuView.upToDateHand();
             summonSound();
         } else if (selectedMonster.getLevel() == 5 || selectedMonster.getLevel() == 6) {
             return summonWithOneTribute();
@@ -452,15 +461,47 @@ public class DuelMenuController {
         return null;
     }
 
+    public void takeTribute() {
+        MonsterCard[] monsterCards = DuelMenuView.getDuelMenuController().getTurnPlayer().getBoard().getMonstersZone();
+        GridPane gridPane = new GridPane();
+        for (int i = 1; i <= 5; i++) {
+            if (monsterCards[i] != null) {
+                Rectangle rectangle = new Rectangle();
+                Image img = new Image(getClass().getResource(monsterCards[i].getFrontImageAddress()).toExternalForm());
+                rectangle.setFill(new ImagePattern(img));
+                rectangle.setHeight(50);
+                rectangle.setWidth(80);
+                int finalI = i;
+                rectangle.addEventHandler(MouseEvent.MOUSE_CLICKED,
+                        new EventHandler<MouseEvent>() {
+                            @Override
+                            public void handle(MouseEvent e) {
+                                DuelMenuView.getDuelMenuController().getTurnPlayer().getBoard().getGraveyard().add(DuelMenuView.getDuelMenuController().getTurnPlayer().getBoard().getMonstersZone()[finalI]);
+                                DuelMenuView.getDuelMenuController().getTurnPlayer().getBoard().getMonstersZone()[finalI] = null;
+                                DuelMenuView.getOwnMonsterRectangles()[finalI].setFill(null);
+                                DuelMenuView.getScrollPane().setVisible(false);
+                                flag = false;
+                            }
+                        });
+                gridPane.add(rectangle, 0, i);
+            }
+        }
+        DuelMenuView.getScrollPane().setContent(gridPane);
+        DuelMenuView.getScrollPane().setVisible(true);
+        while (flag) {
+        }
+    }
+
     private DuelMenuMessages summonWithOneTribute() {
         Board turnPlayerBoard = turnPlayer.getBoard();
         if (!turnPlayerBoard.isThereOneMonsterForTribute()) {
             return DuelMenuMessages.NOT_ENOUGH_CARD_FOR_TRIBUTE;
         }
-        try {
-            DuelMenuView.class.getMethod("takeTribute").invoke(new DuelMenuView(new Player("", "", ""), 1));
-        } catch (Exception e) {
-        }
+        takeTribute();
+//        try {
+//            DuelMenuView.class.getMethod("takeTribute").invoke(new DuelMenuView(new Player("", "", ""), 1));
+//        } catch (Exception e) {
+//        }
         //TODO check String addressString = Utils.getScanner().nextLine().trim();
         //  int address = Integer.parseInt(addressString);
 //        if (!turnPlayerBoard.isThereMonsterCardInAddress(address)) {
@@ -469,6 +510,7 @@ public class DuelMenuController {
 //        turnPlayerBoard.removeTribute(address);
         turnPlayerBoard.setSummonCardOnMonsterZone();
         summonSound();
+        DuelMenuView.upToDateHand();
         return DuelMenuMessages.SUMMONED_SUCCESSFULLY;
     }
 
@@ -477,14 +519,16 @@ public class DuelMenuController {
         if (!turnPlayerBoard.isThereTwoMonsterForTribute()) {
             return DuelMenuMessages.NOT_ENOUGH_CARD_FOR_TRIBUTE;
         }
-        try {
-            DuelMenuView.class.getMethod("takeTribute").invoke(new DuelMenuView(new Player("", "", ""), 1));
-        } catch (Exception e) {
-        }
-        try {
-            DuelMenuView.class.getMethod("takeTribute").invoke(new DuelMenuView(new Player("", "", ""), 1));
-        } catch (Exception e) {
-        }
+        takeTribute();
+        takeTribute();
+//        try {
+//            DuelMenuView.class.getMethod("takeTribute").invoke(new DuelMenuView(new Player("", "", ""), 1));
+//        } catch (Exception e) {
+//        }
+//        try {
+//            DuelMenuView.class.getMethod("takeTribute").invoke(new DuelMenuView(new Player("", "", ""), 1));
+//        } catch (Exception e) {
+//        }
 //        TODO chack!   String addressString = Utils.getScanner().nextLine().trim();
 //        int address = Integer.parseInt(addressString);
 //        addressString = Utils.getScanner().nextLine().trim();
@@ -499,6 +543,7 @@ public class DuelMenuController {
 //        turnPlayerBoard.removeTribute(address2);
         turnPlayerBoard.setSummonCardOnMonsterZone();
         summonSound();
+        DuelMenuView.upToDateHand();
         return DuelMenuMessages.SUMMONED_SUCCESSFULLY;
     }
 

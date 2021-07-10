@@ -1,12 +1,15 @@
 package controller;
 
 import controller.duelmenu.Phases;
+import javafx.scene.image.Image;
+import javafx.scene.paint.ImagePattern;
 import model.Board;
 import model.cards.Card;
 import model.cards.CardTypes;
 import model.cards.magiccard.MagicCard;
 import model.cards.monstercard.MonsterCard;
 import model.Player;
+import view.DuelMenuView;
 
 import java.util.ArrayList;
 
@@ -77,7 +80,10 @@ public class AIClass {
         for (int i = 1; i <= 5; i++) {
             if (machineBoard.getMonstersZone()[i] == null) {
                 machineBoard.getMonstersZone()[i] = (MonsterCard) machineBoard.getCardsInHand().get(canSummonWithoutTribute);
+                Image img = new Image(AIClass.class.getResource(machineBoard.getCardsInHand().get(canSummonWithoutTribute).getFrontImageAddress()).toExternalForm());
+                DuelMenuView.getOwnMonsterRectangles()[i].setFill(new ImagePattern(img));
                 machineBoard.getCardsInHand().remove(canSummonWithoutTribute);
+                DuelMenuView.upToDateHand();
                 break;
             }
         }
