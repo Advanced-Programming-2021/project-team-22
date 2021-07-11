@@ -11,7 +11,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class AttackTest extends MenuTest {
-
+/*
     @BeforeAll
     static void createPlayer() {
         Player a = new Player("a", "a", "a");
@@ -182,5 +182,5 @@ public class AttackTest extends MenuTest {
         duelMenuController.findCommand("attack 1");
         Assertions.assertEquals("Test", a.getBoard().getGraveyard().get(0).getName());
 
-    }
+    }*/
 }

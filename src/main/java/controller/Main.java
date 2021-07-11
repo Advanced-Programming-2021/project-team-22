@@ -4,6 +4,8 @@ import javafx.application.Application;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
+import model.Player;
+import view.DuelMenuView;
 import view.LoginMenuView;
 
 import java.io.File;
@@ -15,10 +17,15 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Database.prepareGame();
-        handleSFX();
-        Utils.setStage(stage);
-        stage.setTitle("Yu-Gi-Oh!");
+      //  Database.prepareGame();
+       // handleSFX();
+        //Utils.setStage(stage);
+        //stage.setTitle("Yu-Gi-Oh!");
+        Player player1 = new Player("1", "1", "1");
+        Player player2 = new Player("2", "2", "2");
+        DuelMenuView duelMenuView = new DuelMenuView(player1, player2, 1);
+        duelMenuView.duelMenuView();
+      // duelMenuView.start(stage);
         //new LoginMenuView().start(stage);
     }
 

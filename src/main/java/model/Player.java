@@ -56,7 +56,7 @@ public class Player implements Comparable<Player> {
         setPassword(password);
         setNickname(nickname);
         addPlayerToAllPlayers(this);
-        Database.updatePlayerInformationInDatabase(this);
+ //       Database.updatePlayerInformationInDatabase(this);
     }
 
     public static Boolean isNicknameExist(String nickname) {

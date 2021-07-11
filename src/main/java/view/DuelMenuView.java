@@ -7,6 +7,7 @@ import controller.duelmenu.DuelMenuMessages;
 import controller.duelmenu.Phases;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -21,6 +22,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
@@ -41,7 +43,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class DuelMenuView {
+public class DuelMenuView extends Application {
     private static Scene scene;
     private static Rectangle[] ownMonsterRectangles = new Rectangle[6];
     private static Rectangle[] ownMagicRectangles = new Rectangle[6];
@@ -61,7 +63,7 @@ public class DuelMenuView {
     Stage stage;
     private Player firstPlayer;
     private Player secondPlayer;
-    private final int numberOfRounds;
+    private  int numberOfRounds;
     private Integer turnFlag;
     private final AIClass AIClass;
     private Pane root;
@@ -76,6 +78,8 @@ public class DuelMenuView {
         AIClass = new AIClass();
     }
 
+    public DuelMenuView(){}
+
     public DuelMenuView(Player firstPlayer, Player secondPlayer, int numberOfRounds) {
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
@@ -87,6 +91,18 @@ public class DuelMenuView {
         this.firstPlayer = firstPlayer;
         this.secondPlayer = AIPlayer;
         this.numberOfRounds = numberOfRounds;
+    }
+
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        System.out.println("ASD");
+//        Pane root = FXMLLoader.load(getClass().getResource("/view/fxml/Board.fxml"));
+//        scene = new Scene(root, 700, 600);
+//      //  setScene(scene);
+//        stage.setScene(scene);
+//        duelMenuView();
+        stage.show();
     }
 
     public static String findChooseOfPlayerInMiniGame(Player player) {
@@ -219,6 +235,8 @@ public class DuelMenuView {
     }
 
     private static void showCardsInHand(Board board) {
+        if (board == null)
+            return;
         for (int i = 0; i < board.getCardsInHand().size(); i++) {
             System.out.print("C ");
         }
@@ -317,6 +335,10 @@ public class DuelMenuView {
         return scrollPane;
     }
 
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
     public static void setOpponentCardsInHand(Rectangle[] opponentCardsInHand) {
         DuelMenuView.opponentCardsInHand = opponentCardsInHand;
     }
@@ -358,13 +380,13 @@ public class DuelMenuView {
     public DuelMenuMessages duelMenuView() {
         DuelMenuController duelMenuController = new DuelMenuController();
         DuelMenuView.duelMenuController = duelMenuController;
-
+/*
         DuelMenuMessages resultOfInitialGame = null;
         while (resultOfInitialGame == null || !resultOfInitialGame.equals(DuelMenuMessages.SHOW_TURN_PLAYER)) {
             resultOfInitialGame = duelMenuController.initialGame(firstPlayer, secondPlayer);
             System.out.print(resultOfInitialGame.getMessage());
         }
-
+*/
 
         URL url = getClass().getResource("/view/Board.fxml");
         try {

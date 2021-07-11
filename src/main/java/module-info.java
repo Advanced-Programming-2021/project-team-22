@@ -12,4 +12,5 @@ module Graphic.Copy {
     exports view;
     exports model;
     exports controller.duelmenu;
+    exports controller;
 }
