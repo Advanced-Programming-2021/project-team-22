@@ -181,25 +181,26 @@ public class DuelMenuController {
     }
 
     private static void addDeckToAI(Player AI) {
-        ShopMenuController shopMenuController = new ShopMenuController(AI);
+//        ShopMenuController shopMenuController = new ShopMenuController(AI);
 //        shopMenuController.findCommand("increase --M 1000000");
-        int numberOfCards = 0;
-        for (String cardName : Card.getAllCards().keySet()) {
+//        int numberOfCards = 0;
+//        for (String cardName : Card.getAllCards().keySet()) {
 //            shopMenuController.findCommand("shop buy " + cardName);
-            ++numberOfCards;
-            if (numberOfCards == 50) break;
-        }
-
-        DeckMenuController deckMenuController = new DeckMenuController(AI);
-        deckMenuController.findCommand("deck create :)");
-
-        for (String cardName : Card.getAllCards().keySet()) {
-            deckMenuController.findCommand("deck add-showSelectedCard --showSelectedCard " + cardName + " --deck :)");
-            ++numberOfCards;
-            if (numberOfCards == 50) break;
-        }
-
-        deckMenuController.findCommand("deck set-activate :)");
+//            ++numberOfCards;
+//            if (numberOfCards == 50) break;
+//        }
+//
+//        DeckMenuController deckMenuController = new DeckMenuController(AI);
+//        deckMenuController.findCommand("deck create :)");
+//
+//        for (String cardName : Card.getAllCards().keySet()) {
+//            deckMenuController.findCommand("deck add-showSelectedCard --showSelectedCard " + cardName + " --deck :)");
+//            ++numberOfCards;
+//            if (numberOfCards == 50) break;
+//        }
+//
+//        deckMenuController.findCommand("deck set-activate :)");
+//        TODO: handle it base on graphic
     }
 
     public DuelMenuMessages findCommand(String command) {

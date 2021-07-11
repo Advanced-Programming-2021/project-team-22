@@ -8,10 +8,14 @@ import model.Player;
 import java.util.regex.Matcher;
 
 public class ProfileMenuController {
-    private final Player loggedInPlayer;
+    private static Player loggedInPlayer;
 
-    public ProfileMenuController(Player loggedInPlayer) {
-        this.loggedInPlayer = loggedInPlayer;
+    public static Player getLoggedInPlayer() {
+        return loggedInPlayer;
+    }
+
+    public static void setLoggedInPlayer(Player loggedInPlayer) {
+        ProfileMenuController.loggedInPlayer = loggedInPlayer;
     }
 
     public ProfileMenuMessages findCommand(String command) {

@@ -1,6 +1,10 @@
-.borderPane {
+.firstMenusBorderPane {
     -fx-background-image: url("/images/backgrounds/LoginMenuMainMenu.jpg");
     -fx-background-size: stretch;
+}
+
+.secondMenusBorderPane {
+    -fx-background-color: rgb(36, 17, 33);
 }
 
 .generalButton {
@@ -38,4 +42,11 @@
     -fx-border-color: #534b4b;
     -fx-border-width: 2px;
     -fx-border-radius: 5;
+}
+
+.generalScrollPane {
+    -fx-background-color: transparent;
+    -fx-fill: transparent;
+    -fx-progress-color: transparent;
+    -fx-background: transparent;
 }

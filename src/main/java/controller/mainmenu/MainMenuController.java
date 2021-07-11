@@ -45,15 +45,15 @@ public class MainMenuController {
             return MainMenuMessages.INVALID_NAVIGATION;
 
         } else if (menu.equalsIgnoreCase("Deck")) {
-            DeckMenuView deckMenuView = new DeckMenuView(loggedInPlayer);
-            deckMenuView.deckMenuView();
+//            DeckMenuView deckMenuView = new DeckMenuView(loggedInPlayer);
+//            deckMenuView.deckMenuView();
 
         } else if (menu.equalsIgnoreCase("Scoreboard"))
             ScoreboardMenuView.scoreboardMenuView();
 
         else if (menu.equalsIgnoreCase("Profile")) {
-            ProfileMenuView profileMenuView = new ProfileMenuView(loggedInPlayer);
-            profileMenuView.profileMenuView();
+//            ProfileMenuView profileMenuView = new ProfileMenuView(loggedInPlayer);
+//            profileMenuView.profileMenuView();
 
         } else if (menu.equalsIgnoreCase("Shop")) {
 //            ShopMenuView shopMenuView = new ShopMenuView(loggedInPlayer);

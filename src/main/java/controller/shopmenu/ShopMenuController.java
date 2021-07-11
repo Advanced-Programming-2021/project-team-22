@@ -10,10 +10,6 @@ import java.util.regex.Matcher;
 public class ShopMenuController {
     private static Player loggedInPlayer;
 
-    public ShopMenuController(Player loggedInPlayer) {
-        this.loggedInPlayer = loggedInPlayer;
-    }
-
     public static Player getLoggedInPlayer() {
         return loggedInPlayer;
     }

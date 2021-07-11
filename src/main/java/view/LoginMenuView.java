@@ -33,6 +33,7 @@ public class LoginMenuView extends Application {
         stage.setMinHeight(scene.getHeight() + 28 /*title bar height*/);
         stage.setMinWidth(scene.getWidth());
         stage.setScene(scene);
+        stage.sizeToScene();
 
         LoginMenuController.createCloseWindowShortcut(scene);
         stage.show();
@@ -63,6 +64,8 @@ public class LoginMenuView extends Application {
 
     private void handleVisibilityOfPasswordField() {
         checkBox.setOnMouseClicked(mouseEvent -> {
+            Utils.playButtonClickSFX();
+
             visiblePassword.managedProperty().bind(checkBox.selectedProperty());
             visiblePassword.visibleProperty().bind(checkBox.selectedProperty());
 
@@ -70,7 +73,6 @@ public class LoginMenuView extends Application {
             invisiblePassword.visibleProperty().bind(checkBox.selectedProperty().not());
 
             visiblePassword.textProperty().bindBidirectional(invisiblePassword.textProperty());
-            Utils.playButtonClickSFX();
         });
     }
 

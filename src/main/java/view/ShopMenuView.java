@@ -3,7 +3,6 @@ package view;
 import controller.Utils;
 import controller.shopmenu.ShopMenuController;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
@@ -74,13 +73,10 @@ public class ShopMenuView extends Application {
     }
 
     private void handleBorderPaneSetOnMouseClicked() {
-        borderPane.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                Utils.playButtonClickSFX();
-                cheatField.setVisible(false);
-                cheatField.setText("");
-            }
+        borderPane.setOnMouseClicked(mouseEvent -> {
+            Utils.playButtonClickSFX();
+            cheatField.setVisible(false);
+            cheatField.setText("");
         });
     }
 

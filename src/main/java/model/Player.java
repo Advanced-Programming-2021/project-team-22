@@ -7,6 +7,9 @@ import model.cards.magiccard.MagicCard;
 import model.cards.monstercard.MonsterCard;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashSet;
 
 public class Player implements Comparable<Player> {
     private static final ArrayList<Player> allPlayers;
@@ -137,6 +140,22 @@ public class Player implements Comparable<Player> {
         return boughtCards;
     }
 
+    public ArrayList<Card> getDifferentBoughCards() {
+        ArrayList<String> boughtCardsName = new ArrayList<>();
+        for (Card card : boughtCards) boughtCardsName.add(card.getName());
+
+//        remove repeated elements
+        ArrayList<String> differentBoughtCardsName = new ArrayList<>(new HashSet<>(boughtCardsName));
+
+        ArrayList<Card> differentBoughtCards = new ArrayList<>();
+        for (String cardName : differentBoughtCardsName) {
+            differentBoughtCards.add(Card.getCardByName(cardName));
+        }
+
+        differentBoughtCards.sort(Comparator.comparing(Card::getName));
+        return differentBoughtCards;
+    }
+
     public Card getCardByNameFromBoughtCards(String cardName) {
         for (Card card : boughtCards) {
             if (card.getName().equals(cardName)) return card;
@@ -175,8 +194,13 @@ public class Player implements Comparable<Player> {
         return number;
     }
 
-    public void removeCardFromBoughtCards(Card card) {
-        boughtCards.remove(card);
+    public void removeCardFromBoughtCards(String cardName) {
+        for (Card card : boughtCards) {
+            if (card.getName().equals(cardName)) {
+                boughtCards.remove(card);
+                break;
+            }
+        }
     }
 
     public void setHasSummonedInTurn(boolean hasSummonedInTurn) {

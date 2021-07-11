@@ -1,18 +1,18 @@
 package view;
 
 import controller.Utils;
+import controller.deckmenu.DeckMenuController;
 import controller.mainmenu.MainMenuController;
 import controller.mainmenu.MainMenuMessages;
+import controller.profilemenu.ProfileMenuController;
 import controller.shopmenu.ShopMenuController;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import model.Player;
 
 import java.util.Objects;
 
@@ -33,6 +33,7 @@ public class MainMenuView extends Application {
         stage.setMinHeight(scene.getHeight() + 28 /*title bar height*/);
         stage.setMinWidth(scene.getWidth());
         stage.setScene(scene);
+        stage.sizeToScene();
     }
 
     @FXML
@@ -43,11 +44,14 @@ public class MainMenuView extends Application {
         });
         handleLogOutButton();
         handleShopButton();
+        handleDeckButton();
+        handleProfileButton();
     }
 
     private void handleLogOutButton() {
         logOutButton.setOnMouseClicked(mouseEvent -> {
             try {
+                Utils.playButtonClickSFX();
                 new LoginMenuView().start(Utils.getStage());
             } catch (Exception exception) {
                 exception.printStackTrace();
@@ -61,6 +65,30 @@ public class MainMenuView extends Application {
                 Utils.playButtonClickSFX();
                 ShopMenuController.setLoggedInPlayer(MainMenuController.getLoggedInPlayer());
                 new ShopMenuView().start(Utils.getStage());
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        });
+    }
+
+    private void handleDeckButton() {
+        deckButton.setOnMouseClicked(mouseEvent -> {
+            try {
+                Utils.playButtonClickSFX();
+                DeckMenuController.setLoggedInPlayer(MainMenuController.getLoggedInPlayer());
+                new DeckMenuView().start(Utils.getStage());
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        });
+    }
+
+    private void handleProfileButton() {
+        profileButton.setOnMouseClicked(mouseEvent -> {
+            try {
+                Utils.playButtonClickSFX();
+                ProfileMenuController.setLoggedInPlayer(MainMenuController.getLoggedInPlayer());
+                new ProfileMenuView().start(Utils.getStage());
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
