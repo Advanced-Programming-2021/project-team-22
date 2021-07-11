@@ -112,9 +112,9 @@ public class MainMenuController {
             } else if (rounds.equals("3")) {
                 DuelMenuView duelMenuView = new DuelMenuView(loggedInPlayer, opponentPlayer, 3);
                 DuelMenuMessages result = DuelMenuMessages.PLAY_ANOTHER_TURN;
-                while (result.equals(DuelMenuMessages.PLAY_ANOTHER_TURN)) {
-                    result = duelMenuView.duelMenuView();
-                }
+           //     while (result.equals(DuelMenuMessages.PLAY_ANOTHER_TURN)) {
+               //     result = duelMenuView.duelMenuView();
+             //   }
 
             } else {
                 return MainMenuMessages.INVALID_ROUNDS_NUMBER;

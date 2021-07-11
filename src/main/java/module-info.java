@@ -11,6 +11,7 @@ module Graphic.Copy {
     opens view to javafx.fxml;
     exports view;
     exports model;
+    exports model.cards.magiccard;
     exports controller.duelmenu;
     exports controller;
 }

@@ -568,7 +568,7 @@ public class DuelMenuController {
         magicCard.setPowerUsed(false);
         magicCard.setCardFaceUp(false);
         magicCard.setIsSetInThisTurn(true);
-
+        DuelMenuView.upToDateHand();
         return DuelMenuMessages.SET_SUCCESSFULLY;
     }
 

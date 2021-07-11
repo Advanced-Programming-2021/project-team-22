@@ -84,7 +84,7 @@
       <Rectangle id="ownHandCard3" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="134.0" layoutX="294.0" layoutY="525.0" stroke="BLACK" strokeType="INSIDE" width="97.0" />
       <Rectangle id="ownHandCard4" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="134.0" layoutX="402.0" layoutY="525.0" stroke="BLACK" strokeType="INSIDE" width="97.0" />
       <ScrollPane id="graveYard" layoutX="174.0" layoutY="95.0" prefHeight="314.0" prefWidth="290.0" />
-      <VBox id="settingsMenu" layoutX="452.0" layoutY="64.0" prefHeight="200.0" prefWidth="108.0">
+      <VBox id="settingsMenu" layoutX="31.0" layoutY="33.0" prefHeight="200.0" prefWidth="108.0">
          <children>
             <Button id="musicButton" mnemonicParsing="false" prefHeight="38.0" prefWidth="117.0" text="play/stop " />
             <Button id="pauseGame" mnemonicParsing="false" prefHeight="38.0" prefWidth="88.0" text="pause" />
@@ -107,5 +107,8 @@
       <Button id="summonOwnCard4" layoutX="417.0" layoutY="565.0" mnemonicParsing="false" text="summon" />
       <Rectangle id="ownGraveyard" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="92.0" layoutX="499.0" layoutY="334.0" stroke="BLACK" strokeType="INSIDE" width="69.0" />
       <Rectangle id="opponentGraveyard" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="92.0" layoutX="31.0" layoutY="164.0" stroke="BLACK" strokeType="INSIDE" width="69.0" />
+      <Rectangle id="ownFieldzone" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="92.0" layoutX="31.0" layoutY="309.0" stroke="BLACK" strokeType="INSIDE" width="69.0" />
+      <Rectangle id="opponentFieldzone" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="92.0" layoutX="499.0" layoutY="194.0" stroke="BLACK" strokeType="INSIDE" width="69.0" />
+      <Button id="activeOwnFielzone" layoutX="40.0" layoutY="346.0" mnemonicParsing="false" text="active" />
    </children>
 </Pane>

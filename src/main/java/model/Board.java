@@ -122,6 +122,9 @@ public class Board {
         if (previousFieldZone != null) graveyard.add(previousFieldZone);
         setFieldZone(spellCard);
         cardsInHand.remove(spellCard);
+        Image img = new Image(spellCard.getBackImageAddress());
+        DuelMenuView.getOwnFieldzone().setFill(new ImagePattern(img));
+
     }
 
     public void addMagicCardToMagicsZone(MagicCard magicCard) {
@@ -129,6 +132,8 @@ public class Board {
             if (magicsZone[i] == null) {
                 magicsZone[i] = magicCard;
                 cardsInHand.remove(magicCard);
+                Image img = new Image(magicCard.getBackImageAddress());
+                DuelMenuView.getOwnFieldzone().setFill(new ImagePattern(img));
                 return;
             }
         }
