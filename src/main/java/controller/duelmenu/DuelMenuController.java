@@ -236,7 +236,10 @@ public class DuelMenuController {
             return DuelMenuMessages.EMPTY;
 
         } else if (command.equals("cancel")) ;//cancelCommand();
-        else if (command.equals("surrender")) /*TODO*/;
+        else if (command.equals("surrender")) {
+            turnPlayer.setLifePoint(0);
+            return DuelMenuMessages.EMPTY;
+        };
 
         return DuelMenuMessages.INVALID_COMMAND;
     }
