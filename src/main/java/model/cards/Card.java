@@ -64,6 +64,10 @@ public class Card {
         allCards.put(card.getName(), card);
     }
 
+    public static void removeCardFromAllCards(Card card) {
+        allCards.remove(card.getName());
+    }
+
     public static String getBackImageAddress() {
         return backImageAddress;
     }

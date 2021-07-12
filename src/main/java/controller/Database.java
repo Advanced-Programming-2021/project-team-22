@@ -12,6 +12,7 @@ import model.cards.magiccard.MagicCard;
 import model.cards.magiccard.MagicCardStatuses;
 import model.cards.monstercard.MonsterCard;
 import model.cards.monstercard.MonsterCardAttributes;
+import org.hildan.fxgson.FxGson;
 
 import java.io.*;
 import java.util.ArrayList;

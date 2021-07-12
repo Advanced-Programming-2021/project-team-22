@@ -74,7 +74,8 @@ public class ShopMenuView extends Application {
 
     private void handleBorderPaneSetOnMouseClicked() {
         borderPane.setOnMouseClicked(mouseEvent -> {
-            Utils.playButtonClickSFX();
+            if (ShopMenuController.getLoggedInPlayer().isPlaySFX()) Utils.playButtonClickSFX();
+
             cheatField.setVisible(false);
             cheatField.setText("");
         });
@@ -122,7 +123,8 @@ public class ShopMenuView extends Application {
 
     private void setRectangleOnMouseClicked(Rectangle rectangle, Card card, Label label) {
         rectangle.setOnMouseClicked(mouseEvent -> {
-            Utils.playButtonClickSFX();
+            if (ShopMenuController.getLoggedInPlayer().isPlaySFX()) Utils.playButtonClickSFX();
+
             selectedCard = card;
             if (rectangleOfSelectedCard != null) rectangleOfSelectedCard.setEffect(null);
             rectangleOfSelectedCard = rectangle;
@@ -154,7 +156,8 @@ public class ShopMenuView extends Application {
 
     private void handleBuyButtonSetOnMouseClicked() {
         buyButton.setOnMouseClicked(mouseEvent -> {
-            Utils.playButtonClickSFX();
+            if (ShopMenuController.getLoggedInPlayer().isPlaySFX()) Utils.playButtonClickSFX();
+
             ShopMenuController.buyACard(selectedCard);
             message.setText("Card added successfully");
             money.setText(String.valueOf(ShopMenuController.getLoggedInPlayer().getMoney()));

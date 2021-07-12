@@ -72,7 +72,7 @@
                         <Insets top="10.0" />
                      </VBox.margin>
                   </HBox>
-                  <Button fx:id="buyButton" mnemonicParsing="false" styleClass="generalButton" text="Buy">
+                  <Button fx:id="buyButton" mnemonicParsing="false" styleClass="secondMenusButton, buyButton" text="Buy">
                      <VBox.margin>
                         <Insets top="20.0" />
                      </VBox.margin>

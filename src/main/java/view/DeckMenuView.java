@@ -178,7 +178,7 @@ public class DeckMenuView extends Application {
     }
 
     private void setOnMouseClickedForDeck(Deck deck, ImageView imageView, Label deckInformation) {
-        Utils.playButtonClickSFX();
+        if (DeckMenuController.getLoggedInPlayer().isPlaySFX()) Utils.playButtonClickSFX();
         if (imageViewOfSelectedDeck != null) imageViewOfSelectedDeck.setEffect(null);
 
         selectedDeck = deck;
@@ -380,7 +380,7 @@ public class DeckMenuView extends Application {
 
     private void handleCreateDeckButton() {
         createDeckButton.setOnAction(mouseEvent -> {
-            Utils.playButtonClickSFX();
+            if (DeckMenuController.getLoggedInPlayer().isPlaySFX()) Utils.playButtonClickSFX();
 
             if (!createDeckField.isVisible()) {
                 createDeckField.setVisible(true);
@@ -404,7 +404,7 @@ public class DeckMenuView extends Application {
 
     private void handleDeleteDeckButton() {
         deleteDeckButton.setOnAction(mouseEvent -> {
-            Utils.playButtonClickSFX();
+            if (DeckMenuController.getLoggedInPlayer().isPlaySFX()) Utils.playButtonClickSFX();
 
             DeckMenuMessages result = DeckMenuController.deleteDeck(selectedDeck);
             deleteDeckMessage.setText(result.getMessage());
@@ -428,7 +428,7 @@ public class DeckMenuView extends Application {
 
     private void handleActivateDeckButton() {
         activateDeckButton.setOnMouseClicked(mouseEvent -> {
-            Utils.playButtonClickSFX();
+            if (DeckMenuController.getLoggedInPlayer().isPlaySFX()) Utils.playButtonClickSFX();
 
             DeckMenuMessages result = DeckMenuController.activateADeck(selectedDeck);
             activateDeckMessage.setText(result.getMessage());
