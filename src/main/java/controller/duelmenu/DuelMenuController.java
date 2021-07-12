@@ -239,7 +239,7 @@ public class DuelMenuController {
         else if (command.equals("surrender")) {
             turnPlayer.setLifePoint(0);
             return DuelMenuMessages.EMPTY;
-        };
+        }
 
         return DuelMenuMessages.INVALID_COMMAND;
     }
