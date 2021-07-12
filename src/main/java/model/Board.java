@@ -129,6 +129,16 @@ public class Board {
         }
     }
 
+    public void setMonsterCardInMonstersZone(MonsterCard monsterCard) {
+        for (int i = 1; i < monstersZone.length; i++) {
+            if (monstersZone[i] == null) {
+                monstersZone[i] = monsterCard;
+                cardsInHand.remove(monsterCard);
+                return;
+            }
+        }
+    }
+
     public boolean isCardAvailableInMonstersZone(MonsterCard monsterCard) {
         for (int i = 1; i < monstersZone.length; i++) {
             if (monstersZone[i] != null && monstersZone[i].equals(monsterCard)) return true;

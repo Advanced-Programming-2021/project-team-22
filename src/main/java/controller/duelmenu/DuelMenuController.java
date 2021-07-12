@@ -14,6 +14,7 @@ import model.cards.monstercard.MonsterCard;
 import view.DuelMenuView;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 
 public class DuelMenuController {
@@ -54,8 +55,11 @@ public class DuelMenuController {
         board.setACardInHandSelected(false);
 
         for (Card card : board.getDeck().getMainCards()) {
-            if (card instanceof MonsterCard) ((MonsterCard) card).setAttacked(false);
-            else ((MagicCard) card).setIsSetInThisTurn(false);
+            if (card instanceof MonsterCard) {
+                MonsterCard monsterCard = (MonsterCard) card;
+                monsterCard.setAttacked(false);
+                monsterCard.setPositionChangedInThisTurn(false);
+            } else ((MagicCard) card).setIsSetInThisTurn(false);
         }
     }
 
@@ -181,26 +185,25 @@ public class DuelMenuController {
     }
 
     private static void addDeckToAI(Player AI) {
-//        ShopMenuController shopMenuController = new ShopMenuController(AI);
-//        shopMenuController.findCommand("increase --M 1000000");
-//        int numberOfCards = 0;
-//        for (String cardName : Card.getAllCards().keySet()) {
-//            shopMenuController.findCommand("shop buy " + cardName);
-//            ++numberOfCards;
-//            if (numberOfCards == 50) break;
-//        }
-//
-//        DeckMenuController deckMenuController = new DeckMenuController(AI);
-//        deckMenuController.findCommand("deck create :)");
-//
-//        for (String cardName : Card.getAllCards().keySet()) {
-//            deckMenuController.findCommand("deck add-showSelectedCard --showSelectedCard " + cardName + " --deck :)");
-//            ++numberOfCards;
-//            if (numberOfCards == 50) break;
-//        }
-//
-//        deckMenuController.findCommand("deck set-activate :)");
-//        TODO: handle it base on graphic
+        ShopMenuController.setLoggedInPlayer(AI);
+        int numberOfCards = 0;
+        HashMap<String, Card> allCards = Card.getAllCards();
+        for (String cardName : allCards.keySet()) {
+            ShopMenuController.buyACard(allCards.get(cardName));
+            ++numberOfCards;
+            if (numberOfCards == 50) break;
+        }
+
+        DeckMenuController.setLoggedInPlayer(AI);
+        DeckMenuController.createDeck(":)");
+
+        for (String cardName : allCards.keySet()) {
+            DeckMenuController.addCard(allCards.get(cardName), AI.getDeckByName(":)"), true, true);
+            ++numberOfCards;
+            if (numberOfCards == 50) break;
+        }
+
+        DeckMenuController.activateADeck(AI.getDeckByName(":)"));
     }
 
     public DuelMenuMessages findCommand(String command) {
@@ -216,7 +219,7 @@ public class DuelMenuController {
         else if (command.startsWith("select ")) return checkSelectCard(command);
         else if (command.equals("summon")) return summonMonster();
         else if (command.equals("set")) return checkSetACard();
-        else if (command.startsWith("set --position"));// return checkChangePosition(command);
+        else if (command.startsWith("set --position")) return changePosition(command);
         else if (command.equals("flip-summon")) ;//return checkFlipSummon();
         else if (command.equals("attack direct")) return directAttack();
         else if (command.startsWith("attack")) return attack(command);
@@ -515,7 +518,7 @@ public class DuelMenuController {
         if (board.getSelectedCard() == null) return DuelMenuMessages.UNAVAILABLE_SELECTED_CARD;
         else if (!board.isACardInHandSelected()) return DuelMenuMessages.CANT_SET;
         else if (!phase.equals(Phases.MAIN_PHASE_1) && !phase.equals(Phases.MAIN_PHASE_2)) return DuelMenuMessages.NOT_TRUE_PHASE;
-        else if (Card.isMonsterCard(selectedCard)) return checkSetAMonsterCard(selectedCard);
+        else if (Card.isMonsterCard(selectedCard)) return setAMonsterCard((MonsterCard) selectedCard);
 
         MagicCard magicCard = (MagicCard) selectedCard;
         return setAMagicCard(magicCard);
@@ -533,21 +536,44 @@ public class DuelMenuController {
         return DuelMenuMessages.SET_SUCCESSFULLY;
     }
 
-    private DuelMenuMessages checkSetAMonsterCard(Card card) {
-        return DuelMenuMessages.EMPTY;
+    private DuelMenuMessages setAMonsterCard(MonsterCard monsterCard) {
+        Board board = turnPlayer.getBoard();
+        if (board.isMonsterZoneFull()) return DuelMenuMessages.FULL_MONSTERS_ZONE;
+        else if (turnPlayer.getHasSummonedInTurn()) return DuelMenuMessages.ALREADY_SUMMONED_OR_SET;
+
+        board.setMonsterCardInMonstersZone(monsterCard);
+        monsterCard.setCardFaceUp(false);
+        monsterCard.setDefensePosition(true);
+        turnPlayer.setHasSummonedInTurn(true);
+
+        return DuelMenuMessages.SET_SUCCESSFULLY;
     }
 
-//    private DuelMenuMessages setAMonster() {
-//
-//    }
+    private DuelMenuMessages changePosition(String command) {
+        Matcher matcher = Utils.getMatcher(DuelMenuRegexes.CHANGE_POSITION.getRegex(), command);
+        String destinationPosition;
+        if (matcher.find()) destinationPosition = matcher.group(1);
+        else return DuelMenuMessages.INVALID_COMMAND;
 
-//    private DuelMenuMessages checkChangePosition(String command) {
-//
-//    }
+        Board board = turnPlayer.getBoard();
+        Card selectedCard = board.getSelectedCard();
+        if (board.getSelectedCard() == null) return DuelMenuMessages.UNAVAILABLE_SELECTED_CARD;
+        else if (!Card.isMonsterCard(selectedCard)) return DuelMenuMessages.CANT_CHANGE_POSITION;
 
-//    private DuelMenuMessages changePosition(String command) {
-//
-//    }
+        MonsterCard monsterCard = (MonsterCard) selectedCard;
+        if (!board.isCardAvailableInMonstersZone(monsterCard)) return DuelMenuMessages.CANT_CHANGE_POSITION;
+        else if (!phase.equals(Phases.MAIN_PHASE_1) && !phase.equals(Phases.MAIN_PHASE_2)) return DuelMenuMessages.NOT_TRUE_PHASE;
+        else if (monsterCard.isDefensePosition() && destinationPosition.equals("defense") ||
+                !monsterCard.isDefensePosition() && destinationPosition.equals("attack"))
+            return DuelMenuMessages.ALREADY_IN_WANTED_POSITION;
+        else if (monsterCard.isPositionChangedInThisTurn()) return DuelMenuMessages.POSITION_CHANGED_BEFORE;
+
+        monsterCard.setDefensePosition(!monsterCard.isDefensePosition());
+        monsterCard.setCardFaceUp(true);
+        monsterCard.setPositionChangedInThisTurn(true);
+
+        return DuelMenuMessages.POSITION_CHANGED;
+    }
 
 //    private DuelMenuMessages checkFlipSummon() {
 //

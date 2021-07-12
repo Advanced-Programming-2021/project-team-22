@@ -76,7 +76,7 @@ public class Database {
         new MagicCard(name, cardType, icon, description, status, price, frontImageAddress);
     }
 
-    private static String getNameForFrontImageAddress(String name) {
+    public static String getNameForFrontImageAddress(String name) {
         name = name.replaceAll(" ", "").replaceAll("-", "").replaceAll("'", "");
         if (name.startsWith("Terratiger")) name = "Terratiger";
 

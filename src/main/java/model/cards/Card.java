@@ -43,6 +43,10 @@ public class Card {
         return allCards.get(name);
     }
 
+    public void setFrontImageAddress(String frontImageAddress) {
+        this.frontImageAddress = frontImageAddress;
+    }
+
     public static boolean isMonsterCard(Card card) {
         try {
             MonsterCard monsterCard = (MonsterCard) card;
@@ -62,6 +66,10 @@ public class Card {
 
     public static void addCardToAllCards(Card card) {
         allCards.put(card.getName(), card);
+    }
+
+    public static void removeCardFromAllCards(Card card) {
+        allCards.remove(card.getName());
     }
 
     public static String getBackImageAddress() {

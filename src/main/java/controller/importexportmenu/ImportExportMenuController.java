@@ -2,68 +2,69 @@ package controller.importexportmenu;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import controller.MenuRegexes;
-import controller.Utils;
+import controller.Database;
+import model.Player;
 import model.cards.Card;
 import model.cards.magiccard.MagicCard;
 import model.cards.monstercard.MonsterCard;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.regex.Matcher;
 
 public class ImportExportMenuController {
-    public static ImportExportMenuMessages findCommand(String command) {
+    private static Player loggedInPlayer;
 
-        if (command.startsWith("menu enter")) return enterAMenu(command);
-        else if (command.equals("menu exit")) return ImportExportMenuMessages.EXIT_IMPORT_EXPORT_MENU;
-        else if (command.equals("menu show-current")) return ImportExportMenuMessages.SHOW_MENU;
-        else if (command.startsWith("import showSelectedCard")) return importCard(command);
-        else if (command.startsWith("export showSelectedCard")) return exportCard(command);
-
-        return ImportExportMenuMessages.INVALID_COMMAND;
+    public static Player getLoggedInPlayer() {
+        return loggedInPlayer;
     }
 
-    private static ImportExportMenuMessages enterAMenu(String command) {
-        Matcher matcher = Utils.getMatcher(MenuRegexes.ENTER_A_MENU.getRegex(), command);
-        if (!matcher.find()) return ImportExportMenuMessages.INVALID_COMMAND;
-
-        return ImportExportMenuMessages.INVALID_NAVIGATION;
+    public static void setLoggedInPlayer(Player loggedInPlayer) {
+        ImportExportMenuController.loggedInPlayer = loggedInPlayer;
     }
 
-    private static ImportExportMenuMessages importCard(String command) {
-        Matcher matcher = Utils.getMatcher(ImportExportMenuRegexes.IMPORT_CARD.getRegex(), command);
-        if (!matcher.find()) return ImportExportMenuMessages.INVALID_COMMAND;
-
-        String cardName = matcher.group(1);
+    public static ImportExportMenuMessages importCard(File file, String cardName) {
         try {
-            FileReader fileReader = new FileReader("src/main/resources/cards/" + cardName + ".json");
+            FileReader fileReader = new FileReader(file);
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             MonsterCard monsterCard = gson.fromJson(fileReader, MonsterCard.class);
 
             if (Card.getCardByName(cardName) != null) return ImportExportMenuMessages.AVAILABLE_CARD;
             if (monsterCard.getAttribute() == null) {
 //                so we understand that the showSelectedCard is a magic showSelectedCard
-                fileReader = new FileReader("src/main/resources/cards/" + cardName + ".json");
+                fileReader = new FileReader(file);
                 MagicCard magicCard = gson.fromJson(fileReader, MagicCard.class);
                 Card.addCardToAllCards(magicCard);
-                if (isCardIncomplete(magicCard) || isMagicCardIncomplete(magicCard))
+                if (isCardIncomplete(magicCard) || isMagicCardIncomplete(magicCard)) {
+                    Card.removeCardFromAllCards(magicCard);
                     return ImportExportMenuMessages.INVALID_FILE;
+                }
+
+                String frontImageAddress = "/Project-Assets-1.0.0/Assets/Cards/SpellTrap/" +
+                        Database.getNameForFrontImageAddress(cardName) + ".jpg";
+                magicCard.setFrontImageAddress(frontImageAddress);
             } else {
-//                so we understand that the showSelectedCard is a monster showSelectedCard
+//                so we understand that the card is a monster card
                 monsterCard.createEquippedByArrayList();
                 Card.addCardToAllCards(monsterCard);
-                if (isCardIncomplete(monsterCard) || isMonsterCardIncomplete(monsterCard))
+                if (isCardIncomplete(monsterCard) || isMonsterCardIncomplete(monsterCard)) {
+                    Card.removeCardFromAllCards(monsterCard);
                     return ImportExportMenuMessages.INVALID_FILE;
+                }
+
+                String frontImageAddress = "/Project-Assets-1.0.0/Assets/Cards/Monsters/" +
+                        Database.getNameForFrontImageAddress(cardName) + ".jpg";
+                monsterCard.setFrontImageAddress(frontImageAddress);
             }
+
             fileReader.close();
         } catch (IOException ignore) {
-            return ImportExportMenuMessages.UNAVAILABLE_FILE;
+            return ImportExportMenuMessages.INVALID_FILE;
         }
 
 
-        return ImportExportMenuMessages.EMPTY;
+        return ImportExportMenuMessages.IMPORT_SUCCESSFULLY;
     }
 
     private static boolean isCardIncomplete(Card card) {
@@ -78,15 +79,9 @@ public class ImportExportMenuController {
         return magicCard.getIcon() == null || magicCard.getStatus() == null;
     }
 
-    private static ImportExportMenuMessages exportCard(String command) {
-        Matcher matcher = Utils.getMatcher(ImportExportMenuRegexes.EXPORT_CARD.getRegex(), command);
-        if (!matcher.find()) return ImportExportMenuMessages.INVALID_COMMAND;
-
-        String cardName = matcher.group(1);
-        Card card = Card.getCardByName(cardName);
-        if (card == null) return ImportExportMenuMessages.UNAVAILABLE_CARD;
+    public static void exportCard(Card card) {
         try {
-            FileWriter fileWriter = new FileWriter("src/main/resources/cards/" + cardName + ".json");
+            FileWriter fileWriter = new FileWriter("src/main/resources/cards/" + card.getName() + ".json");
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             fileWriter.write(gson.toJson(card));
             fileWriter.close();
@@ -94,8 +89,5 @@ public class ImportExportMenuController {
             ioException.printStackTrace();
             System.exit(0);
         }
-
-
-        return ImportExportMenuMessages.EMPTY;
     }
 }

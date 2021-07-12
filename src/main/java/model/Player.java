@@ -1,7 +1,10 @@
 package model;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import controller.Database;
+import controller.Utils;
+import javafx.scene.image.Image;
 import model.cards.Card;
 import model.cards.magiccard.MagicCard;
 import model.cards.monstercard.MonsterCard;
@@ -37,6 +40,12 @@ public class Player implements Comparable<Player> {
     private long money;
     @Expose
     private int lifePoint;
+    @Expose
+    private boolean playMusic;
+    @Expose
+    private boolean playSFX;
+    @Expose
+    private Image avatar;
     private boolean hasSummonedInTurn;
     private int wonRounds;
     private int maxLifePointDuringPlay;
@@ -49,6 +58,9 @@ public class Player implements Comparable<Player> {
         score = 0;
         money = 100000;
         lifePoint = 8000;
+        playMusic = true;
+        playSFX = true;
+        avatar = null;
         hasSummonedInTurn = false;
         wonRounds = 0;
         maxLifePointDuringPlay = 0;
@@ -59,10 +71,11 @@ public class Player implements Comparable<Player> {
         setPassword(password);
         setNickname(nickname);
         addPlayerToAllPlayers(this);
+        avatar = Utils.createAvatar(username);
         Database.updatePlayerInformationInDatabase(this);
     }
 
-    public static Boolean isNicknameExist(String nickname) {
+    public static boolean isNicknameExist(String nickname) {
         for (Player player : allPlayers) {
             if (player.nickname.equals(nickname)) return true;
         }
@@ -115,12 +128,36 @@ public class Player implements Comparable<Player> {
         this.nickname = nickname;
     }
 
+    public Image getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(Image avatar) {
+        this.avatar = avatar;
+    }
+
     public long getScore() {
         return score;
     }
 
     public long getMoney() {
         return money;
+    }
+
+    public boolean isPlayMusic() {
+        return playMusic;
+    }
+
+    public void setPlayMusic(boolean playMusic) {
+        this.playMusic = playMusic;
+    }
+
+    public boolean isPlaySFX() {
+        return playSFX;
+    }
+
+    public void setPlaySFX(boolean playSFX) {
+        this.playSFX = playSFX;
     }
 
     public Deck getActivatedDeck() {
@@ -154,13 +191,6 @@ public class Player implements Comparable<Player> {
 
         differentBoughtCards.sort(Comparator.comparing(Card::getName));
         return differentBoughtCards;
-    }
-
-    public Card getCardByNameFromBoughtCards(String cardName) {
-        for (Card card : boughtCards) {
-            if (card.getName().equals(cardName)) return card;
-        }
-        return null;
     }
 
     public void increaseScore(long score) {

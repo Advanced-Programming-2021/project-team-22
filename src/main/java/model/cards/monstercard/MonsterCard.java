@@ -17,11 +17,13 @@ public class MonsterCard extends Card implements SpecialMonstersFunction {
 //    if this boolean equals "false" so we can conclude that showSelectedCard is in attack position
     protected transient boolean isDefensePosition;
     protected transient boolean isAttacked;
+    private transient boolean isPositionChangedInThisTurn;
 
     {
         equippedBy = new ArrayList<>();
         isDefensePosition = false;
         isAttacked = false;
+        isPositionChangedInThisTurn = false;
     }
 
     public MonsterCard(String name, short level, MonsterCardAttributes attribute, String monsterType, CardTypes cardType,
@@ -46,6 +48,14 @@ public class MonsterCard extends Card implements SpecialMonstersFunction {
 
     public short getLevel() {
         return level;
+    }
+
+    public boolean isPositionChangedInThisTurn() {
+        return isPositionChangedInThisTurn;
+    }
+
+    public void setPositionChangedInThisTurn(boolean positionChangedInThisTurn) {
+        isPositionChangedInThisTurn = positionChangedInThisTurn;
     }
 
     public MonsterCardAttributes getAttribute() {

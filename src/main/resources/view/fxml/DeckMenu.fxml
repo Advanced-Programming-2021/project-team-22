@@ -43,7 +43,7 @@
                   <Insets left="10.0" top="10.0" />
                </VBox.margin>
                <children>
-                  <Button fx:id="createDeckButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="95.0" styleClass="deckButton" text="create deck" />
+                  <Button fx:id="createDeckButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="95.0" styleClass="secondMenusButton, deckButton" text="create deck" />
                   <TextField fx:id="createDeckField" prefHeight="26.0" prefWidth="90.0" promptText="deck name" visible="false">
                      <HBox.margin>
                         <Insets left="4.0" />
@@ -59,7 +59,7 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Button fx:id="deleteDeckButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="95.0" styleClass="deckButton" text="delete deck">
+            <Button fx:id="deleteDeckButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="95.0" styleClass="secondMenusButton, deckButton" text="delete deck">
                <VBox.margin>
                   <Insets left="10.0" top="10.0" />
                </VBox.margin></Button>
@@ -71,7 +71,7 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Button fx:id="activateDeckButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="95.0" styleClass="deckButton" text="activate deck">
+            <Button fx:id="activateDeckButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="95.0" styleClass="secondMenusButton, deckButton" text="activate deck">
                <VBox.margin>
                   <Insets left="10.0" top="10.0" />
                </VBox.margin></Button>

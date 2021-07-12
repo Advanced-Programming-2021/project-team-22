@@ -22,18 +22,6 @@
     -fx-background-image: url("/images/deckmenu/steel.jpg");
 }
 
-.deckButton {
-    -fx-background-color: rgb(57, 179, 226);
-    -fx-background-radius: 5px;
-}
-
-.deckButton:hover {
-    -fx-cursor: hand;
-    -fx-background-color: rgb(36, 17, 33);
-    -fx-text-fill: rgb(57, 179, 226);
-}
-
 .deckButton:pressed {
-    -fx-text-fill: white;
     -fx-translate-x: 3;
 }

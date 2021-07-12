@@ -11,6 +11,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import model.Player;
 
@@ -60,6 +61,8 @@ public class LoginMenuView extends Application {
             logIn();
         });
         checkBox.setCursor(Cursor.HAND);
+
+        handleBackgroundMusic();
     }
 
     private void handleVisibilityOfPasswordField() {
@@ -104,5 +107,14 @@ public class LoginMenuView extends Application {
             }
         }
 
+    }
+
+    private void handleBackgroundMusic() {
+        MediaPlayer backgroundMusicPlayer = Utils.getBackgroundMusicPlayer();
+        if (backgroundMusicPlayer.isMute()) {
+            backgroundMusicPlayer.stop();
+            backgroundMusicPlayer.setMute(false);
+            backgroundMusicPlayer.play();
+        }
     }
 }

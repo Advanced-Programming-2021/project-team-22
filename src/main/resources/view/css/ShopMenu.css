@@ -9,3 +9,7 @@
     -fx-border-radius: 2px;
     -fx-text-fill: #0fc0c1;
 }
+
+.buyButton:pressed {
+    -fx-translate-y: 1;
+}
