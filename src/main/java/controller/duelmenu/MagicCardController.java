@@ -5,6 +5,7 @@ import model.Player;
 import model.cards.Card;
 import model.cards.magiccard.MagicCard;
 import model.cards.monstercard.MonsterCard;
+import view.DuelMenuView;
 import view.MagicCardView;
 
 import java.util.ArrayList;
@@ -438,6 +439,8 @@ public class MagicCardController {
 
         chosenCard.addToEquippedBy(spellCard);
         turnPlayerBoard.addMagicCardToMagicsZone(spellCard);
+
+        DuelMenuView.upToDateHand();
         return true;
     }
 

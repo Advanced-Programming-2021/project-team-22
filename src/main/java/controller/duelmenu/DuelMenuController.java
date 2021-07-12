@@ -33,6 +33,24 @@ public class DuelMenuController {
     private Phases phase;
     private MediaPlayer mediaPlayer;
     private static boolean flag = true;
+    private static String firstPlayerChoiceInString;
+    private static String secondPlayerChoiceInString;
+
+    public static void setFirstPlayerChoiceInString(String firstPlayerChoiceInString) {
+        DuelMenuController.firstPlayerChoiceInString = firstPlayerChoiceInString;
+    }
+
+    public static void setSecondPlayerChoiceInString(String secondPlayerChoiceInString) {
+        DuelMenuController.secondPlayerChoiceInString = secondPlayerChoiceInString;
+    }
+
+    public static String getFirstPlayerChoiceInString() {
+        return firstPlayerChoiceInString;
+    }
+
+    public static String getSecondPlayerChoiceInString() {
+        return secondPlayerChoiceInString;
+    }
 
     public void setTurnPlayer(Player turnPlayer) {
         this.turnPlayer = turnPlayer;
@@ -83,11 +101,9 @@ public class DuelMenuController {
     }
 
     public static String specifyTurnPlayer(Player firstPlayer, Player secondPlayer) {
-        String firstPlayerChoiceInString = DuelMenuView.findChooseOfPlayerInMiniGame(firstPlayer);
         if (!isMiniGameChoiceValid(firstPlayerChoiceInString)) return "invalid choice";
         MiniGameChoices firstPlayerChoice = MiniGameChoices.valueOf(firstPlayerChoiceInString.toUpperCase());
 
-        String secondPlayerChoiceInString = DuelMenuView.findChooseOfPlayerInMiniGame(secondPlayer);
         if (!isMiniGameChoiceValid(secondPlayerChoiceInString)) return "invalid choice";
         MiniGameChoices secondPlayerChoice = MiniGameChoices.valueOf(secondPlayerChoiceInString.toUpperCase());
 
@@ -575,6 +591,7 @@ public class DuelMenuController {
         magicCard.setPowerUsed(false);
         magicCard.setCardFaceUp(false);
         magicCard.setIsSetInThisTurn(true);
+
         DuelMenuView.upToDateHand();
         return DuelMenuMessages.SET_SUCCESSFULLY;
     }
@@ -589,6 +606,7 @@ public class DuelMenuController {
         monsterCard.setDefensePosition(true);
         turnPlayer.setHasSummonedInTurn(true);
 
+        DuelMenuView.upToDateHand();
         return DuelMenuMessages.SET_SUCCESSFULLY;
     }
 
@@ -781,6 +799,8 @@ public class DuelMenuController {
         MagicCardController.doSpellAbsorptionEffect(notTurnPlayer);
         if (spellCard.getIcon().equals("Normal") || spellCard.getIcon().equals("Ritual"))
             board.moveMagicCardToGraveyard(spellCard);
+
+        DuelMenuView.upToDateHand();
         return DuelMenuMessages.SPELL_ACTIVATED;
     }
 

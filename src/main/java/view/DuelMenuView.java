@@ -18,12 +18,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Shadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
@@ -94,6 +92,10 @@ public class DuelMenuView extends Application {
     public DuelMenuView() {
     }
 
+    public int getNumberOfRounds() {
+        return numberOfRounds;
+    }
+
     public DuelMenuView(Player firstPlayer, Player secondPlayer, int numberOfRounds) {
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
@@ -106,6 +108,10 @@ public class DuelMenuView extends Application {
         this.secondPlayer = AIPlayer;
         this.numberOfRounds = numberOfRounds;
         this.isPlayingWithAI = true;
+    }
+
+    public static void setDuelMenuController(DuelMenuController duelMenuController) {
+        DuelMenuView.duelMenuController = duelMenuController;
     }
 
     public static void main(String[] args) {
@@ -122,7 +128,7 @@ public class DuelMenuView extends Application {
 
         }
         duelMenuController.setPhase(Phases.DRAW_PHASE);
-        URL url = getClass().getResource("/view/fxml/Board.fxml");
+        URL url = getClass().getResource("/view/fxml/duelmenu/Board.fxml");
         try {
             root = FXMLLoader.load(url);
         } catch (Exception e) {
@@ -330,6 +336,14 @@ public class DuelMenuView extends Application {
 
     public static Rectangle getOwnFieldzone() {
         return ownFieldzone;
+    }
+
+    public Player getFirstPlayer() {
+        return firstPlayer;
+    }
+
+    public Player getSecondPlayer() {
+        return secondPlayer;
     }
 
     public static Rectangle getOpponentFieldzone() {
@@ -996,17 +1010,17 @@ public class DuelMenuView extends Application {
         mainPhase2 = (Rectangle) scene.lookup("#mainPhase2");
         endPhase = (Rectangle) scene.lookup("#endPhase");
 
-        Image img = new Image(getClass().getResource("/images/drawPhase.png").toExternalForm());
+        Image img = new Image(getClass().getResource("/images/duelmenu/drawPhase.png").toExternalForm());
         drawPhase.setFill(new ImagePattern(img));
-        img = new Image(getClass().getResource("/images/standbyPhase.png").toExternalForm());
+        img = new Image(getClass().getResource("/images/duelmenu/standbyPhase.png").toExternalForm());
         standbyPhase.setFill(new ImagePattern(img));
-        img = new Image(getClass().getResource("/images/mainPhase.png").toExternalForm());
+        img = new Image(getClass().getResource("/images/duelmenu/mainPhase.png").toExternalForm());
         mainPhase1.setFill(new ImagePattern(img));
-        img = new Image(getClass().getResource("/images/battlePhase.png").toExternalForm());
+        img = new Image(getClass().getResource("/images/duelmenu/battlePhase.png").toExternalForm());
         battlePhase.setFill(new ImagePattern(img));
-        img = new Image(getClass().getResource("/images/mainPhase2.png").toExternalForm());
+        img = new Image(getClass().getResource("/images/duelmenu/mainPhase2.png").toExternalForm());
         mainPhase2.setFill(new ImagePattern(img));
-        img = new Image(getClass().getResource("/images/endPhase.png").toExternalForm());
+        img = new Image(getClass().getResource("/images/duelmenu/endPhase.png").toExternalForm());
         endPhase.setFill(new ImagePattern(img));
 
 
@@ -1116,6 +1130,102 @@ public class DuelMenuView extends Application {
                         scene.lookup("#changeMonster1").setVisible(false);
                     }
                 });
+
+        scene.lookup("#changeMonster1").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result;
+                            if (duelMenuController.getTurnPlayer().getBoard().getMonstersZone()[1] != null &&
+                                    duelMenuController.getTurnPlayer().getBoard().getMonstersZone()[1].isDefensePosition())
+                                result = duelMenuController.findCommand("set --position attack");
+                            else if (duelMenuController.getTurnPlayer().getBoard().getMonstersZone()[1] != null &&
+                                    !duelMenuController.getTurnPlayer().getBoard().getMonstersZone()[1].isDefensePosition())
+                                result = duelMenuController.findCommand("set --position defense");
+                        }
+
+                        scene.lookup("#changeMonster1").setVisible(false);
+                    }
+                });
+
+        scene.lookup("#changeMonster2").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result;
+                            if (duelMenuController.getTurnPlayer().getBoard().getMonstersZone()[2] != null &&
+                                    duelMenuController.getTurnPlayer().getBoard().getMonstersZone()[2].isDefensePosition())
+                                result = duelMenuController.findCommand("set --position attack");
+                            else if (duelMenuController.getTurnPlayer().getBoard().getMonstersZone()[2] != null &&
+                                    !duelMenuController.getTurnPlayer().getBoard().getMonstersZone()[2].isDefensePosition())
+                                result = duelMenuController.findCommand("set --position defense");
+                        }
+
+                        scene.lookup("#changeMonster2").setVisible(false);
+                    }
+                });
+
+        scene.lookup("#changeMonster3").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result;
+                            if (duelMenuController.getTurnPlayer().getBoard().getMonstersZone()[3] != null &&
+                                    duelMenuController.getTurnPlayer().getBoard().getMonstersZone()[3].isDefensePosition())
+                                result = duelMenuController.findCommand("set --position attack");
+                            else if (duelMenuController.getTurnPlayer().getBoard().getMonstersZone()[3] != null &&
+                                    !duelMenuController.getTurnPlayer().getBoard().getMonstersZone()[3].isDefensePosition())
+                                result = duelMenuController.findCommand("set --position defense");
+                        }
+
+                        scene.lookup("#changeMonster3").setVisible(false);
+                    }
+                });
+
+        scene.lookup("#changeMonster4").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result;
+                            if (duelMenuController.getTurnPlayer().getBoard().getMonstersZone()[4] != null &&
+                                    duelMenuController.getTurnPlayer().getBoard().getMonstersZone()[4].isDefensePosition())
+                                result = duelMenuController.findCommand("set --position attack");
+                            else if (duelMenuController.getTurnPlayer().getBoard().getMonstersZone()[4] != null &&
+                                    !duelMenuController.getTurnPlayer().getBoard().getMonstersZone()[4].isDefensePosition())
+                                result = duelMenuController.findCommand("set --position defense");
+                        }
+
+                        scene.lookup("#changeMonster4").setVisible(false);
+                    }
+                });
+
+        scene.lookup("#changeMonster5").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        System.out.println("gfd");
+                        if (!pause) {
+                            DuelMenuMessages result;
+                            if (duelMenuController.getTurnPlayer().getBoard().getMonstersZone()[5] != null &&
+                                    duelMenuController.getTurnPlayer().getBoard().getMonstersZone()[5].isDefensePosition())
+                                result = duelMenuController.findCommand("set --position attack");
+                            else if (duelMenuController.getTurnPlayer().getBoard().getMonstersZone()[5] != null &&
+                                    !duelMenuController.getTurnPlayer().getBoard().getMonstersZone()[5].isDefensePosition())
+                                result = duelMenuController.findCommand("set --position defense");
+                        }
+
+                        scene.lookup("#changeMonster5").setVisible(false);
+                    }
+                });
+
         scene.lookup("#changeMonster2").addEventHandler(MouseEvent.MOUSE_EXITED,
                 new EventHandler<MouseEvent>() {
                     @Override
