@@ -6,6 +6,9 @@ module Graphic.Copy {
     requires com.google.gson;
     requires opencsv;
     requires javafx.media;
+    requires avatar.generator;
+    requires avatar.generator.smiley;
+    requires avatar.generator.EightBitAvatar;
 
 
     opens view to javafx.fxml;

@@ -73,26 +73,12 @@ public class Deck {
         if (card != null) sideCards.add(card);
     }
 
-    public Card removeCardFromMainDeck(String cardName) {
-        for (Card card : mainCards) {
-            if (card.getName().equals(cardName)) {
-                mainCards.remove(card);
-                return card;
-            }
-        }
-
-        return null;
+    public void removeCardFromMainDeck(Card card) {
+        mainCards.remove(card);
     }
 
-    public Card removeCardFromSideDeck(String cardName) {
-        for (Card card : sideCards) {
-            if (card.getName().equals(cardName)) {
-                sideCards.remove(card);
-                return card;
-            }
-        }
-
-        return null;
+    public void removeCardFromSideDeck(Card card) {
+        sideCards.remove(card);
     }
 
     public String isValid() {

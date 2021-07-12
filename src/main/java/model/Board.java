@@ -1,11 +1,8 @@
 package model;
 
-import javafx.scene.image.Image;
-import javafx.scene.paint.ImagePattern;
 import model.cards.Card;
 import model.cards.magiccard.MagicCard;
 import model.cards.monstercard.MonsterCard;
-import view.DuelMenuView;
 
 import java.util.ArrayList;
 
@@ -17,7 +14,7 @@ public class Board {
     private Deck deck;
     private MagicCard fieldZone;
     private Card selectedCard;
-    //    if this boolean equals "false" so we can conclude that opponent card selected or nothing selected
+//    if this boolean equals "false" so we can conclude that opponent showSelectedCard selected or nothing selected
     private boolean isMyCardSelected;
     private boolean isACardInHandSelected;
 
@@ -107,12 +104,10 @@ public class Board {
 //        if cardName isn't available, then this method returns false
         boolean isCardFaceUp = false;
         for (int i = 1; i < monstersZone.length; i++) {
-            if (monstersZone[i] != null && monstersZone[i].getName().equals(cardName) && !isCardFaceUp)
-                isCardFaceUp = monstersZone[i].getCardFaceUp();
+            if (monstersZone[i] != null && monstersZone[i].getName().equals(cardName) && !isCardFaceUp) isCardFaceUp = monstersZone[i].getCardFaceUp();
         }
         for (int i = 1; i < magicsZone.length; i++) {
-            if (magicsZone[i] != null && magicsZone[i].getName().equals(cardName) && !isCardFaceUp)
-                isCardFaceUp = magicsZone[i].getCardFaceUp();
+            if (magicsZone[i] != null && magicsZone[i].getName().equals(cardName) && !isCardFaceUp) isCardFaceUp = magicsZone[i].getCardFaceUp();
         }
         return isCardFaceUp;
     }
@@ -122,9 +117,6 @@ public class Board {
         if (previousFieldZone != null) graveyard.add(previousFieldZone);
         setFieldZone(spellCard);
         cardsInHand.remove(spellCard);
-        Image img = new Image(spellCard.getBackImageAddress());
-        DuelMenuView.getOwnFieldzone().setFill(new ImagePattern(img));
-
     }
 
     public void addMagicCardToMagicsZone(MagicCard magicCard) {
@@ -132,8 +124,6 @@ public class Board {
             if (magicsZone[i] == null) {
                 magicsZone[i] = magicCard;
                 cardsInHand.remove(magicCard);
-                Image img = new Image(magicCard.getBackImageAddress());
-                DuelMenuView.getOwnFieldzone().setFill(new ImagePattern(img));
                 return;
             }
         }
@@ -158,8 +148,7 @@ public class Board {
     public int getNumberOfWarriorMonsterCards() {
         int numberOfWarriorMonsterCards = 0;
         for (int i = 1; i < monstersZone.length; i++) {
-            if (monstersZone[i] != null && monstersZone[i].getMonsterType().equals("Warrior"))
-                ++numberOfWarriorMonsterCards;
+            if (monstersZone[i] != null && monstersZone[i].getMonsterType().equals("Warrior")) ++numberOfWarriorMonsterCards;
         }
 
         return numberOfWarriorMonsterCards;
@@ -184,7 +173,7 @@ public class Board {
     }
 
     public MagicCard getFaceDownMagicCardFromMagicsZoneByName(String cardName) {
-//        this function returns the first faceDown card
+//        this function returns the first faceDown showSelectedCard
         for (int i = 1; i < magicsZone.length; i++) {
             if (magicsZone[i] != null && magicsZone[i].getName().equals(cardName) && !magicsZone[i].getCardFaceUp())
                 return magicsZone[i];
@@ -193,7 +182,7 @@ public class Board {
     }
 
     public MagicCard getFaceUpMagicCardFromMagicsZoneByName(String cardName) {
-//        this function returns the first faceUp card
+//        this function returns the first faceUp showSelectedCard
         for (int i = 1; i < magicsZone.length; i++) {
             if (magicsZone[i] != null && magicsZone[i].getName().equals(cardName) && magicsZone[i].getCardFaceUp())
                 return magicsZone[i];
@@ -239,15 +228,13 @@ public class Board {
         return monstersZone[address] != null;
     }
 
-    public void setSummonCardOnMonsterZone() {//TODO handel photo!
+    public void setSummonCardOnMonsterZone() {
         removeSelectedCardFromHand();
         for (int i = 1; i <= 5; i++) {
             if (monstersZone[i] == null) {
                 monstersZone[i] = (MonsterCard) selectedCard;
                 monstersZone[i].setCardFaceUp(true);
                 monstersZone[i].setDefensePosition(false);
-                Image img = new Image(getClass().getResource(magicsZone[i].getFrontImageAddress()).toExternalForm());
-                DuelMenuView.getOwnMonsterRectangles()[i].setFill(new ImagePattern(img));
                 break;
             }
         }
@@ -257,7 +244,6 @@ public class Board {
         for (int i = 0; i < cardsInHand.size(); i++) {
             if (cardsInHand.get(i) == selectedCard) {
                 cardsInHand.remove(i);
-                DuelMenuView.getOwnCardsInHand()[i + 1].setFill(null);
                 break;
             }
         }

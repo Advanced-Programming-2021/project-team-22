@@ -24,6 +24,7 @@ import view.DuelMenuView;
 
 import java.io.File;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 
 public class DuelMenuController {
@@ -32,6 +33,24 @@ public class DuelMenuController {
     private Phases phase;
     private MediaPlayer mediaPlayer;
     private static boolean flag = true;
+    private static String firstPlayerChoiceInString;
+    private static String secondPlayerChoiceInString;
+
+    public static void setFirstPlayerChoiceInString(String firstPlayerChoiceInString) {
+        DuelMenuController.firstPlayerChoiceInString = firstPlayerChoiceInString;
+    }
+
+    public static void setSecondPlayerChoiceInString(String secondPlayerChoiceInString) {
+        DuelMenuController.secondPlayerChoiceInString = secondPlayerChoiceInString;
+    }
+
+    public static String getFirstPlayerChoiceInString() {
+        return firstPlayerChoiceInString;
+    }
+
+    public static String getSecondPlayerChoiceInString() {
+        return secondPlayerChoiceInString;
+    }
 
     public void setTurnPlayer(Player turnPlayer) {
         this.turnPlayer = turnPlayer;
@@ -79,11 +98,11 @@ public class DuelMenuController {
     }
 
     public static String specifyTurnPlayer(Player firstPlayer, Player secondPlayer) {
-        String firstPlayerChoiceInString = DuelMenuView.findChooseOfPlayerInMiniGame(firstPlayer);
+        //String firstPlayerChoiceInString = DuelMenuView.findChooseOfPlayerInMiniGame(firstPlayer);
         if (!isMiniGameChoiceValid(firstPlayerChoiceInString)) return "invalid choice";
         MiniGameChoices firstPlayerChoice = MiniGameChoices.valueOf(firstPlayerChoiceInString.toUpperCase());
 
-        String secondPlayerChoiceInString = DuelMenuView.findChooseOfPlayerInMiniGame(secondPlayer);
+     //   String secondPlayerChoiceInString = DuelMenuView.findChooseOfPlayerInMiniGame(secondPlayer);
         if (!isMiniGameChoiceValid(secondPlayerChoiceInString)) return "invalid choice";
         MiniGameChoices secondPlayerChoice = MiniGameChoices.valueOf(secondPlayerChoiceInString.toUpperCase());
 
@@ -173,25 +192,25 @@ public class DuelMenuController {
     }
 
     private static void addDeckToAI(Player AI) {
-        ShopMenuController shopMenuController = new ShopMenuController(AI);
-        shopMenuController.findCommand("increase --M 1000000");
+        ShopMenuController.setLoggedInPlayer(AI);
         int numberOfCards = 0;
-        for (String cardName : Card.getAllCards().keySet()) {
-            shopMenuController.findCommand("shop buy " + cardName);
+        HashMap<String, Card> allCards = Card.getAllCards();
+        for (String cardName : allCards.keySet()) {
+            ShopMenuController.buyACard(allCards.get(cardName));
             ++numberOfCards;
             if (numberOfCards == 50) break;
         }
 
-        DeckMenuController deckMenuController = new DeckMenuController(AI);
-        deckMenuController.findCommand("deck create :)");
+        DeckMenuController.setLoggedInPlayer(AI);
+        DeckMenuController.createDeck(":)");
 
-        for (String cardName : Card.getAllCards().keySet()) {
-            deckMenuController.findCommand("deck add-card --card " + cardName + " --deck :)");
+        for (String cardName : allCards.keySet()) {
+            DeckMenuController.addCard(allCards.get(cardName), AI.getDeckByName(":)"), true, true);
             ++numberOfCards;
             if (numberOfCards == 50) break;
         }
 
-        deckMenuController.findCommand("deck set-activate :)");
+        DeckMenuController.activateADeck(AI.getDeckByName(":)"));
     }
 
     public DuelMenuMessages findCommand(String command) {

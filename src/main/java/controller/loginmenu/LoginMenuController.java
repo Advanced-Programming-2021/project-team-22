@@ -1,70 +1,20 @@
 package controller.loginmenu;
 
 import controller.Utils;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.stage.Popup;
+import javafx.stage.Stage;
 import model.Player;
-import view.MainMenuView;
 
-import java.util.regex.Matcher;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class LoginMenuController {
-    public static LoginMenuMessages findCommand(String command) {
-
-        if (command.startsWith("menu enter")) return enterAMenu(command);
-        else if (command.equals("menu exit")) System.exit(0);
-        else if (command.equals("menu show-current")) return LoginMenuMessages.SHOW_MENU;
-        else if (command.startsWith("user create")) {
-            return checkCreateUser(command);
-        } else if (command.startsWith("user login")) {
-            return checkLoginUser(command);
-        }
-
-        return LoginMenuMessages.INVALID_COMMAND;
-    }
-
-    private static LoginMenuMessages enterAMenu(String command) {
-        Matcher matcher = Utils.getMatcher(LoginMenuRegexes.ENTER_A_MENU.getRegex(), command);
-        if (!matcher.find()) return LoginMenuMessages.INVALID_COMMAND;
-
-        String menu = matcher.group(1);
-        if (menu.equalsIgnoreCase("Login")) {
-            return LoginMenuMessages.INVALID_NAVIGATION;
-        }
-
-        return LoginMenuMessages.FIRST_LOGIN;
-    }
-
-    private static LoginMenuMessages checkCreateUser(String command) {
-        Matcher matcher;
-        String username, nickname, password;
-        if (( matcher = Utils.getMatcher(LoginMenuRegexes.CREATE_USER_FIRST_PATTERN.getRegex(), command) ).find()) {
-            username = matcher.group(1);
-            nickname = matcher.group(2);
-            password = matcher.group(3);
-        } else if (( matcher = Utils.getMatcher(LoginMenuRegexes.CREATE_USER_SECOND_PATTERN.getRegex(), command) ).find()) {
-            username = matcher.group(1);
-            nickname = matcher.group(3);
-            password = matcher.group(2);
-        } else if (( matcher = Utils.getMatcher(LoginMenuRegexes.CREATE_USER_THIRD_PATTERN.getRegex(), command) ).find()) {
-            username = matcher.group(2);
-            nickname = matcher.group(1);
-            password = matcher.group(3);
-        } else if (( matcher = Utils.getMatcher(LoginMenuRegexes.CREATE_USER_FOURTH_PATTERN.getRegex(), command) ).find()) {
-            username = matcher.group(3);
-            nickname = matcher.group(1);
-            password = matcher.group(2);
-        } else if (( matcher = Utils.getMatcher(LoginMenuRegexes.CREATE_USER_FIFTH_PATTERN.getRegex(), command) ).find()) {
-            username = matcher.group(2);
-            nickname = matcher.group(3);
-            password = matcher.group(1);
-        } else if (( matcher = Utils.getMatcher(LoginMenuRegexes.CREATE_USER_SIXTH_PATTERN.getRegex(), command) ).find()) {
-            username = matcher.group(3);
-            nickname = matcher.group(2);
-            password = matcher.group(1);
-        } else {
-            return LoginMenuMessages.INVALID_COMMAND;
-        }
-
-
+    public static LoginMenuMessages createUser(String username, String nickname, String password) {
         if (Player.getPlayerByUsername(username) != null) {
             LoginMenuMessages.setUsername(username);
             return LoginMenuMessages.USERNAME_EXISTS;
@@ -73,47 +23,54 @@ public class LoginMenuController {
             LoginMenuMessages.setNickname(nickname);
             return LoginMenuMessages.NICKNAME_EXISTS;
         }
+        if (username.equals("")) return LoginMenuMessages.INVALID_USERNAME;
+        if (nickname.equals("")) return LoginMenuMessages.INVALID_NICKNAME;
+        if (password.equals("")) return LoginMenuMessages.INVALID_PASSWORD;
 
-        createUser(username, password, nickname);
+        new Player(username, password, nickname);
         return LoginMenuMessages.USER_CREATED;
     }
 
-    private static void createUser(String username, String password, String nickname) {
-        new Player(username, password, nickname);
-    }
-
-    private static LoginMenuMessages checkLoginUser(String command) {
-        Matcher matcher;
-        String username, password;
-        if (( matcher = Utils.getMatcher(LoginMenuRegexes.LOGIN_USER_USERNAME_PATTERN.getRegex(), command) ).find()) {
-            username = matcher.group(1);
-            password = matcher.group(2);
-        } else if (( matcher = Utils.getMatcher(LoginMenuRegexes.LOGIN_USER_PASSWORD_PATTERN.getRegex(), command) ).find()) {
-            username = matcher.group(2);
-            password = matcher.group(1);
-        } else {
-            return LoginMenuMessages.INVALID_COMMAND;
-        }
-
-
-        if (!Player.isPasswordCorrect(username, password)) {
-            return LoginMenuMessages.UNMATCHED_USERNAME_AND_PASSWORD;
-        }
-
+    public static LoginMenuMessages loginUser(String username, String password) {
+        if (!Player.isPasswordCorrect(username, password)) return LoginMenuMessages.UNMATCHED_USERNAME_AND_PASSWORD;
         return LoginMenuMessages.USER_LOGGED_IN;
     }
 
-    public static void loginUser(String command) {
-        Matcher matcher;
-        String username = null;
-        if (( matcher = Utils.getMatcher(LoginMenuRegexes.LOGIN_USER_USERNAME_PATTERN.getRegex(), command) ).find()) {
-            username = matcher.group(1);
-        } else if (( matcher = Utils.getMatcher(LoginMenuRegexes.LOGIN_USER_PASSWORD_PATTERN.getRegex(), command) ).find()) {
-            username = matcher.group(2);
-        }
+    public static void createCloseWindowShortcut(Scene scene) {
+        KeyCombination keyCombination = new KeyCodeCombination(KeyCode.W, KeyCombination.META_DOWN);
+        Runnable runnable = LoginMenuController::exitGame;
+        scene.getAccelerators().put(keyCombination, runnable);
+    }
 
+    public static void exitGame() {
+        showExitPopup();
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                System.exit(0);
+            }
+        }, 2000);
+    }
 
-        MainMenuView mainMenuView = new MainMenuView(Player.getPlayerByUsername(username));
-        mainMenuView.mainMenuView();
+    private static void showExitPopup() {
+        Popup popup = createPopup("hope to see you again :)", "popup", "/view/css/LoginMenu.css");
+        Stage stage = Utils.getStage();
+        popup.setOnShown(e -> {
+            popup.setX(stage.getX() + stage.getWidth() / 2 - popup.getWidth() / 2);
+            popup.setY(stage.getY() + 2 * popup.getHeight());
+        });
+        popup.show(Utils.getStage());
+    }
+
+    public static Popup createPopup(String message, String styleClass, String address) {
+        Popup popup = new Popup();
+        popup.setAutoFix(true);
+        popup.setAutoHide(true);
+        popup.setHideOnEscape(true);
+        Label label = new Label(message);
+        label.getStylesheets().add(address);
+        label.getStyleClass().add(styleClass);
+        popup.getContent().add(label);
+        return popup;
     }
 }

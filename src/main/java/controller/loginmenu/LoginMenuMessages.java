@@ -1,15 +1,14 @@
 package controller.loginmenu;
 
 public enum LoginMenuMessages {
-    FIRST_LOGIN("please login first"),
-    INVALID_NAVIGATION("menu navigation is not possible"),
-    SHOW_MENU("Login Menu"),
     USER_CREATED("user created successfully!"),
     USERNAME_EXISTS("user with username <username> already exists"),
     NICKNAME_EXISTS("user with nickname <nickname> already exists"),
     USER_LOGGED_IN("user logged in successfully!"),
-    UNMATCHED_USERNAME_AND_PASSWORD("Username and password didn’t match!"),
-    INVALID_COMMAND("invalid command");
+    UNMATCHED_USERNAME_AND_PASSWORD("Username and password didn't match!"),
+    INVALID_USERNAME("your entered username is invalid"),
+    INVALID_NICKNAME("your entered nickname is invalid"),
+    INVALID_PASSWORD("your entered password is invalid");
 
     private String message;
 

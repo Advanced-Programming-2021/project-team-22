@@ -6,7 +6,7 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Button layoutX="14.0" layoutY="361.0" mnemonicParsing="false" text="back" />
+      <Button fx:id="backButton" layoutX="14.0" layoutY="361.0" mnemonicParsing="false" text="back" />
       <Label layoutX="256.0" layoutY="22.0" prefHeight="36.0" prefWidth="89.0" text="  Score Board" />
       <ScrollPane id="scrollPane" layoutX="135.0" layoutY="89.0" prefHeight="200.0" prefWidth="331.0" />
    </children>

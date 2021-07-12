@@ -1,15 +1,13 @@
 package controller.profilemenu;
 
 public enum ProfileMenuMessages {
-    NOT_UNIQUE_NICKNAME("user with nickname  <nickname>  already exists"),
-    CHANGE_NICKNAME_DONE("nickname changed successfully!"),
-    CHANGE_PASSWORD_DONE("password changed successfully!"),
-    WRONG_CURRENT_PASSWORD("current password is invalid"),
-    INVALID_COMMAND("invalid command"),
-    SHOW_MENU("Profile Menu"),
-    EXIT_PROFILE_MENU("exit"),
-    INVALID_NAVIGATION("menu navigation is not possible"),
-    SAME_PASSWORD("please enter a new password");
+    WRONG_OLD_PASSWORD("current password is invalid"),
+    EMPTY_NEW_PASSWORD("your entered new password is empty"),
+    SAME_PASSWORDS("please enter a new password"),
+    PASSWORD_CHANGED("password changed successfully!"),
+    EMPTY_NICKNAME("your entered nickname is empty"),
+    AVAILABLE_NICKNAME("user with nickname  <nickname>  already exists"),
+    NICKNAME_CHANGED("nickname changed successfully!");
 
     private String message;
 
@@ -18,7 +16,7 @@ public enum ProfileMenuMessages {
     }
 
     public static void setNickname(String nickname) {
-        ProfileMenuMessages.NOT_UNIQUE_NICKNAME.message = "user with nickname " + nickname + " already exists";
+        ProfileMenuMessages.AVAILABLE_NICKNAME.message = "user with nickname " + nickname + " already exists";
     }
 
     public String getMessage() {

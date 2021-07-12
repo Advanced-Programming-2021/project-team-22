@@ -9,9 +9,11 @@ import java.util.TreeMap;
 
 public class Card {
     protected static HashMap<String, Card> allCards;
+    protected static transient String backImageAddress;
 
     static {
-        allCards = new HashMap<>();
+         allCards = new HashMap<>();
+        backImageAddress = "/Project-Assets-1.0.0/Assets/Cards/Monsters/Unknown.jpg";
     }
 
     @Expose
@@ -19,16 +21,14 @@ public class Card {
     protected final String description;
     protected final CardTypes cardType;
     protected final int price;
-    //    if this boolean equals "false" so we can conclude that card is "face down"
+    //    if this boolean equals "false" so we can conclude that showSelectedCard is "face down"
     protected transient boolean isCardFaceUp;
     protected transient boolean isPowerUsed;
     protected transient String frontImageAddress;
-    protected transient String backImageAddress;
 
     {
         isCardFaceUp = false;
         isPowerUsed = false;
-        backImageAddress = "/Project-Assets-1.0.0/Assets/Cards/Monsters/Unknown.jpg";
     }
 
     public Card(String name, String description, CardTypes cardType, int price, String frontImageAddress) {
@@ -41,15 +41,6 @@ public class Card {
 
     public static Card getCardByName(String name) {
         return allCards.get(name);
-    }
-
-    public static TreeMap<String, Integer> getListOfCards() {
-        TreeMap<String, Integer> listOfCards = new TreeMap<>();
-        for (String cardName : allCards.keySet()) {
-            Integer cardPrice = allCards.get(cardName).getPrice();
-            listOfCards.put(cardName, cardPrice);
-        }
-        return listOfCards;
     }
 
     public static boolean isMonsterCard(Card card) {
@@ -71,6 +62,14 @@ public class Card {
 
     public static void addCardToAllCards(Card card) {
         allCards.put(card.getName(), card);
+    }
+
+    public static void removeCardFromAllCards(Card card) {
+        allCards.remove(card.getName());
+    }
+
+    public static String getBackImageAddress() {
+        return backImageAddress;
     }
 
     public static HashMap<String, Card> getAllCards() {
@@ -109,15 +108,7 @@ public class Card {
         isCardFaceUp = cardFaceUp;
     }
 
-    public void setFrontImageAddress(String frontImageAddress) {
-        this.frontImageAddress = frontImageAddress;
-    }
-
     public String getFrontImageAddress() {
         return frontImageAddress;
-    }
-
-    public String getBackImageAddress() {
-        return backImageAddress;
     }
 }

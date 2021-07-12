@@ -7,6 +7,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
@@ -15,6 +16,7 @@ import javafx.stage.Stage;
 import model.Player;
 
 import java.net.URL;
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -24,11 +26,14 @@ public class ScoreboardMenuView extends Application {
     private Scene scene;
     private GridPane gridPane;
     private Player loggedPlayer;
+    private Button backButton;
 
     public ScoreboardMenuView(Player player) {
         loggedPlayer = player;
     }
 
+    public ScoreboardMenuView() {
+    }
 
     public static void main(String[] args) {
         launch(args);
@@ -46,6 +51,9 @@ public class ScoreboardMenuView extends Application {
         setPlayers();
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        backButton = (Button) scene.lookup("#backButton");
+        Utils.handleBackButton(backButton);
     }
 
     public void setPlayers() {

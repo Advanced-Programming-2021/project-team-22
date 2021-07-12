@@ -5,6 +5,7 @@ import controller.Utils;
 import controller.duelmenu.DuelMenuController;
 import controller.duelmenu.DuelMenuMessages;
 import controller.duelmenu.Phases;
+import controller.mainmenu.MainMenuController;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -75,6 +76,12 @@ public class DuelMenuView extends Application {
     private static javafx.scene.control.ScrollPane scrollPane;
     private boolean pause;
     private MediaPlayer mediaPlayer;
+    private Rectangle ownAvatar;
+    private Rectangle opponentAvatar;
+    Label ownUsername;
+    Label ownNickname;
+    Label opponentName;
+    Label opponentNickname;
 
     {
         isAITurn = false;
@@ -85,6 +92,10 @@ public class DuelMenuView extends Application {
     }
 
     public DuelMenuView() {
+    }
+
+    public int getNumberOfRounds() {
+        return numberOfRounds;
     }
 
     public DuelMenuView(Player firstPlayer, Player secondPlayer, int numberOfRounds) {
@@ -99,6 +110,10 @@ public class DuelMenuView extends Application {
         this.secondPlayer = AIPlayer;
         this.numberOfRounds = numberOfRounds;
         this.isPlayingWithAI = true;
+    }
+
+    public static void setDuelMenuController(DuelMenuController duelMenuController) {
+        DuelMenuView.duelMenuController = duelMenuController;
     }
 
     public static void main(String[] args) {
@@ -323,6 +338,14 @@ public class DuelMenuView extends Application {
 
     public static Rectangle getOwnFieldzone() {
         return ownFieldzone;
+    }
+
+    public Player getFirstPlayer() {
+        return firstPlayer;
+    }
+
+    public Player getSecondPlayer() {
+        return secondPlayer;
     }
 
     public static Rectangle getOpponentFieldzone() {
@@ -730,7 +753,12 @@ public class DuelMenuView extends Application {
         if (checkWinner()) {
             DuelMenuMessages result = giveScores();
             if (result.equals(DuelMenuMessages.ENTER_MAIN_MENU)) {
-                //TODO new main menu
+                MainMenuController.setLoggedInPlayer(firstPlayer);
+                try {
+                    new MainMenuView().start(Utils.getStage());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -803,7 +831,12 @@ public class DuelMenuView extends Application {
         if (checkWinner()) {
             DuelMenuMessages result = giveScores();
             if (result.equals(DuelMenuMessages.ENTER_MAIN_MENU)) {
-                //TODO new main menu
+                MainMenuController.setLoggedInPlayer(firstPlayer);
+                try {
+                    new MainMenuView().start(Utils.getStage());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -916,19 +949,21 @@ public class DuelMenuView extends Application {
         scene.lookup("#settingsMenu").setVisible(false);
         scene.lookup("#cheatcodeMenu").setVisible(false);
 
-        Label ownUsername = (Label) scene.lookup("#ownUsername");
-        Label ownNickname = (Label) scene.lookup("#ownNiackname");
-        Label opponentName = (Label) scene.lookup("#opponentName");
-        Label opponentNickname = (Label) scene.lookup("#opponentNickname");
+        ownUsername = (Label) scene.lookup("#ownUsername");
+        ownNickname = (Label) scene.lookup("#ownNiackname");
+        opponentName = (Label) scene.lookup("#opponentName");
+        opponentNickname = (Label) scene.lookup("#opponentNickname");
 
-        ownUsername.setText(firstPlayer.getUsername());
-        ownNickname.setText(firstPlayer.getNickname());
-        opponentName.setText(secondPlayer.getUsername());
-        opponentNickname.setText(secondPlayer.getNickname());
+        ownUsername.setText(duelMenuController.getTurnPlayer().getUsername());
+        ownNickname.setText(duelMenuController.getTurnPlayer().getNickname());
+        opponentName.setText(duelMenuController.getNotTurnPlayer().getUsername());
+        opponentNickname.setText(duelMenuController.getNotTurnPlayer().getNickname());
 
 
-        //TODO set profile images!!!!
-
+        ownAvatar = (Rectangle) scene.lookup("#ownImage");
+        ownAvatar.setFill(new ImagePattern(duelMenuController.getTurnPlayer().getAvatar()));
+        opponentAvatar = (Rectangle) scene.lookup("#opponentImage");
+        opponentAvatar.setFill(new ImagePattern(duelMenuController.getNotTurnPlayer().getAvatar()));
 
         ownFieldzone = (Rectangle) scene.lookup("#ownFieldzone");
         opponentFieldzone = (Rectangle) scene.lookup("#opponentFieldzone");
@@ -1968,5 +2003,15 @@ public class DuelMenuView extends Application {
                 opponentCardsInHand[i + 1].setFill(new ImagePattern(img));
             }
         }
+
+        ownUsername.setText(duelMenuController.getTurnPlayer().getUsername());
+        ownNickname.setText(duelMenuController.getTurnPlayer().getNickname());
+        opponentName.setText(duelMenuController.getNotTurnPlayer().getUsername());
+        opponentNickname.setText(duelMenuController.getNotTurnPlayer().getNickname());
+
+        ownAvatar = (Rectangle) scene.lookup("#ownImage");
+        ownAvatar.setFill(new ImagePattern(duelMenuController.getTurnPlayer().getAvatar()));
+        opponentAvatar = (Rectangle) scene.lookup("#opponentImage");
+        opponentAvatar.setFill(new ImagePattern(duelMenuController.getNotTurnPlayer().getAvatar()));
     }
 }

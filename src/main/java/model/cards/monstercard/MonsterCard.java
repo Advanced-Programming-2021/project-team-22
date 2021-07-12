@@ -14,7 +14,7 @@ public class MonsterCard extends Card implements SpecialMonstersFunction {
     protected int attackPoints;
     protected int defensePoints;
     protected transient ArrayList<MagicCard> equippedBy;
-    //    if this boolean equals "false" so we can conclude that card is in attack position
+//    if this boolean equals "false" so we can conclude that showSelectedCard is in attack position
     protected transient boolean isDefensePosition;
     protected transient boolean isAttacked;
 
