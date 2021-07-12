@@ -28,6 +28,10 @@ public class ScoreboardMenuView extends Application {
     private Player loggedPlayer;
     private Button backButton;
 
+    {
+        gridPane = new GridPane();
+    }
+
     public ScoreboardMenuView(Player player) {
         loggedPlayer = player;
     }
@@ -57,7 +61,7 @@ public class ScoreboardMenuView extends Application {
     }
 
     public void setPlayers() {
-        ScrollPane scrollPane = (ScrollPane) scene.lookup("scrollPane");
+        ScrollPane scrollPane = (ScrollPane) scene.lookup("#scrollPane");
         int numberOfPlayers = Player.getAllPlayers().size();
         int count = 20;
         if (numberOfPlayers < count)
@@ -65,24 +69,26 @@ public class ScoreboardMenuView extends Application {
         Comparator<Player> compareByScore = Comparator
                 .comparing(Player::getScore).reversed()
                 .thenComparing(Player::getNickname);
-        int scoreCompare = 0;
+        long scoreCompare = Long.MAX_VALUE;
         int lastRank = 0;
         Player.getAllPlayers().sort(compareByScore);
 
         for (int i = 0; i < count; i++) {
 
             Label labelRank = new Label();
-            if (Player.getAllPlayers().get(i).getScore() > scoreCompare) {
+            if (Player.getAllPlayers().get(i).getScore() < scoreCompare) {
                 lastRank = i + 1;
+                scoreCompare = Player.getAllPlayers().get(i).getScore();
             }
-            showScoreGenerate(gridPane, lastRank, i, labelRank, Player.getAllPlayers().get(i));
+            labelRank.setText("" + lastRank);
+            showScoreGenerate(lastRank, i, labelRank, Player.getAllPlayers().get(i));
         }
 
         scrollPane.setContent(gridPane);
     }
 
 
-    private void showScoreGenerate(GridPane gridPane, int lastRank, int i, Label labelRank, Player player) {
+    private void showScoreGenerate(int lastRank, int i, Label labelRank, Player player) {
         labelRank.setText(String.valueOf(lastRank));
         Label labelName = new Label();
         labelName.setText(Player.getAllPlayers().get(i).getNickname());

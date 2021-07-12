@@ -157,8 +157,6 @@ public class ImportExportMenuView extends Application {
         });
 
         fileChooser.setInitialDirectory(new File("src/main/resources/cards"));
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Json Files", "*.json")
-        );
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Json Files", "*.json"));
     }
 }
