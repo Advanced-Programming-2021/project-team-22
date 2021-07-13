@@ -95,7 +95,8 @@ public class MainMenuController {
             if (rounds.equals("1")) {
                 DuelMenuView duelMenuView = new DuelMenuView(loggedInPlayer, opponentPlayer, 1);
                 try {
-                    duelMenuView.start(Utils.getStage());
+                    DefineStarter1.duelMenuView = duelMenuView;
+                    new DefineStarter1().start(Utils.getStage());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -103,7 +104,8 @@ public class MainMenuController {
             } else if (rounds.equals("3")) {
                 DuelMenuView duelMenuView = new DuelMenuView(loggedInPlayer, opponentPlayer, 3);
                 try {
-                    duelMenuView.start(Utils.getStage());
+                    DefineStarter1.duelMenuView = duelMenuView;
+                    new DefineStarter1().start(Utils.getStage());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

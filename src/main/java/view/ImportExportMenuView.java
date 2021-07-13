@@ -3,9 +3,7 @@ package view;
 import controller.Utils;
 import controller.importexportmenu.ImportExportMenuController;
 import controller.importexportmenu.ImportExportMenuMessages;
-import controller.shopmenu.ShopMenuController;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
@@ -15,7 +13,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -46,24 +43,14 @@ public class ImportExportMenuView extends Application {
     public Rectangle card;
     public Button backButton;
 
-//    public void ImportExportMenuView() {
-//        while (true) {
-//            String command = Utils.getScanner().nextLine().trim();
-//            ImportExportMenuMessages result = ImportExportMenuController.findCommand(command);
-//
-//            System.out.print(result.getMessage());
-//
-//            if (result.equals(ImportExportMenuMessages.EXIT_IMPORT_EXPORT_MENU)) break;
-//        }
-//    }
-
     @Override
     public void start(Stage stage) throws Exception {
-        BorderPane root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/fxml/ImportExport.fxml")));
+        BorderPane root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/fxml/ImportExportMenu.fxml")));
         Scene scene = new Scene(root, 1280, 800);
         stage.setMinHeight(scene.getHeight() + 28 /*title bar height*/);
         stage.setMinWidth(scene.getWidth());
         stage.setScene(scene);
+        stage.sizeToScene();
     }
 
     @FXML
@@ -124,6 +111,7 @@ public class ImportExportMenuView extends Application {
             rectangle.setEffect(dropShadow);
             rectangle.requestFocus();
             message.setText("");
+            this.card.setVisible(false);
             exportCardButton.setDisable(false);
         });
     }
@@ -132,6 +120,7 @@ public class ImportExportMenuView extends Application {
         exportCardButton.setOnMouseClicked(mouseEvent -> {
             if (ImportExportMenuController.getLoggedInPlayer().isPlaySFX()) Utils.playButtonClickSFX();
             message.setText("");
+            card.setVisible(false);
 
             if (gridPane.isVisible()) {
                 ImportExportMenuController.exportCard(selectedCard);
@@ -150,15 +139,23 @@ public class ImportExportMenuView extends Application {
         importCardButton.setOnMouseClicked(e -> {
             gridPane.setVisible(false);
             message.setText("");
+            card.setVisible(false);
 
             File selectedFile = fileChooser.showOpenDialog(Utils.getStage());
-            ImportExportMenuMessages result = ImportExportMenuController.importCard(selectedFile);
+            fileChooser.setInitialDirectory(new File("src/main/resources/cards"));
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Json Files", "*.json"));
+
+            String fileName = selectedFile.getName();
+            String cardName = fileName.substring(0, fileName.length() - 5 /*.json length*/);
+            ImportExportMenuMessages result = ImportExportMenuController.importCard(selectedFile, cardName);
             message.setText(result.getMessage());
+
+            if (result.equals(ImportExportMenuMessages.IMPORT_SUCCESSFULLY)) {
+                Image image = new Image(Card.getAllCards().get(cardName).getFrontImageAddress());
+                card.setFill(new ImagePattern(image));
+                card.setVisible(true);
+            }
         });
 
-        fileChooser.setInitialDirectory(new File("src/main/resources/cards"));
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Json Files", "*.json")
-        );
     }
 }

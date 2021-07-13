@@ -2,8 +2,18 @@ package controller.profilemenu;
 
 import controller.Database;
 import controller.Utils;
+import controller.importexportmenu.ImportExportMenuController;
+import controller.importexportmenu.ImportExportMenuMessages;
+import javafx.scene.image.Image;
+import javafx.scene.paint.ImagePattern;
+import javafx.stage.FileChooser;
 import model.Player;
+import model.cards.Card;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.regex.Matcher;
 
 public class ProfileMenuController {
@@ -37,5 +47,24 @@ public class ProfileMenuController {
         loggedInPlayer.setPassword(newPassword);
         Database.updatePlayerInformationInDatabase(loggedInPlayer);
         return ProfileMenuMessages.PASSWORD_CHANGED;
+    }
+
+    public static Image changeAvatar() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Json Files", "*.png"));
+        fileChooser.setInitialDirectory(new File("src/main/resources/preparedAvatars"));
+        File selectedFile = fileChooser.showOpenDialog(Utils.getStage());
+        if (selectedFile == null) return null;
+
+        BufferedImage bufferedImage = null;
+        try {
+            bufferedImage = ImageIO.read(selectedFile);
+            loggedInPlayer.setAvatar(bufferedImage);
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+
+        Database.updatePlayerInformationInDatabase(loggedInPlayer);
+        return Utils.convertToFxImage(bufferedImage);
     }
 }

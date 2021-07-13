@@ -54,6 +54,7 @@ public class ShopMenuView extends Application {
         stage.setMinHeight(scene.getHeight() + 28 /*title bar height*/);
         stage.setMinWidth(scene.getWidth());
         stage.setScene(scene);
+        stage.sizeToScene();
 
         handleCheatField(scene);
     }

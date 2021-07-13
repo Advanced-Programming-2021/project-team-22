@@ -1,8 +1,11 @@
 package model;
 
+import javafx.scene.image.Image;
+import javafx.scene.paint.ImagePattern;
 import model.cards.Card;
 import model.cards.magiccard.MagicCard;
 import model.cards.monstercard.MonsterCard;
+import view.DuelMenuView;
 
 import java.util.ArrayList;
 
@@ -124,6 +127,22 @@ public class Board {
             if (magicsZone[i] == null) {
                 magicsZone[i] = magicCard;
                 cardsInHand.remove(magicCard);
+
+                Image image = new Image(Card.getBackImageAddress());
+                DuelMenuView.getOwnMagicRectangles()[i].setFill(new ImagePattern(image));
+                return;
+            }
+        }
+    }
+
+    public void setMonsterCardInMonstersZone(MonsterCard monsterCard) {
+        for (int i = 1; i < monstersZone.length; i++) {
+            if (monstersZone[i] == null) {
+                monstersZone[i] = monsterCard;
+                cardsInHand.remove(monsterCard);
+
+                Image image = new Image(Card.getBackImageAddress());
+                DuelMenuView.getOwnMonsterRectangles()[i].setFill(new ImagePattern(image));
                 return;
             }
         }

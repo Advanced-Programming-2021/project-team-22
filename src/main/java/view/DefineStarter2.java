@@ -20,7 +20,7 @@ public class DefineStarter2 extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        URL url = getClass().getResource("/view/fxml/defineStarter2.fxml");
+        URL url = getClass().getResource("/view/fxml/duelmenu/defineStarter2.fxml");
         try {
             root = FXMLLoader.load(url);
         } catch (Exception e) {
@@ -31,11 +31,11 @@ public class DefineStarter2 extends Application {
         Rectangle rectangle1 = (Rectangle) scene.lookup("#rectangle1");
         Rectangle rectangle2 = (Rectangle) scene.lookup("#rectangle2");
         Rectangle rectangle3 = (Rectangle) scene.lookup("#rectangle3");
-        Image img = new Image(getClass().getResource("/images/paper.bmp").toExternalForm());
+        Image img = new Image(getClass().getResource("/images/duelmenu/paper.bmp").toExternalForm());
         rectangle1.setFill(new ImagePattern(img));
-        img = new Image(getClass().getResource("/images/sang.bmp").toExternalForm());
+        img = new Image(getClass().getResource("/images/duelmenu/sang.bmp").toExternalForm());
         rectangle2.setFill(new ImagePattern(img));
-        img = new Image(getClass().getResource("/images/sward.bmp").toExternalForm());
+        img = new Image(getClass().getResource("/images/duelmenu/sward.bmp").toExternalForm());
         rectangle3.setFill(new ImagePattern(img));
 
         scene.lookup("#rectangle1").addEventHandler(MouseEvent.MOUSE_CLICKED,

@@ -38,6 +38,8 @@ public class DeckMenuController {
         loggedInPlayer.removeDeckFromAllDecks(deck);
         if (loggedInPlayer.getActivatedDeck() != null && loggedInPlayer.getActivatedDeck().equals(deck))
             loggedInPlayer.setActivatedDeck(null);
+
+        Database.updatePlayerInformationInDatabase(loggedInPlayer);
         return DeckMenuMessages.DECK_DELETED;
     }
 
@@ -45,6 +47,7 @@ public class DeckMenuController {
         if (deck == null) return DeckMenuMessages.UNAVAILABLE_SELECTION;
 
         loggedInPlayer.setActivatedDeck(deck);
+        Database.updatePlayerInformationInDatabase(loggedInPlayer);
         return DeckMenuMessages.DECK_ACTIVATED;
     }
 
