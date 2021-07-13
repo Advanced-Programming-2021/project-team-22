@@ -2,7 +2,6 @@ package controller;
 
 import com.talanlabs.avatargenerator.*;
 import com.talanlabs.avatargenerator.eightbit.EightBitAvatar;
-import com.talanlabs.avatargenerator.layers.backgrounds.ColorPaintBackgroundLayer;
 import com.talanlabs.avatargenerator.smiley.SmileyAvatar;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -11,17 +10,12 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
-import model.Player;
 import model.cards.Card;
 import model.cards.magiccard.MagicCard;
 import model.cards.monstercard.MonsterCard;
 import view.MainMenuView;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -80,7 +74,7 @@ public class Utils {
         });
     }
 
-    public static Image createAvatar(String username) {
+    public static BufferedImage createAvatar(String username) {
         double randomNumber = Math.random() * 8;
         Avatar avatar;
         if (randomNumber < 1) {
@@ -102,14 +96,14 @@ public class Utils {
         }
 
         try {
-            return convertToFxImage(avatar.create(username.hashCode()));
+            return avatar.create(username.hashCode());
         } catch (Exception ignored) {
             avatar = TriangleAvatar.newAvatarBuilder().build();
-            return convertToFxImage(avatar.create(username.hashCode()));
+            return avatar.create(username.hashCode());
         }
     }
 
-    private static Image convertToFxImage(BufferedImage image) {
+    public static Image convertToFxImage(BufferedImage image) {
         WritableImage wr = null;
         if (image != null) {
             wr = new WritableImage(image.getWidth(), image.getHeight());

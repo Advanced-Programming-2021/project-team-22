@@ -26,7 +26,9 @@
          </BorderPane.margin>
          <content>
             <GridPane fx:id="gridPane" prefHeight="740.0" prefWidth="565.0" styleClass="gridPane">
-            </GridPane>
+               <padding>
+                  <Insets left="4.0" top="4.0" />
+               </padding></GridPane>
          </content>
       </ScrollPane>
    </left>

@@ -1,5 +1,5 @@
 .firstMenusBorderPane {
-    -fx-background-image: url("/images/backgrounds/LoginMenuMainMenu.jpg");
+    -fx-background-image: url("/images/general/LoginMenuMainMenuBackground.jpg");
     -fx-background-size: stretch;
 }
 

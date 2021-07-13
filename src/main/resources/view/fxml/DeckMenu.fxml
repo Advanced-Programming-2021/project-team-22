@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
             prefHeight="860.0" prefWidth="1410.0" styleClass="secondMenusBorderPane"
             stylesheets="@/view/css/DeckMenu.css, @/view/css/General.css"
             xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"

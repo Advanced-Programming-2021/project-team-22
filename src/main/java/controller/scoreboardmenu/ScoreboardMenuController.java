@@ -1,32 +1,21 @@
 package controller.scoreboardmenu;
 
-import controller.MenuRegexes;
-import controller.Utils;
 import model.Player;
-import view.ScoreboardMenuView;
 
 import java.util.ArrayList;
-import java.util.regex.Matcher;
 
 public class ScoreboardMenuController {
-    public static ScoreboardMenuMessages findCommand(String command) {
+    private static Player loggedInPlayer;
 
-        if (command.startsWith("menu enter")) return enterAMenu(command);
-        else if (command.equals("menu exit")) return ScoreboardMenuMessages.EXIT_SCOREBOARD_MENU;
-        else if (command.equals("menu show-current")) return ScoreboardMenuMessages.SHOW_MENU;
-        else if (command.equals("scoreboard show")) return sortAllPlayers();
-
-        return ScoreboardMenuMessages.INVALID_COMMAND;
+    public static Player getLoggedInPlayer() {
+        return loggedInPlayer;
     }
 
-    private static ScoreboardMenuMessages enterAMenu(String command) {
-        Matcher matcher = Utils.getMatcher(MenuRegexes.ENTER_A_MENU.getRegex(), command);
-        if (!matcher.find()) return ScoreboardMenuMessages.INVALID_COMMAND;
-
-        return ScoreboardMenuMessages.INVALID_NAVIGATION;
+    public static void setLoggedInPlayer(Player loggedInPlayer) {
+        ScoreboardMenuController.loggedInPlayer = loggedInPlayer;
     }
 
-    private static ScoreboardMenuMessages sortAllPlayers() {
+    public static ArrayList<Player> sortAllPlayers() {
         ArrayList<Player> allPlayers = Player.getAllPlayers();
 
         for (int i = 0; i < allPlayers.size(); i++) {
@@ -41,7 +30,16 @@ public class ScoreboardMenuController {
             }
         }
 
-        ScoreboardMenuView.showScoreboard(allPlayers);
-        return ScoreboardMenuMessages.EMPTY;
+        addRankToPlayers(allPlayers);
+        return allPlayers;
+    }
+
+    private static void addRankToPlayers(ArrayList<Player> allPlayers) {
+        int rank = 1;
+        for (int i = 0; i < allPlayers.size(); i++) {
+            Player player = allPlayers.get(i);
+            if (i != 0 && player.getScore() != allPlayers.get(i - 1).getScore()) rank = i + 1;
+            player.setRank(rank);
+        }
     }
 }

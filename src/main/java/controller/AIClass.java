@@ -2,11 +2,11 @@ package controller;
 
 import controller.duelmenu.Phases;
 import model.Board;
+import model.Player;
 import model.cards.Card;
 import model.cards.CardTypes;
 import model.cards.magiccard.MagicCard;
 import model.cards.monstercard.MonsterCard;
-import model.Player;
 
 import java.util.ArrayList;
 

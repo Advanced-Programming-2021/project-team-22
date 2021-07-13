@@ -2,9 +2,8 @@ package controller.mainmenu;
 
 import controller.MenuRegexes;
 import controller.Utils;
-import controller.duelmenu.DuelMenuMessages;
 import model.Player;
-import view.*;
+import view.DuelMenuView;
 
 import java.util.regex.Matcher;
 

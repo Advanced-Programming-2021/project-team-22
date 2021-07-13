@@ -34,3 +34,8 @@
     -fx-font-family: "XB Shiraz";
     -fx-font-weight: bold;
 }
+
+.profileMenuBorderPane {
+    -fx-background-image: url("/images/profilemenu/background.png");
+    -fx-background-size: stretch;
+}

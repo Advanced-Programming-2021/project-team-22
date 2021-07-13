@@ -7,6 +7,7 @@ import controller.importexportmenu.ImportExportMenuController;
 import controller.mainmenu.MainMenuController;
 import controller.mainmenu.MainMenuMessages;
 import controller.profilemenu.ProfileMenuController;
+import controller.scoreboardmenu.ScoreboardMenuController;
 import controller.shopmenu.ShopMenuController;
 import javafx.application.Application;
 import javafx.fxml.FXML;
@@ -92,37 +93,14 @@ public class MainMenuView extends Application {
             try {
                 if (MainMenuController.getLoggedInPlayer().isPlaySFX()) Utils.playButtonClickSFX();
 
+                MainMenuMessages result = MainMenuController.enterDuelMenu(username.getText(), numberOfRounds.getText(), true);
+                this.result.setText(result.getMessage());
+
                 username.clear();
                 numberOfRounds.clear();
                 username.setVisible(false);
                 numberOfRounds.setVisible(false);
                 playWithAIButton.setVisible(false);
-
-                MainMenuMessages result = MainMenuController.enterDuelMenu(username.getText(), numberOfRounds.getText(), true);
-                this.result.setText(result.getMessage());
-            } catch (Exception exception) {
-                exception.printStackTrace();
-            }
-        });
-    }
-
-    private void handleLogOutButton() {
-        logOutButton.setOnMouseClicked(mouseEvent -> {
-            try {
-                if (MainMenuController.getLoggedInPlayer().isPlaySFX()) Utils.playButtonClickSFX();
-                new LoginMenuView().start(Utils.getStage());
-            } catch (Exception exception) {
-                exception.printStackTrace();
-            }
-        });
-    }
-
-    private void handleShopButton() {
-        shopButton.setOnMouseClicked(mouseEvent -> {
-            try {
-                if (MainMenuController.getLoggedInPlayer().isPlaySFX()) Utils.playButtonClickSFX();
-                ShopMenuController.setLoggedInPlayer(MainMenuController.getLoggedInPlayer());
-                new ShopMenuView().start(Utils.getStage());
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
@@ -133,6 +111,7 @@ public class MainMenuView extends Application {
         deckButton.setOnMouseClicked(mouseEvent -> {
             try {
                 if (MainMenuController.getLoggedInPlayer().isPlaySFX()) Utils.playButtonClickSFX();
+
                 DeckMenuController.setLoggedInPlayer(MainMenuController.getLoggedInPlayer());
                 new DeckMenuView().start(Utils.getStage());
             } catch (Exception exception) {
@@ -145,8 +124,9 @@ public class MainMenuView extends Application {
         scoreboardButton.setOnMouseClicked(mouseEvent -> {
             try {
                 if (MainMenuController.getLoggedInPlayer().isPlaySFX()) Utils.playButtonClickSFX();
-//                ScoreboardMenuView scoreboardMenuView = new ScoreboardMenuView(MainMenuController.getLoggedInPlayer());
-//                scoreboardMenuView.start(Utils.getStage());
+
+                ScoreboardMenuController.setLoggedInPlayer(MainMenuController.getLoggedInPlayer());
+                new ScoreboardMenuView().start(Utils.getStage());
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
@@ -157,8 +137,22 @@ public class MainMenuView extends Application {
         profileButton.setOnMouseClicked(mouseEvent -> {
             try {
                 if (MainMenuController.getLoggedInPlayer().isPlaySFX()) Utils.playButtonClickSFX();
+
                 ProfileMenuController.setLoggedInPlayer(MainMenuController.getLoggedInPlayer());
                 new ProfileMenuView().start(Utils.getStage());
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        });
+    }
+
+    private void handleShopButton() {
+        shopButton.setOnMouseClicked(mouseEvent -> {
+            try {
+                if (MainMenuController.getLoggedInPlayer().isPlaySFX()) Utils.playButtonClickSFX();
+
+                ShopMenuController.setLoggedInPlayer(MainMenuController.getLoggedInPlayer());
+                new ShopMenuView().start(Utils.getStage());
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
@@ -172,6 +166,18 @@ public class MainMenuView extends Application {
 
                 ImportExportMenuController.setLoggedInPlayer(MainMenuController.getLoggedInPlayer());
                 new ImportExportMenuView().start(Utils.getStage());
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        });
+    }
+
+    private void handleLogOutButton() {
+        logOutButton.setOnMouseClicked(mouseEvent -> {
+            try {
+                if (MainMenuController.getLoggedInPlayer().isPlaySFX()) Utils.playButtonClickSFX();
+
+                new LoginMenuView().start(Utils.getStage());
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
