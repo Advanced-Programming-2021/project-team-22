@@ -2,9 +2,7 @@ package controller.importexportmenu;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import controller.MenuRegexes;
-import controller.Utils;
-import controller.shopmenu.ShopMenuController;
+import controller.Database;
 import model.Player;
 import model.cards.Card;
 import model.cards.magiccard.MagicCard;
@@ -14,7 +12,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.regex.Matcher;
 
 public class ImportExportMenuController {
     private static Player loggedInPlayer;
@@ -27,13 +24,13 @@ public class ImportExportMenuController {
         ImportExportMenuController.loggedInPlayer = loggedInPlayer;
     }
 
-    public static ImportExportMenuMessages importCard(File file) {
+    public static ImportExportMenuMessages importCard(File file, String cardName) {
         try {
             FileReader fileReader = new FileReader(file);
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             MonsterCard monsterCard = gson.fromJson(fileReader, MonsterCard.class);
 
-            if (Card.getCardByName(monsterCard.getName()) != null) return ImportExportMenuMessages.AVAILABLE_CARD;
+            if (Card.getCardByName(cardName) != null) return ImportExportMenuMessages.AVAILABLE_CARD;
             if (monsterCard.getAttribute() == null) {
 //                so we understand that the showSelectedCard is a magic showSelectedCard
                 fileReader = new FileReader(file);
@@ -43,6 +40,10 @@ public class ImportExportMenuController {
                     Card.removeCardFromAllCards(magicCard);
                     return ImportExportMenuMessages.INVALID_FILE;
                 }
+
+                String frontImageAddress = "/Project-Assets-1.0.0/Assets/Cards/SpellTrap/" +
+                        Database.getNameForFrontImageAddress(cardName) + ".jpg";
+                magicCard.setFrontImageAddress(frontImageAddress);
             } else {
 //                so we understand that the card is a monster card
                 monsterCard.createEquippedByArrayList();
@@ -51,6 +52,10 @@ public class ImportExportMenuController {
                     Card.removeCardFromAllCards(monsterCard);
                     return ImportExportMenuMessages.INVALID_FILE;
                 }
+
+                String frontImageAddress = "/Project-Assets-1.0.0/Assets/Cards/Monsters/" +
+                        Database.getNameForFrontImageAddress(cardName) + ".jpg";
+                monsterCard.setFrontImageAddress(frontImageAddress);
             }
 
             fileReader.close();
@@ -59,7 +64,7 @@ public class ImportExportMenuController {
         }
 
 
-        return ImportExportMenuMessages.EMPTY;
+        return ImportExportMenuMessages.IMPORT_SUCCESSFULLY;
     }
 
     private static boolean isCardIncomplete(Card card) {

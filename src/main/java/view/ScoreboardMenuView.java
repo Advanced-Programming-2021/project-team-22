@@ -2,105 +2,128 @@ package view;
 
 import controller.Utils;
 import controller.scoreboardmenu.ScoreboardMenuController;
-import controller.scoreboardmenu.ScoreboardMenuMessages;
 import javafx.application.Application;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import model.Player;
 
-import java.net.URL;
-import java.nio.Buffer;
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Objects;
 
 public class ScoreboardMenuView extends Application {
+    public TableView<Player> tableView;
+    public Button backButton;
+    public ImageView imageView;
 
-    private Pane root;
-    private Scene scene;
-    private GridPane gridPane;
-    private Player loggedPlayer;
-    private Button backButton;
-
-    public ScoreboardMenuView(Player player) {
-        loggedPlayer = player;
-    }
-
-    public ScoreboardMenuView() {
-    }
-
-    public static void main(String[] args) {
-        launch(args);
+    public static void showScoreboard(ArrayList<Player> allPlayers) {
+        int rank = 1;
+        for (int i = 0; i < allPlayers.size(); i++) {
+            Player player = allPlayers.get(i);
+            if (i != 0 && player.getScore() != allPlayers.get(i - 1).getScore()) rank = i + 1;
+            System.out.println(rank + "- " + player.getNickname() + ": " + player.getScore());
+        }
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        URL url = getClass().getResource("/view/fxml/ScoreBoard.fxml");
-        try {
-            root = FXMLLoader.load(url);
-        } catch (Exception e) {
-            System.out.println("cant load board!");
-        }
-        scene = new Scene(root, 700, 600);
-        setPlayers();
-        primaryStage.setScene(scene);
-        primaryStage.show();
+    public void start(Stage stage) throws Exception {
+        BorderPane root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/fxml/ScoreboardMenu.fxml")));
+        Scene scene = new Scene(root, 1280, 800);
+        stage.setMinHeight(scene.getHeight() + 28 /*title bar height*/);
+        stage.setMinWidth(scene.getWidth());
+        stage.setScene(scene);
+        stage.sizeToScene();
+    }
 
-        backButton = (Button) scene.lookup("#backButton");
+    @FXML
+    public void initialize() {
+        createTableView();
+        handleImageView();
+
         Utils.handleBackButton(backButton);
     }
 
-    public void setPlayers() {
-        ScrollPane scrollPane = (ScrollPane) scene.lookup("scrollPane");
-        int numberOfPlayers = Player.getAllPlayers().size();
-        int count = 20;
-        if (numberOfPlayers < count)
-            count = numberOfPlayers;
-        Comparator<Player> compareByScore = Comparator
-                .comparing(Player::getScore).reversed()
-                .thenComparing(Player::getNickname);
-        int scoreCompare = 0;
-        int lastRank = 0;
-        Player.getAllPlayers().sort(compareByScore);
+    private void createTableView() {
+        ArrayList<Player> allPlayers = ScoreboardMenuController.sortAllPlayers();
 
-        for (int i = 0; i < count; i++) {
+        TableColumn<Player, String> rankColumn = createColumn("rank", false);
+        TableColumn<Player, String> nicknameColumn = createColumn("nickname", true);
+        TableColumn<Player, String> scoreColumn = createColumn("score", true);
 
-            Label labelRank = new Label();
-            if (Player.getAllPlayers().get(i).getScore() > scoreCompare) {
-                lastRank = i + 1;
-            }
-            showScoreGenerate(gridPane, lastRank, i, labelRank, Player.getAllPlayers().get(i));
+
+        scoreColumn.setPrefWidth(100);
+        double nicknameColumnPrefWidth = Utils.getStage().getWidth() - 200 - nicknameColumn.getPrefWidth() -
+                scoreColumn.getPrefWidth() - 20;
+        nicknameColumn.setPrefWidth(nicknameColumnPrefWidth);
+
+        tableView.getColumns().addAll(rankColumn, nicknameColumn, scoreColumn);
+        tableView.setEditable(false);
+
+        for (int i = 0; i < allPlayers.size() && allPlayers.get(i).getRank() <= 20; i++) {
+            tableView.getItems().add(allPlayers.get(i));
         }
 
-        scrollPane.setContent(gridPane);
+        changeLoggedInPlayerRowColor(nicknameColumn);
     }
 
+    private TableColumn<Player, String> createColumn(String name, boolean sortable) {
+        TableColumn<Player, String> column = new TableColumn<>(name);
+        column.setCellValueFactory(new PropertyValueFactory<>(name));
+        column.setResizable(false);
+        column.setReorderable(false);
+        column.setSortable(sortable);
+        return column;
+    }
 
-    private void showScoreGenerate(GridPane gridPane, int lastRank, int i, Label labelRank, Player player) {
-        labelRank.setText(String.valueOf(lastRank));
-        Label labelName = new Label();
-        labelName.setText(Player.getAllPlayers().get(i).getNickname());
-        Label labelScore = new Label();
-        labelScore.setText(String.valueOf(Player.getAllPlayers().get(i).getScore()));
-        gridPane.add(labelRank, 0, i);
-        gridPane.add(labelName, 1, i);
-        gridPane.add(labelScore, 2, i);
-        BackgroundFill background_fill = new BackgroundFill(Color.GOLD,
-                CornerRadii.EMPTY, Insets.EMPTY);
+    private void changeLoggedInPlayerRowColor(TableColumn<Player, String> tableColumn) {
+        Callback<TableColumn<Player, String>, TableCell<Player, String>> cellFactory =
+                new Callback<>() {
+                    @Override
+                    public TableCell<Player, String> call(final TableColumn<Player, String> param) {
 
-        Background background = new Background(background_fill);
-        if (player.getNickname().equals(loggedPlayer.getNickname())) {
-            labelRank.setBackground(background);
-            labelName.setBackground(background);
-            labelScore.setBackground(background);
+                        return new TableCell<>() {
+
+                            @Override
+                            public void updateItem(String item, boolean empty) {
+                                super.updateItem(item, empty);
+                                if (empty) {
+                                    setGraphic(null);
+                                    setText(null);
+                                } else {
+                                    setText(item);
+                                    TableRow<Player> row = getTableRow();
+
+                                    row.getStyleClass().clear();
+                                    row.getStyleClass().add("table-row-cell");
+
+                                    if (row.getItem().getNickname().equals(ScoreboardMenuController.getLoggedInPlayer().getNickname())) {
+                                        row.getStyleClass().clear();
+                                        row.getStyleClass().add("loggedInPlayerTableRowCell");
+                                    }
+                                }
+                            }
+                        };
+                    }
+                };
+
+        tableColumn.setCellFactory(cellFactory);
+    }
+
+    private void handleImageView() {
+        double randomNumber = Math.random() * 3;
+        if (randomNumber < 1) {
+            imageView.setImage(new Image("images/scoreboardmenu/Cutin001.dds9.png"));
+        } else if (randomNumber < 2) {
+            imageView.setImage(new Image("images/scoreboardmenu/Cutin001.dds16.png"));
+        } else {
+            imageView.setImage(new Image("images/scoreboardmenu/Cutin001.dds24.png"));
         }
-
     }
-
 }

@@ -46,7 +46,6 @@ public class DeckMenuView extends Application {
         showingDeckInformationTimeline = null;
     }
 
-    public BorderPane borderPane;
     public ScrollPane deckScrollPane;
     public GridPane deckGridPane;
     public ScrollPane allCardsScrollPane;

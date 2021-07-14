@@ -12,16 +12,19 @@ import model.cards.magiccard.MagicCard;
 import model.cards.magiccard.MagicCardStatuses;
 import model.cards.monstercard.MonsterCard;
 import model.cards.monstercard.MonsterCardAttributes;
-import org.hildan.fxgson.FxGson;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 
 public class Database {
     public static void prepareGame() {
-        new File("src/main/resources/players").mkdirs();
+        new File("src/main/resources/players/avatars").mkdirs();
+
         addCardsToGame();
         readPlayersDataFromDatabase();
+        prepareSomeAvatars();
     }
 
     private static void addCardsToGame() {
@@ -77,7 +80,7 @@ public class Database {
         new MagicCard(name, cardType, icon, description, status, price, frontImageAddress);
     }
 
-    private static String getNameForFrontImageAddress(String name) {
+    public static String getNameForFrontImageAddress(String name) {
         name = name.replaceAll(" ", "").replaceAll("-", "").replaceAll("'", "");
         if (name.startsWith("Terratiger")) name = "Terratiger";
 
@@ -101,6 +104,7 @@ public class Database {
                 addBoughtCardsToPlayer(player);
                 addDeckCardsToPlayer(player);
                 handleActivatedDeck(player);
+                handleAvatar(player);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -158,6 +162,32 @@ public class Database {
         }
     }
 
+    private static void handleAvatar(Player player) {
+        try {
+            File imageFile = new File("src/main/resources/players/avatars/" + player.getUsername() + ".png");
+            player.setAvatar(ImageIO.read(imageFile));
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+            System.exit(0);
+        }
+    }
+
+    private static void prepareSomeAvatars() {
+        boolean isDirectoryCreated = new File("src/main/resources/preparedAvatars").mkdir();
+        if (!isDirectoryCreated) return;
+
+        String fakeUsername = "1";
+        for (int i = 0; i < 100; i++) {
+            try {
+                BufferedImage bufferedImage = Utils.createAvatar(fakeUsername);
+                File imageFile = new File("src/main/resources/preparedAvatars/" + fakeUsername + ".png");
+                ImageIO.write(bufferedImage, "png", imageFile);
+                fakeUsername = fakeUsername.concat("" + i);
+            } catch (IOException ignored) {
+            }
+        }
+    }
+
     public static void updatePlayerInformationInDatabase(Player player) {
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
 
@@ -165,6 +195,9 @@ public class Database {
             FileWriter fileWriter = new FileWriter("src/main/resources/players/" + player.getUsername() + ".json");
             fileWriter.write(gson.toJson(player));
             fileWriter.close();
+
+            File imageFile = new File("src/main/resources/players/avatars/" + player.getUsername() + ".png");
+            ImageIO.write(player.getAvatar(), "png", imageFile);
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(0);

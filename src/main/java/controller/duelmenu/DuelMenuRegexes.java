@@ -12,6 +12,7 @@ public enum DuelMenuRegexes {
     SELECT_OPPONENT_FIELD_ZONE_OPPONENT_PATTERN("^select --(?:opponent|O) --(?:field|F)$"),
     SELECT_CARDS_IN_HAND("^select --(?:hand|H) ((?:-|)\\d+)$"),
     ACTIVE_MAGIC_CARD_IN_OPPONENT_TURN("^activate effect ([^\\n]+)$"),
+    CHANGE_POSITION("^set --position (attack|defense)$"),
     CHEAT_DECREASE_OPPONENT_LIFE_POINT("^decrease --(?:opponentLP|O) ([0-9]+)$"),
     CHEAT_INCREASE_LIFE_POINT("^increase --(?:LP|L) ([0-9]+)$"),
     CHEAT_SET_WINNER("^duel set-winner (\\S+)$"),

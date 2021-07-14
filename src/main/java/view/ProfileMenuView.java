@@ -3,9 +3,11 @@ package view;
 import controller.profilemenu.ProfileMenuController;
 import controller.profilemenu.ProfileMenuMessages;
 import controller.Utils;
+import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Side;
@@ -13,10 +15,16 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.effect.Bloom;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -24,14 +32,21 @@ import model.switchbutton.SwitchButton;
 import model.switchbutton.SwitchButtonType;
 
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ProfileMenuView extends Application {
     public VBox musicVBox;
     public VBox sfxVBox;
 
+    public HBox showUsername;
+    public HBox showNickname;
+    public ImageView leftImage;
+
     public BorderPane borderPane;
     public Button backButton;
-    public ImageView avatar;
+    public Circle avatar;
+    public Label EditAvatar;
 
     public TextField nickname;
     public ContextMenu nicknameContextMenu;
@@ -43,17 +58,6 @@ public class ProfileMenuView extends Application {
     public ContextMenu newPasswordContextMenu;
     public Button changePasswordButton;
 
-//    public void profileMenuView() {
-//        ProfileMenuController profileMenuController = new ProfileMenuController(loggedInPlayer);
-//        while (true) {
-//            String command = Utils.getScanner().nextLine().trim();
-//            ProfileMenuMessages result = profileMenuController.findCommand(command);
-//
-//            if (result.equals(ProfileMenuMessages.EXIT_PROFILE_MENU)) break;
-//            else System.out.print(result.getMessage());
-//        }
-//    }
-
     @Override
     public void start(Stage stage) throws Exception {
         BorderPane root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/fxml/ProfileMenu.fxml")));
@@ -61,6 +65,7 @@ public class ProfileMenuView extends Application {
         stage.setMinHeight(scene.getHeight() + 28 /*title bar height*/);
         stage.setMinWidth(scene.getWidth());
         stage.setScene(scene);
+        stage.sizeToScene();
     }
 
     @FXML
@@ -83,7 +88,13 @@ public class ProfileMenuView extends Application {
         generalNodeSetOnMouseClicked(newPassword);
         generalNodeSetOnMouseClicked(nickname);
 
-        avatar.setImage(ProfileMenuController.getLoggedInPlayer().getAvatar());
+        handleAvatar();
+        handleEditAvatar();
+
+        handleShowUsername();
+        handleShowNickName();
+
+        leftImage.setImage(new Image("images/profilemenu/Chara002.dds20.png"));
 
         Utils.handleBackButton(backButton);
     }
@@ -186,6 +197,8 @@ public class ProfileMenuView extends Application {
                 setBackgroundColor(nickname, "green");
                 changeNicknameButton.setText("Done!");
                 nickname.setDisable(true);
+                handleLastIndexOfShowNickName();
+
                 new Timeline(new KeyFrame(Duration.seconds(1), actionEvent -> hideNicknameField())).play();
         }
     }
@@ -270,5 +283,65 @@ public class ProfileMenuView extends Application {
             if (ProfileMenuController.getLoggedInPlayer().isPlaySFX()) Utils.playButtonClickSFX();
             setBackgroundColor(node, "white");
         });
+    }
+
+    private void handleAvatar() {
+        Image image = Utils.convertToFxImage(ProfileMenuController.getLoggedInPlayer().getAvatar());
+        avatar.setFill(new ImagePattern(image));
+        avatar.setCursor(Cursor.HAND);
+
+        avatar.setOnMouseEntered(mouseEvent -> EditAvatar.setVisible(true));
+        avatar.setOnMouseExited(mouseEvent -> EditAvatar.setVisible(false));
+
+        avatar.setOnMouseClicked(mouseEvent -> {
+            Image changedImage = ProfileMenuController.changeAvatar();
+            if (changedImage != null) avatar.setFill(new ImagePattern(changedImage));
+        });
+    }
+
+    private void handleEditAvatar() {
+        DropShadow dropShadow = new DropShadow();
+        dropShadow.setColor(Color.BLACK);
+        dropShadow.setInput(new Bloom());
+
+        EditAvatar.setEffect(dropShadow);
+        EditAvatar.setMouseTransparent(true);
+    }
+
+    private void handleShowUsername() {
+        ObservableList<Node> children = showUsername.getChildren();
+        ((Label) children.get(children.size() - 1)).setText(ProfileMenuController.getLoggedInPlayer().getUsername());
+        handleFadeTransition(children);
+    }
+
+    private void handleShowNickName() {
+        handleLastIndexOfShowNickName();
+        handleFadeTransition(showNickname.getChildren());
+    }
+
+    private void handleLastIndexOfShowNickName() {
+        ObservableList<Node> children = showNickname.getChildren();
+        ((Label) children.get(children.size() - 1)).setText(ProfileMenuController.getLoggedInPlayer().getNickname());
+    }
+
+    private void handleFadeTransition(ObservableList<Node> observableList) {
+        double delay = 0;
+        for (Node node : observableList) {
+            FadeTransition fadeTransition = new FadeTransition();
+            fadeTransition.setNode(node);
+            fadeTransition.setDelay(Duration.seconds(delay));
+            fadeTransition.setDuration(Duration.seconds(2.0));
+            fadeTransition.setFromValue(0);
+            fadeTransition.setToValue(1);
+
+            fadeTransition.play();
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    node.setVisible(true);
+                }
+            }, (int) (delay * 1000));
+            delay += 0.4;
+        }
     }
 }

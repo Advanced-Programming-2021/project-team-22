@@ -27,8 +27,8 @@ public class Main extends Application {
         double randomNumber = Math.random();
         Media media;
         if (randomNumber < 0.5)
-            media = new Media(new File("src/main/resources/sounds/background1.mp3").toURI().toString());
-        else media = new Media(new File("src/main/resources/sounds/background2.mp3").toURI().toString());
+            media = new Media(new File("C:\\Users\\ASUS\\IdeaProjects\\Yu.Gi.Oh.game\\src\\main\\resources\\sounds\\background1.mp3").toURI().toString());
+        else media = new Media(new File("C:\\Users\\ASUS\\IdeaProjects\\Yu.Gi.Oh.game\\src\\main\\resources\\sounds\\background2.mp3").toURI().toString());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setAutoPlay(true);
         mediaPlayer.play();
@@ -36,7 +36,7 @@ public class Main extends Application {
     }
 
     private static void handleSFX() {
-        Media media = new Media(new File("src/main/resources/sounds/buttonClick.mp3").toURI().toString());
+        Media media = new Media(new File("C:\\Users\\ASUS\\IdeaProjects\\Yu.Gi.Oh.game\\src\\main\\resources\\sounds\\buttonClick.mp3").toURI().toString());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
         Utils.setButtonClickSFX(mediaPlayer);
     }

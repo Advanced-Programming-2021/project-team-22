@@ -9,6 +9,7 @@ import model.cards.Card;
 import model.cards.magiccard.MagicCard;
 import model.cards.monstercard.MonsterCard;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -45,7 +46,8 @@ public class Player implements Comparable<Player> {
     @Expose
     private boolean playSFX;
     @Expose
-    private Image avatar;
+    private BufferedImage avatar;
+    private int rank;
     private boolean hasSummonedInTurn;
     private int wonRounds;
     private int maxLifePointDuringPlay;
@@ -61,6 +63,7 @@ public class Player implements Comparable<Player> {
         playMusic = true;
         playSFX = true;
         avatar = null;
+        rank = 0;
         hasSummonedInTurn = false;
         wonRounds = 0;
         maxLifePointDuringPlay = 0;
@@ -128,12 +131,20 @@ public class Player implements Comparable<Player> {
         this.nickname = nickname;
     }
 
-    public Image getAvatar() {
+    public BufferedImage getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(Image avatar) {
+    public void setAvatar(BufferedImage avatar) {
         this.avatar = avatar;
+    }
+
+    public int getRank() {
+        return rank;
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
     }
 
     public long getScore() {
@@ -166,7 +177,6 @@ public class Player implements Comparable<Player> {
 
     public void setActivatedDeck(Deck activatedDeck) {
         this.activatedDeck = activatedDeck;
-        Database.updatePlayerInformationInDatabase(this);
     }
 
     public ArrayList<Deck> getAllDecks() {

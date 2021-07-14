@@ -1,7 +1,7 @@
 package controller;
 
 import com.talanlabs.avatargenerator.*;
-//import com.talanlabs.avatargenerator.eightbit.EightBitAvatar;
+import com.talanlabs.avatargenerator.eightbit.EightBitAvatar;
 import com.talanlabs.avatargenerator.layers.backgrounds.ColorPaintBackgroundLayer;
 import com.talanlabs.avatargenerator.smiley.SmileyAvatar;
 import javafx.scene.control.Button;
@@ -80,7 +80,7 @@ public class Utils {
         });
     }
 
-    public static Image createAvatar(String username) {
+    public static BufferedImage createAvatar(String username) {
         double randomNumber = Math.random() * 8;
         Avatar avatar;
         if (randomNumber < 1) {
@@ -102,14 +102,14 @@ public class Utils {
         }
 
         try {
-            return convertToFxImage(avatar.create(username.hashCode()));
+            return avatar.create(username.hashCode());
         } catch (Exception ignored) {
             avatar = TriangleAvatar.newAvatarBuilder().build();
-            return convertToFxImage(avatar.create(username.hashCode()));
+            return avatar.create(username.hashCode());
         }
     }
 
-    private static Image convertToFxImage(BufferedImage image) {
+    public static Image convertToFxImage(BufferedImage image) {
         WritableImage wr = null;
         if (image != null) {
             wr = new WritableImage(image.getWidth(), image.getHeight());
