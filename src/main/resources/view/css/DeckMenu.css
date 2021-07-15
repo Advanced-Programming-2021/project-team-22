@@ -1,0 +1,27 @@
+.deckGridPane {
+    -fx-background-color: transparent;
+}
+
+.allCardsGridPane {
+    -fx-background-color: transparent;
+}
+
+.allCardsScrollPane {
+    -fx-background-color: transparent;
+    -fx-fill: transparent;
+    -fx-progress-color: transparent;
+    -fx-background: transparent;
+}
+
+.mainCards {
+    -fx-background-image: url("/images/deckmenu/steel.jpg");
+    -fx-background-size: stretch;
+}
+
+.sideCards {
+    -fx-background-image: url("/images/deckmenu/steel.jpg");
+}
+
+.deckButton:pressed {
+    -fx-translate-x: 3;
+}

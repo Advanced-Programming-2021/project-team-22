@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="800.0" prefWidth="1280.0" styleClass="secondMenusBorderPane"
+            stylesheets="@/view/css/CreateCardMenu.css, @/view/css/General.css"
+            xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="view.CreateCardMenuView">
+   <bottom>
+      <HBox alignment="BOTTOM_LEFT" prefHeight="33.0" prefWidth="1280.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="backButton" mnemonicParsing="false" prefHeight="65.0" prefWidth="60.0" styleClass="backButton">
+               <HBox.margin>
+                  <Insets bottom="2.0" left="2.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+   </bottom>
+   <center>
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER" prefHeight="26.0" prefWidth="1280.0">
+               <children>
+                  <Button fx:id="monsterCardButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="100.0" styleClass="secondMenusButton, createCardMenuButton" text="Monster Card" />
+                  <Button fx:id="spellCardButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="100.0" styleClass="secondMenusButton, createCardMenuButton" text="Spell Card">
+                     <HBox.margin>
+                        <Insets left="20.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="trapCardButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="100.0" styleClass="secondMenusButton, createCardMenuButton" text="Trap Card">
+                     <HBox.margin>
+                        <Insets left="20.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="26.0" prefWidth="839.0">
+               <children>
+                  <ComboBox fx:id="effects" prefHeight="26.0" prefWidth="130.0" promptText="Effects" visible="false" />
+                  <Button fx:id="chooseImageButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="130.0" styleClass="secondMenusButton, createCardMenuButton" text="Choose Image" visible="false">
+                     <HBox.margin>
+                        <Insets left="20.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="26.0" prefWidth="200.0">
+               <children>
+                  <Button fx:id="calculatePriceButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="100.0" styleClass="secondMenusButton, createCardMenuButton" text="Calculate Price" visible="false" />
+               </children>
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </HBox>
+            <Label fx:id="price" prefWidth="0.0">
+               <font>
+                  <Font name="American Typewriter" size="18.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </Label>
+            <Label fx:id="money" prefWidth="0.0">
+               <font>
+                  <Font name="American Typewriter" size="18.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="3.0" />
+               </VBox.margin>
+            </Label>
+            <Button fx:id="confirmButton" mnemonicParsing="false" styleClass="generalButton" text="Confirm" visible="false">
+               <VBox.margin>
+                  <Insets top="25.0" />
+               </VBox.margin>
+            </Button>
+         </children>
+      </VBox>
+   </center>
+   <left>
+      <Pane prefHeight="614.0" prefWidth="421.0" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets left="20.0" />
+         </BorderPane.margin>
+         <children>
+            <Rectangle fx:id="monsterCard" arcHeight="5.0" arcWidth="5.0" height="614.0" layoutY="77.0" visible="false" width="421.0" />
+            <TextField fx:id="monsterCardName" layoutX="26.0" layoutY="103.0" prefHeight="40.0" prefWidth="280.0" promptText="Card Name" styleClass="text" visible="false" />
+            <MenuButton fx:id="monsterCardAttribute" layoutX="306.0" layoutY="103.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="115.0" styleClass="menu" text="Attribute" visible="false">
+              <items>
+                <MenuItem mnemonicParsing="false" text="DARK" />
+                <MenuItem mnemonicParsing="false" text="EARTH" />
+                <MenuItem mnemonicParsing="false" text="FIRE" />
+                <MenuItem mnemonicParsing="false" text="LIGHT" />
+                <MenuItem mnemonicParsing="false" text="WATER" />
+                <MenuItem mnemonicParsing="false" text="WIND" />
+              </items>
+            </MenuButton>
+            <TextField fx:id="monsterCardLevel" layoutX="186.0" layoutY="148.0" prefHeight="32.0" prefWidth="193.0" promptText="Level" styleClass="text" visible="false" />
+            <TextField fx:id="monsterCardMonsterType" layoutX="31.0" layoutY="537.0" prefHeight="26.0" prefWidth="160.0" promptText="Monster Type" styleClass="text" visible="false" />
+            <TextField fx:id="monsterCardCardType" layoutX="191.0" layoutY="537.0" prefHeight="26.0" prefWidth="160.0" promptText="Card Type" styleClass="text" visible="false" />
+            <TextArea fx:id="monsterCardDescription" layoutX="31.0" layoutY="563.0" prefHeight="69.0" prefWidth="358.0" promptText="Card Description" styleClass="text" visible="false" />
+            <TextField fx:id="monsterCardAttack" layoutX="264.0" layoutY="634.0" prefHeight="26.0" prefWidth="47.0" promptText="ATK" styleClass="text" visible="false" />
+            <TextField fx:id="monsterCardDefense" layoutX="348.0" layoutY="634.0" prefHeight="26.0" prefWidth="40.0" promptText="DEF" styleClass="text" visible="false" />
+         </children>
+      </Pane>
+   </left>
+   <right>
+      <Pane prefHeight="614.0" prefWidth="421.0" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets right="20.0" />
+         </BorderPane.margin>
+         <children>
+            <Rectangle fx:id="magicCard" arcHeight="5.0" arcWidth="5.0" height="614.0" layoutY="77.0" visible="false" width="421.0" />
+            <TextField fx:id="magicCardName" layoutX="26.0" layoutY="103.0" prefHeight="40.0" prefWidth="320.0" promptText="Card Name" styleClass="text" visible="false" />
+            <MenuButton fx:id="magicCardStatus" layoutX="44.0" layoutY="147.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="137.0" styleClass="menu" text="Status" visible="false">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="LIMITED" />
+                  <MenuItem mnemonicParsing="false" text="UNLIMITED" />
+               </items>
+            </MenuButton>
+            <TextField fx:id="magicCardIcon" layoutX="187.0" layoutY="148.0" prefHeight="32.0" prefWidth="193.0" promptText="Icon" styleClass="text" visible="false" />
+            <TextArea fx:id="magicCardDescription" layoutX="32.0" layoutY="541.0" prefHeight="109.0" prefWidth="358.0" promptText="Card Description" styleClass="text" visible="false" />
+         </children>
+      </Pane>
+   </right>
+</BorderPane>
