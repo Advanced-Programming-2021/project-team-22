@@ -450,8 +450,9 @@ public class DuelMenuController {
         Board turnPlayerBoard = turnPlayer.getBoard();
         DuelMenuMessages result = null;
         result = checkSummonMonster();
-        if (result != null)
-            return result;
+        if (result != null){
+            System.out.println(result.getMessage());
+            return result;}
         System.out.println("B");
         turnPlayer.setHasSummonedInTurn(true);
         MonsterCard selectedMonster = (MonsterCard) turnPlayerBoard.getSelectedCard();

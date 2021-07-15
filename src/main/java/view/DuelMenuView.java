@@ -427,13 +427,25 @@ public class DuelMenuView extends Application {
     }
 
 
-    public static void upToDateHand() {//TODO call for spell and traps
+    public static void upToDateHand() {
         for (int i = 0; i < 4; i++) {
             if (i < duelMenuController.getTurnPlayer().getBoard().getCardsInHand().size() && duelMenuController.getTurnPlayer().getBoard().getCardsInHand().get(i) != null) {
                 Image img = new Image(DuelMenuView.class.getResource(duelMenuController.getTurnPlayer().getBoard().getCardsInHand().get(i).getFrontImageAddress()).toExternalForm());
                 ownCardsInHand[i + 1].setFill(new ImagePattern(img));
             } else {
                 ownCardsInHand[i + 1].setFill(DODGERBLUE);
+            }
+
+        }
+    }
+
+    public void updateAIHand() {
+        for (int i = 0; i < 4; i++) {
+            if (i < secondPlayer.getBoard().getCardsInHand().size() && secondPlayer.getBoard().getCardsInHand().get(i) != null) {
+                Image img = new Image(getClass().getResource(Card.getBackImageAddress()).toExternalForm());
+                opponentCardsInHand[i + 1].setFill(new ImagePattern(img));
+            } else {
+                opponentCardsInHand[i + 1].setFill(DODGERBLUE);
             }
 
         }
@@ -576,7 +588,7 @@ public class DuelMenuView extends Application {
                     duelMenuController.getTurnPlayer().getBoard().getDeck().getMainCards().remove(indexOfLastMainCard);
                     int indexOfAddedCard = duelMenuController.getTurnPlayer().getBoard().getCardsInHand().size() - 1;
                     Image img = new Image(getClass().getResource(duelMenuController.getTurnPlayer().getBoard().getCardsInHand().get(indexOfAddedCard).getFrontImageAddress()).toExternalForm());
-                    getOwnCardsInHand()[indexOfAddedCard + 1].setFill(new ImagePattern(img));
+                    getOpponentCardsInHand()[indexOfAddedCard + 1].setFill(new ImagePattern(img));
                 }
             }
             drawPhase.setEffect(null);
@@ -584,7 +596,7 @@ public class DuelMenuView extends Application {
             String command = controller.AIClass.getOrder(secondPlayer.getBoard(), firstPlayer.getBoard(), secondPlayer, firstPlayer, duelMenuController.getPhase());
             DuelMenuMessages result = duelMenuController.findCommand(command);
             duelMenuController.setPhase(Phases.STANDBY_PHASE);
-
+            updateAIHand();
         }
         if (duelMenuController.getPhase().equals(Phases.STANDBY_PHASE)) {
             standbyPhase.setEffect(null);
@@ -592,6 +604,8 @@ public class DuelMenuView extends Application {
             String command = controller.AIClass.getOrder(secondPlayer.getBoard(), firstPlayer.getBoard(), secondPlayer, firstPlayer, duelMenuController.getPhase());
             DuelMenuMessages result = duelMenuController.findCommand(command);
             duelMenuController.setPhase(Phases.MAIN_PHASE_1);
+            updateAIHand();
+
         }
         if (duelMenuController.getPhase().equals(Phases.MAIN_PHASE_1)) {
             mainPhase1.setEffect(null);
@@ -599,6 +613,8 @@ public class DuelMenuView extends Application {
             String command = controller.AIClass.getOrder(secondPlayer.getBoard(), firstPlayer.getBoard(), secondPlayer, firstPlayer, duelMenuController.getPhase());
             DuelMenuMessages result = duelMenuController.findCommand(command);
             duelMenuController.setPhase(Phases.BATTLE_PHASE);
+            updateAIHand();
+
         }
         if (duelMenuController.getPhase().equals(Phases.BATTLE_PHASE)) {
             battlePhase.setEffect(null);
@@ -606,6 +622,8 @@ public class DuelMenuView extends Application {
             String command = controller.AIClass.getOrder(secondPlayer.getBoard(), firstPlayer.getBoard(), secondPlayer, firstPlayer, duelMenuController.getPhase());
             DuelMenuMessages result = duelMenuController.findCommand(command);
             duelMenuController.setPhase(Phases.MAIN_PHASE_2);
+            updateAIHand();
+
         }
         if (duelMenuController.getPhase().equals(Phases.MAIN_PHASE_2)) {
             mainPhase2.setEffect(null);
@@ -613,8 +631,11 @@ public class DuelMenuView extends Application {
             String command = controller.AIClass.getOrder(secondPlayer.getBoard(), firstPlayer.getBoard(), secondPlayer, firstPlayer, duelMenuController.getPhase());
             DuelMenuMessages result = duelMenuController.findCommand(command);
             duelMenuController.setPhase(Phases.END_PHASE);
+            updateAIHand();
+
         }
         if (duelMenuController.getPhase().equals(Phases.END_PHASE)) {
+            showBoard(secondPlayer, firstPlayer);
             endPhase.setEffect(null);
             drawPhase.setEffect(shadow);
             duelMenuController.setPhase(Phases.DRAW_PHASE);
@@ -624,6 +645,7 @@ public class DuelMenuView extends Application {
             duelMenuController.setTurnPlayer(duelMenuController.getNotTurnPlayer());
             duelMenuController.setNotTurnPlayer(holdPlayer);
             changeRectanglesInPlayWithAI();
+            updateAIHand();
 
         }
 
@@ -748,6 +770,17 @@ public class DuelMenuView extends Application {
 
     public void setScene(Scene scene) {
 
+        Button directAttackButton = (Button) scene.lookup("#directAttack");
+        scene.lookup("#directAttack").addEventHandler(MouseEvent.MOUSE_CLICKED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        if (!pause) {
+                            DuelMenuMessages result = duelMenuController.findCommand("attack direct");
+                        }
+
+                    }
+                });
 
         scrollPane = (ScrollPane) scene.lookup("#graveYard");
         scrollPane.setVisible(false);
@@ -763,19 +796,32 @@ public class DuelMenuView extends Application {
         Label ownLPLabel = (Label) scene.lookup("#ownLP");
         Label opponentLPLabel = (Label) scene.lookup("#opponentLP");
 
+        if (isPlayingWithAI) {
+            ownUsername.setText(firstPlayer.getUsername());
+            ownNickname.setText(firstPlayer.getNickname());
+            opponentName.setText(secondPlayer.getUsername());
+            opponentNickname.setText(secondPlayer.getNickname());
+            ownAvatar = (Rectangle) scene.lookup("#ownImage");
+            Image image = Utils.convertToFxImage(firstPlayer.getAvatar());
+            ownAvatar.setFill(new ImagePattern(image));
+            opponentAvatar = (Rectangle) scene.lookup("#opponentImage");
+            image = Utils.convertToFxImage(secondPlayer.getAvatar());
+            opponentAvatar.setFill(new ImagePattern(image));
 
-        ownUsername.setText(duelMenuController.getTurnPlayer().getUsername());
-        ownNickname.setText(duelMenuController.getTurnPlayer().getNickname());
-        opponentName.setText(duelMenuController.getNotTurnPlayer().getUsername());
-        opponentNickname.setText(duelMenuController.getNotTurnPlayer().getNickname());
+        } else {
+            ownUsername.setText(duelMenuController.getTurnPlayer().getUsername());
+            ownNickname.setText(duelMenuController.getTurnPlayer().getNickname());
+            opponentName.setText(duelMenuController.getNotTurnPlayer().getUsername());
+            opponentNickname.setText(duelMenuController.getNotTurnPlayer().getNickname());
+            ownAvatar = (Rectangle) scene.lookup("#ownImage");
+            Image image = Utils.convertToFxImage(duelMenuController.getTurnPlayer().getAvatar());
+            ownAvatar.setFill(new ImagePattern(image));
+            opponentAvatar = (Rectangle) scene.lookup("#opponentImage");
+            image = Utils.convertToFxImage(duelMenuController.getNotTurnPlayer().getAvatar());
+            opponentAvatar.setFill(new ImagePattern(image));
 
+        }
 
-        ownAvatar = (Rectangle) scene.lookup("#ownImage");
-        Image image = Utils.convertToFxImage(duelMenuController.getTurnPlayer().getAvatar());
-        ownAvatar.setFill(new ImagePattern(image));
-        opponentAvatar = (Rectangle) scene.lookup("#opponentImage");
-        image = Utils.convertToFxImage(duelMenuController.getNotTurnPlayer().getAvatar());
-        opponentAvatar.setFill(new ImagePattern(image));
 
         ownFieldzone = (Rectangle) scene.lookup("#ownFieldzone");
         opponentFieldzone = (Rectangle) scene.lookup("#opponentFieldzone");

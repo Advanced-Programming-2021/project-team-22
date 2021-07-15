@@ -1,6 +1,6 @@
-{
+.Pane{
     -fx-padding: 10px
 ;
-    -fx-background-image: url("fie_normal.bmp")
+    -fx-background-image: url("/images/duelmenu/fie_normal.bmp")
 ;
 }

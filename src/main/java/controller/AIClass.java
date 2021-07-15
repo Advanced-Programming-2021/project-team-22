@@ -67,7 +67,7 @@ public class AIClass {
         int level = 20;
         int index = 0;
         for (int i = 1; i <= 5; i++) {
-            if (machineBoard.getMonstersZone()[i].getLevel() < level) {
+            if (machineBoard.getMonstersZone()[i].getLevel() < level) {//TODO check!!
                 level = machineBoard.getMonstersZone()[i].getLevel();
                 index = i;
             }
