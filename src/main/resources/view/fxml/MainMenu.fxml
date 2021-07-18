@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="800.0" prefWidth="1280.0" styleClass="firstMenusBorderPane"
+            stylesheets="@/view/css/General.css"
+            xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="view.MainMenuView">
+   <left>
+      <VBox prefHeight="650.0" prefWidth="235.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="duelButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="140.0" styleClass="generalButton" text="Duel">
+               <font>
+                  <Font name="XB Shiraz Bold" size="15.0" />
+               </font>
+            </Button>
+            <Button fx:id="deckButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="140.0" styleClass="generalButton" text="Deck">
+               <font>
+                  <Font name="XB Shiraz Bold" size="15.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="12.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="scoreboardButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="140.0" styleClass="generalButton" text="Scoreboard">
+               <font>
+                  <Font name="XB Shiraz Bold" size="15.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="12.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="profileButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="140.0" styleClass="generalButton" text="Profile">
+               <font>
+                  <Font name="XB Shiraz Bold" size="15.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="12.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="shopButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="140.0" styleClass="generalButton" text="Shop">
+               <font>
+                  <Font name="XB Shiraz Bold" size="15.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="12.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="importExportButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="140.0" styleClass="generalButton" text="Import/Export">
+               <font>
+                  <Font name="XB Shiraz Bold" size="15.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="12.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="createCardButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="140.0" styleClass="generalButton" text="Create Card">
+               <font>
+                  <Font name="XB Shiraz Bold" size="15.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="12.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="logOutButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="140.0" styleClass="generalButton" text="Log Out">
+               <font>
+                  <Font name="XB Shiraz Bold" size="15.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="25.0" />
+               </VBox.margin>
+            </Button>
+         </children>
+         <padding>
+            <Insets left="40.0" />
+         </padding>
+      </VBox>
+   </left>
+   <top>
+      <HBox prefHeight="392.0" prefWidth="1280.0" BorderPane.alignment="CENTER" />
+   </top>
+   <center>
+      <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <TextField fx:id="username" promptText="opponent username" visible="false" />
+            <TextField fx:id="numberOfRounds" promptText="number of rounds" visible="false">
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </TextField>
+            <Button fx:id="playWithAIButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="140.0" styleClass="generalButton" text="Play With AI" visible="false">
+               <font>
+                  <Font name="XB Shiraz" size="13.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </Button>
+            <Label fx:id="result" textFill="#43f317">
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+               <font>
+                  <Font name="American Typewriter" size="15.0" />
+               </font>
+            </Label>
+         </children>
+         <padding>
+            <Insets left="250.0" right="250.0" />
+         </padding>
+      </VBox>
+   </center>
+   <right>
+      <VBox prefHeight="650.0" prefWidth="235.0" BorderPane.alignment="CENTER" />
+   </right>
+</BorderPane>

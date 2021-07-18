@@ -1,0 +1,41 @@
+.profileContextMenu {
+    -fx-background-color: #006699;
+    -fx-background-radius: 4;
+    -fx-text-fill: white;
+    -fx-padding: 0;
+}
+
+.menu-item .label {
+    -fx-background-color: #006699;
+    -fx-background-radius: 4;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.menu-item:focused {
+    -fx-background-color: #006699;
+    -fx-background-radius: 4;
+    -fx-text-fill: white;
+}
+
+.menu-item:selected {
+    -fx-background-color: #006699;
+    -fx-background-radius: 4;
+    -fx-text-fill: white;
+}
+
+.profileButton:pressed {
+    -fx-translate-y: 1;
+}
+
+.simpleText {
+    -fx-fill: yellow;
+    -fx-font-size: 20;
+    -fx-font-family: "XB Shiraz";
+    -fx-font-weight: bold;
+}
+
+.profileMenuBorderPane {
+    -fx-background-image: url("/images/profilemenu/background.png");
+    -fx-background-size: stretch;
+}

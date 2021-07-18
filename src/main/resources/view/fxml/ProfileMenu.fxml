@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="800.0" prefWidth="1280.0" styleClass="profileMenuBorderPane"
+            stylesheets="@/view/css/ProfileMenu.css, @/view/css/General.css"
+            xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="view.ProfileMenuView">
+   <center>
+      <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="781.0" spacing="7.0" BorderPane.alignment="CENTER">
+         <children>
+            <TextField fx:id="nickname" promptText="new nickname" visible="false">
+               <contextMenu>
+                  <ContextMenu fx:id="nicknameContextMenu" styleClass="profileContextMenu" />
+               </contextMenu>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </TextField>
+            <Button fx:id="changeNicknameButton" mnemonicParsing="false" prefHeight="31.0" prefWidth="153.0" styleClass="secondMenusButton, profileButton" text="Change Nickname">
+               <font>
+                  <Font name="American Typewriter" size="13.0" />
+               </font>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </Button>
+            <PasswordField fx:id="oldPassword" promptText="old password" visible="false">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+               <contextMenu>
+                  <ContextMenu fx:id="oldPasswordContextMenu" styleClass="profileContextMenu" />
+               </contextMenu>
+            </PasswordField>
+            <PasswordField fx:id="newPassword" promptText="new password" visible="false">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+               <contextMenu>
+                  <ContextMenu fx:id="newPasswordContextMenu" styleClass="profileContextMenu" />
+               </contextMenu>
+            </PasswordField>
+            <Button fx:id="changePasswordButton" mnemonicParsing="false" prefHeight="31.0" prefWidth="153.0" styleClass="secondMenusButton, profileButton" text="Change Password">
+               <font>
+                  <Font name="American Typewriter" size="13.0" />
+               </font>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </Button>
+         </children>
+         <padding>
+            <Insets right="520.0" />
+         </padding>
+      </VBox>
+   </center>
+   <bottom>
+      <HBox alignment="BOTTOM_LEFT" prefHeight="33.0" prefWidth="1280.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="backButton" mnemonicParsing="false" prefHeight="65.0" prefWidth="60.0" styleClass="backButton">
+               <HBox.margin>
+                  <Insets bottom="2.0" left="2.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+   </bottom>
+   <top>
+      <VBox alignment="BOTTOM_CENTER" prefHeight="287.0" prefWidth="1280.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="1280.0">
+               <children>
+                  <StackPane prefHeight="150.0" prefWidth="200.0">
+                     <children>
+                        <Circle fx:id="avatar" radius="50.0" />
+                        <Label fx:id="EditAvatar" text="Edit" textFill="WHITE" visible="false">
+                           <StackPane.margin>
+                              <Insets top="75.0" />
+                           </StackPane.margin>
+                           <font>
+                              <Font name="XB Shiraz Bold" size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </StackPane>
+                  <VBox prefHeight="100.0" prefWidth="586.0">
+                     <children>
+                        <HBox fx:id="showUsername" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Label text="U" textFill="WHITE" visible="false">
+                                 <font>
+                                    <Font name="American Typewriter" size="20.0" />
+                                 </font>
+                              </Label>
+                              <Label text="S" textFill="WHITE" visible="false">
+                                 <font>
+                                    <Font name="American Typewriter" size="20.0" />
+                                 </font>
+                              </Label>
+                              <Label text="E" textFill="WHITE" visible="false">
+                                 <font>
+                                    <Font name="American Typewriter" size="20.0" />
+                                 </font>
+                              </Label>
+                              <Label text="R" textFill="WHITE" visible="false">
+                                 <font>
+                                    <Font name="American Typewriter" size="20.0" />
+                                 </font>
+                              </Label>
+                              <Label text="N" textFill="WHITE" visible="false">
+                                 <font>
+                                    <Font name="American Typewriter" size="20.0" />
+                                 </font>
+                              </Label>
+                              <Label text="A" textFill="WHITE" visible="false">
+                                 <font>
+                                    <Font name="American Typewriter" size="20.0" />
+                                 </font>
+                              </Label>
+                              <Label text="M" textFill="WHITE" visible="false">
+                                 <font>
+                                    <Font name="American Typewriter" size="20.0" />
+                                 </font>
+                              </Label>
+                              <Label text="E" textFill="WHITE" visible="false">
+                                 <font>
+                                    <Font name="American Typewriter" size="20.0" />
+                                 </font>
+                              </Label>
+                              <Label text=":" textFill="WHITE" visible="false">
+                                 <font>
+                                    <Font name="American Typewriter" size="20.0" />
+                                 </font>
+                              </Label>
+                              <Label textFill="WHITE" visible="false">
+                                 <font>
+                                    <Font name="American Typewriter" size="20.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="10.0" />
+                                 </HBox.margin>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <HBox fx:id="showNickname" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Label text="N" textFill="WHITE" visible="false">
+                                 <font>
+                                    <Font name="American Typewriter" size="20.0" />
+                                 </font>
+                              </Label>
+                              <Label text="I" textFill="WHITE" visible="false">
+                                 <font>
+                                    <Font name="American Typewriter" size="20.0" />
+                                 </font>
+                              </Label>
+                              <Label text="C" textFill="WHITE" visible="false">
+                                 <font>
+                                    <Font name="American Typewriter" size="20.0" />
+                                 </font>
+                              </Label>
+                              <Label text="K" textFill="WHITE" visible="false">
+                                 <font>
+                                    <Font name="American Typewriter" size="20.0" />
+                                 </font>
+                              </Label>
+                              <Label text="N" textFill="WHITE" visible="false">
+                                 <font>
+                                    <Font name="American Typewriter" size="20.0" />
+                                 </font>
+                              </Label>
+                              <Label text="A" textFill="WHITE" visible="false">
+                                 <font>
+                                    <Font name="American Typewriter" size="20.0" />
+                                 </font>
+                              </Label>
+                              <Label text="M" textFill="WHITE" visible="false">
+                                 <font>
+                                    <Font name="American Typewriter" size="20.0" />
+                                 </font>
+                              </Label>
+                              <Label text="E" textFill="WHITE" visible="false">
+                                 <font>
+                                    <Font name="American Typewriter" size="20.0" />
+                                 </font>
+                              </Label>
+                              <Label text=":" textFill="WHITE" visible="false">
+                                 <font>
+                                    <Font name="American Typewriter" size="20.0" />
+                                 </font>
+                              </Label>
+                              <Label textFill="WHITE" visible="false">
+                                 <font>
+                                    <Font name="American Typewriter" size="20.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="15.0" />
+                                 </HBox.margin>
+                              </Label>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+               <VBox.margin>
+                  <Insets bottom="20.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox alignment="BOTTOM_CENTER" prefHeight="76.0" prefWidth="1280.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="simpleText" text="Music">
+                     <HBox.margin>
+                        <Insets bottom="40.0" />
+                     </HBox.margin></Text>
+                  <VBox fx:id="musicVBox" alignment="BOTTOM_CENTER" prefHeight="52.0" prefWidth="37.0">
+                     <HBox.margin>
+                        <Insets left="30.0" />
+                     </HBox.margin>
+                     <padding>
+                        <Insets bottom="47.0" />
+                     </padding>
+                  </VBox>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="simpleText" text="SFX">
+                     <HBox.margin>
+                        <Insets bottom="40.0" left="60.0" />
+                     </HBox.margin>
+                  </Text>
+                  <VBox fx:id="sfxVBox" alignment="BOTTOM_CENTER" prefHeight="52.0" prefWidth="37.0">
+                     <HBox.margin>
+                        <Insets left="30.0" />
+                     </HBox.margin>
+                     <padding>
+                        <Insets bottom="47.0" />
+                     </padding>
+                  </VBox>
+               </children>
+               <padding>
+                  <Insets right="80.0" />
+               </padding>
+            </HBox>
+         </children>
+      </VBox>
+   </top>
+   <left>
+      <ImageView fx:id="leftImage" fitHeight="515.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets bottom="150.0" left="20.0" />
+         </BorderPane.margin>
+      </ImageView>
+   </left>
+</BorderPane>
